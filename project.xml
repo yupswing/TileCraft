@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project>
+
+	<!-- ################################ SET ################################### -->
+
+
+	<meta title="TileCraft" package="com.akifox.tilecraft" version="0.1.0" company="Akifox Studio" /> <!--  #TODEPLOY -->
+    <app main="Main" path="Export" file="TileCraft" preloader="com.akifox.plik.Preloader" />
+
+
+	<!-- ############################### WINDOW ################################# -->
+
+	<window fps="60" background="0x242424" />
+
+	<window width="1024" height="576" resizable="true" unless="mobile" />
+
+	<window fullscreen="true" if="mobile" />
+	<window orientation="landscape" />
+
+	<window vsync="true" antialiasing="4" if="cpp" />
+	<window hardware="true" allow-shaders="true" require-shaders="false" if="cpp"/>
+
+
+	<!-- ################################ CODE ################################## -->
+
+	<source path="src" />
+	<!-- Openfl Libraries -->
+  <haxelib name="openfl" />
+	<haxelib name="actuate" />
+	<!-- Akifox Libraries -->
+	<haxelib name="akifox-transform" />
+	<haxelib name="plik" />
+	<!-- Other Libraries -->
+	<haxelib name="compiletime" />
+
+
+	<!-- ############################# CUSTOM BUILDS ############################ -->
+
+	<!-- PLATFORM TYPES:
+				DESKTOP (WINDOWS, MAC, LINUX)
+				WEB (FLASH, HTML5, FIREFOX, EMSCRIPTEN)
+				MOBILE (ANDROID, BLACKBERRY, IOS, TIZEN, WEBOS)
+				CONSOLE -->
+
+	<haxedef name="legacy" if="v2" />
+
+	<!-- ################################ ASSETS ################################ -->
+
+	<!-- Generic graphics -->
+	<assets path="assets/graphics/generic" include="*.png|*.jpg|*.xml" />
+
+	<assets path="assets/fonts" include="*.ttf" />
+
+	<!-- PLIK Debug -->
+	<assets path="assets/debug" include="*" />
+
+</project>
