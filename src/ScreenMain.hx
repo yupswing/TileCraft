@@ -47,12 +47,14 @@ class ScreenMain extends Screen
 
 
 		// CLASS TEST
-		// String -> Array<UInt> -> Model (Shapes) -> Array<UInt> -> String
+		// String -> Array<Int> -> Model (Shapes) -> Array<Int> -> String
 		//var original = "EgQCAJn_Zv8zETxKKyZGRp4mm0aeRFaaeUSamnlEVokBRJqJAUNmmnhDqpp4FzxZvCxVV90sqmfdRGaaREYBRVVG70VVCh5FVRxVRO8cqkTv";
-		var original = "FAQA____Ezw5DkBLCjwAWldvAGlIj1CrKhJwRZrNMEtIzmJFGhKCq5rNAiNnvALNRc0CzXgSAiNFEgJ4Zg9MacxpDng7eAoPDwBDEt4BQ97eAQMt3gE.";
+		var original = "FQQA____Ezw5DkBLCjwAWldvAGlIj1CrKhJwRZrNMEtIzmJFGhKCq5rNAiNnvALNRc0CzXgSAiNFEgJ4Zj9MacxpDng7eEMS3gFD3t4BAy3eAUBF3gFDq-8B";
 		//var original = "DAAACGneAQlLXCgIS1wBW0dcv19Her9ri1y_b4t6v2mLzJ1ZR7ydCEusmgBpXiVAaaxH";
 		//var original = "BxAA_wD_DCM0AQy8RQEMZ6sBXHgBAUwB3gFAq0UBEQgIvQ..";
+		//var original = "AQAAAUpJCA.."; //cube
 		//var original = "AgAAAUonAUZZNAc.";
+		//var original = "EgAC____OxK8AUo0qwFLq5oBO828AQgeVSI5IlUDOd1VAwGKARIxegEiMYgBATGqAQE2EYgBOCM0GDYUJZs2IzS8FgUWmjbudwI27xKJ";
 		var decoded = Base64.decodeBase64(original);
 		var model = ModelIO.loadModel(decoded);
 		var demodel = ModelIO.saveModel(model);

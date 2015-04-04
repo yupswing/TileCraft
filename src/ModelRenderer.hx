@@ -6,23 +6,23 @@ import openfl.display.BitmapData;
 class ModelRenderer {
 
 	private var buffer:BitmapData;
-	private var color:Array<UInt>;
-	private var yDepth:Array<UInt>;
-	private var zDepth:Array<UInt>;
-	private var heightMap:Array<UInt>;
-	private var select:Array<UInt>;
+	private var color:Array<Int>;
+	private var yDepth:Array<Int>;
+	private var zDepth:Array<Int>;
+	private var heightMap:Array<Int>;
+	private var select:Array<Int>;
 	private var norm:Array<Float>;
-	private var w:UInt;
-	private var h:UInt;
+	private var w:Int;
+	private var h:Int;
 
 	private var slices:Array<Slice>;
 	private var subSlice = new Slice();
-	private var sliceCount:UInt;
+	private var sliceCount:Int;
 
-	public function new(w:UInt, h:UInt){
+	public function new(w:Int, h:Int){
 		this.w = w;
 		this.h = h;
-		var h2:UInt = Std.int(h/2);
+		var h2:Int = Std.int(h/2);
     slices = [for (i in 0...64) new Slice()];
 
 		buffer = new BitmapData(w,h,true);
@@ -34,7 +34,7 @@ class ModelRenderer {
 		norm = [for (i in 0...w*h) 0];
 	}
 
-  public static function arrayUIntFill(array:Array<UInt>,value:UInt,?from:UInt,?to:UInt=0) {
+  public static function arrayIntFill(array:Array<Int>,value:Int,?from:Int,?to:Int=0) {
     if (to<=0 || to>array.length) to = array.length;
     if (from<=0 || from>array.length) from = array.length;
     for (i in from...to) {
@@ -42,7 +42,7 @@ class ModelRenderer {
     }
   }
 
-  public static function arrayFloatFill(array:Array<Float>,value:Float,?from:UInt=0,?to:UInt=0) {
+  public static function arrayFloatFill(array:Array<Float>,value:Float,?from:Int=0,?to:Int=0) {
     if (to<=0 || to>array.length) to = array.length;
     if (from<=0 || from>array.length) from = array.length;
     for (i in from...to) {
@@ -50,43 +50,43 @@ class ModelRenderer {
     }
   }
 
-	public function render(m:Model, selected:UInt, preview:Bool):BitmapData {
-		var palette:Array<UInt> = m.getPalette();
+	public function render(m:Model, selected:Int, preview:Bool):BitmapData {
+		var palette:Array<Int> = m.getPalette();
 
 
     trace('FILL');
-    arrayUIntFill(color, 0x00000000);
-    arrayUIntFill(yDepth, 0);
-    arrayUIntFill(heightMap, 0);
-    arrayUIntFill(select, -1);
+    arrayIntFill(color, 0x00000000);
+    arrayIntFill(yDepth, 0);
+    arrayIntFill(heightMap, 0);
+    arrayIntFill(select, -1);
     arrayFloatFill(norm, 1.0);
 
 		for(y in 0...h){
 			if(y < h/2){
-        arrayUIntFill(zDepth, 1, y*w, (y+1)*w);
+        arrayIntFill(zDepth, 1, y*w, (y+1)*w);
 			} else {
-        arrayUIntFill(zDepth, 0, y*w, (y+1)*w);
-        arrayUIntFill(yDepth, Std.int(y - h/2), y*w, (y+1)*w);
+        arrayIntFill(zDepth, 0, y*w, (y+1)*w);
+        arrayIntFill(yDepth, Std.int(y - h/2), y*w, (y+1)*w);
 			}
 		}
     trace('SLICE START');
 
-		var size:UInt = m.getSize();
-		var gh:UInt = Std.int(h/(size*2));
-		var gw:UInt = Std.int(w/(size));
+		var size:Int = m.getSize();
+		var gh:Int = Std.int(h/(size*2));
+		var gw:Int = Std.int(w/(size));
 
 		var sideNorm:Float = preview ? 0.7 : 1.0;
 
-		var h2:UInt = Std.int(h/2);
+		var h2:Int = Std.int(h/2);
 
-    var g:UInt = 0;
+    var g:Int = 0;
     while(g<size) {
-			var xOffset:UInt = g*gw;
-      var x:UInt = xOffset;
+			var xOffset:Int = g*gw;
+      var x:Int = xOffset;
       while(x<xOffset+gw) {
 				sliceCount = 0;
 				// first get all the shapes that occur in the slice
-        var index:UInt = 0;
+        var index:Int = 0;
         while(index < m.getShapeCount()) {
 					var shape:Shape = m.getShape(index);
 					if(shape.enabled && shape.getX1() <= g && shape.getX2() > g){
@@ -109,7 +109,7 @@ class ModelRenderer {
 
         sortSlices(slices,Slice.compare,sliceCount);
 
-        var i:UInt = 0;
+        var i:Int = 0;
         while(i<sliceCount) {
 					var s:Slice = slices[i];
 					if(s.z2 <= s.z1){
@@ -117,10 +117,10 @@ class ModelRenderer {
 						continue;
 					}
 					// draw vertical
-          var a:UInt = s.z1;
+          var a:Int = s.z1;
 					while(a < s.z2){
-						var pixel:UInt = Std.int((h2 + s.y2 - a - 1)*w + x);
-						color[pixel] = s.color; //scaleColor(s.color, 0.8f + a/(Float)(h*4));
+						var pixel:Int = Std.int((h2 + s.y2 - a - 1)*w + x);
+						color[pixel] = s.color;//scaleColor(s.color, 0.8 + a/(h*4));
 						select[pixel] = s.index;
 						yDepth[pixel] = s.y2-1;
 						zDepth[pixel] = a;
@@ -128,10 +128,10 @@ class ModelRenderer {
             a++;
 					}
 					// draw horizontal
-          var a:UInt = s.y1;
+          var a:Int = s.y1;
 					while(a < s.y2){
-						var pixel:UInt = Std.int((h2-s.z2+a)*w + x);
-						color[pixel] = s.color; // scaleColor(s.color, s.normal*0.6f + (s.z2/(Float)h2)*0.4f);
+						var pixel:Int = Std.int((h2-s.z2+a)*w + x);
+						color[pixel] = s.color;//scaleColor(s.color, s.normal*0.6 + (s.z2/h2)*0.4);
 						select[pixel] = s.index;
 						yDepth[pixel] = a;
 						zDepth[pixel] = s.z2;
@@ -184,8 +184,8 @@ class ModelRenderer {
 	}
 
 	private function sub() {
-		var count:UInt = sliceCount;
-    var i:UInt = 0;
+		var count:Int = sliceCount;
+    var i:Int = 0;
 		while(i < count){
 			if(slices[i].overlaps(subSlice)){
 				sliceCount = slices[i].sub(subSlice, slices, sliceCount);
@@ -198,7 +198,7 @@ class ModelRenderer {
     for (i in 0...count) {
       var smallsub = i;
       for (j in i+1...count) {
-        if (compare(slices[j],slices[smallsub])<=0) {
+        if (compare(slices[j],slices[smallsub])<0) {
           smallsub = j;
         }
       }
@@ -208,28 +208,28 @@ class ModelRenderer {
     }
   }
 
-	public function getSelect(x:UInt, y:UInt):UInt{
+	public function getSelect(x:Int, y:Int):Int{
 		return select[y*w + x];
 	}
 
-	private static function max(a:UInt, b:UInt):UInt {
+	private static function max(a:Int, b:Int):Int {
 		return a > b ? a : b;
 	}
 
-	private static function min(a:UInt, b:UInt):UInt{
+	private static function min(a:Int, b:Int):Int{
 		return a < b ? a : b;
 	}
 
-	private static function abs(x:UInt):UInt {
+	private static function abs(x:Int):Int {
 		return (x + (x >> 31)) ^ (x >> 31);
 	}
 
 	private function previewLight(){
-    var y:UInt = 0;
+    var y:Int = 0;
     while(y < h){
-      var x:UInt = 0;
+      var x:Int = 0;
       while(x < w){
-				var offset:UInt = y*w + x;
+				var offset:Int = y*w + x;
 				color[offset] = scaleColor(color[offset], norm[offset]);
         x++;
 			}
@@ -237,23 +237,28 @@ class ModelRenderer {
 		}
 	}
 
+	private static inline var LIGHT_X_RADIUS:Int = 6;
+	private static inline var LIGHT_Y_RADIUS:Int = 10;
+
 	private function light(){
-		var h2:UInt = Std.int(h/2);
-    var y:UInt = 0;
+		var h2:Int = Std.int(h/2);
+    var y:Int = 0;
 		while(y < h){
-      var x:UInt = 0;
+      var x:Int = 0;
       while(x < w){
-				var offset:UInt = y*w + x;
-				var yp:UInt = yDepth[offset];
-				var zp:UInt = zDepth[offset];
-				var shadows:UInt = 0;
-				var x1:UInt = max(0,x-7);
-				var x2:UInt = min(w-1,x+7);
-				var y1:UInt = max(0,yp-13);
-				var y2:UInt = min(h2-1,yp+5);
-        var i:UInt = x1;
+				var offset:Int = y*w + x;
+				var yp:Int = yDepth[offset];
+				var zp:Int = zDepth[offset];
+				var shadows:Int = 0;
+
+				var x1:Int = max(0,x-LIGHT_X_RADIUS); // original 7
+				var x2:Int = min(w-1,x+LIGHT_X_RADIUS); // original 7
+				var y1:Int = max(0,yp-LIGHT_Y_RADIUS); // original 13
+				var y2:Int = min(h2-1,Std.int(yp+LIGHT_Y_RADIUS/2)); // original 5
+
+        var i:Int = x1;
         while(i < x2){
-          var j:UInt = y1;
+          var j:Int = y1;
           while(j < y2){
 						if((heightMap[j*w +i ]&0xFF) > zp + abs(x-i)*2){
 							shadows++;
@@ -264,9 +269,11 @@ class ModelRenderer {
 				}
 				var shadow:Float = SHADOW_TABLE[shadows];
 				if(zp == 0 && shadows > 0){
+					// ground with no surface
 					color[offset] = Std.int((1.0 - shadow)*255)<<24;
 				} else {
-					color[offset] = scaleColor(color[offset], shadow*norm[offset] + zp*0.2/h2);
+					// ground with surface
+					color[offset] = scaleColor(color[offset], shadow*norm[offset]+ zp*0.2/h2);
 				}
         x++;
 			}
@@ -274,16 +281,16 @@ class ModelRenderer {
 		}
 	}
 
-  private static inline var SHADOW_TABLE_LENGTH = 256;
+  private static inline var SHADOW_TABLE_LENGTH = 255;
 	private static var SHADOW_TABLE:Array<Float> = [for(i in 0...SHADOW_TABLE_LENGTH) 1.0-Math.pow(i/SHADOW_TABLE_LENGTH, 0.5)*0.5];
 
 
-	public function scaleColor(rgb:UInt, v:Float):UInt{
+	public function scaleColor(rgb:Int, v:Float):Int{
 		v = Math.min(v,1.0);
-		var a:UInt = rgb & 0xFF000000;
-		var r:UInt = Std.int(((rgb>>16)&0xFF)*v);
-		var g:UInt = Std.int(((rgb>>8)&0xFF)*v);
-		var b:UInt = Std.int((rgb&0xFF)*v);
+		var a:Int = rgb & 0xFF000000;
+		var r:Int = Std.int(((rgb>>16)&0xFF)*v);
+		var g:Int = Std.int(((rgb>>8)&0xFF)*v);
+		var b:Int = Std.int((rgb&0xFF)*v);
 		return a | (r<<16) | (g<<8) | b;
 	}
 

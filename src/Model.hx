@@ -6,22 +6,22 @@ class Model {
 	public static inline var MODEL_SIZE = 16;
 
 	private var shapes:Array<Shape>;
-	private var colors:Array<UInt>;
+	private var colors:Array<Int>;
 
-	public function new(colors:Array<UInt>){
+	public function new(colors:Array<Int>){
 		this.colors = colors.copy();
 		this.shapes = new Array<Shape>();
 	}
 
-	public function indexOf(shape:Shape):UInt{
+	public function indexOf(shape:Shape):Int{
 		return shapes.indexOf(shape);
 	}
 
-	public function getSize():UInt {
+	public function getSize():Int {
 		return MODEL_SIZE;
 	}
 
-	public function getShapeCount():UInt{
+	public function getShapeCount():Int{
 		return shapes.length;
 	}
 
@@ -31,7 +31,7 @@ class Model {
 		}
 	}
 
-	public function addShapeAtIndex(index:UInt, shape:Shape){ //toedit
+	public function addShapeAtIndex(index:Int, shape:Shape){ //toedit
 		shapes.insert(index, shape);
 	}
 
@@ -39,11 +39,11 @@ class Model {
 	// 	return shapes[shapes.indexOf(shape)];
 	// }
 
-	public function getShape(index:UInt):Shape {
+	public function getShape(index:Int):Shape {
 		return shapes[index];
 	}
 
-	public function removeShape(index:UInt):Shape {
+	public function removeShape(index:Int):Shape {
     var shape = shapes[index];
 		shapes.remove(shape);
     return shape;
@@ -53,15 +53,15 @@ class Model {
 		return shapes[shapes.length-1];
 	}
 
-	public function getColor(index:UInt):UInt {
+	public function getColor(index:Int):Int {
 		return colors[index];
 	}
 
-	public function getPalette():Array<UInt> {
+	public function getPalette():Array<Int> {
 		return colors;
 	}
 
-	public function setColor(index:UInt, rgb:UInt) {
+	public function setColor(index:Int, rgb:Int) {
 		colors[index] = rgb;
 	}
 

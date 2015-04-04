@@ -20,7 +20,7 @@ It looks almost the same as the original one
 
 
 #### This is the test Model
-http://www.angryoctopus.co.nz/lgmodler/index.php?model=FAQA____Ezw5DkBLCjwAWldvAGlIj1CrKhJwRZrNMEtIzmJFGhKCq5rNAiNnvALNRc0CzXgSAiNFEgJ4Zg9MacxpDng7eAoPDwBDEt4BQ97eAQMt3gE.
+http://www.angryoctopus.co.nz/lgmodler/index.php?model=FQQA____Ezw5DkBLCjwAWldvAGlIj1CrKhJwRZrNMEtIzmJFGhKCq5rNAiNnvALNRc0CzXgSAiNFEgJ4Zg9MacxpDng7eEMS3gFD3t4BAy3eAUBF3gFDq-8B
 (NEKO is very slow on light rendering, run native instead)
 
 ## Utilities
