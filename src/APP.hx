@@ -21,7 +21,7 @@ class APP
 	public static inline var APP_PACKAGE = "com.akifox.tilecraft" ;
 	public static inline var APP_BUILD = CompileTime.readFile("Export/.build");
 	public static inline var APP_BUILD_DATE = CompileTime.buildDateString();
-	public static inline var APP_VERSION = "0.1.0"; //TODEPLOY
+	public static inline var APP_VERSION = "0.2.0"; //TODEPLOY
 	public static inline var APP_PLATFORM =
 	#if debug "dev"
   #elseif flash "swf"
