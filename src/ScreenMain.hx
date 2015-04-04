@@ -22,6 +22,9 @@ import com.akifox.transform.Transformation;
 import com.akifox.plik.atlas.TextureAtlas;
 import com.akifox.plik.atlas.*;
 
+import openfl.display.Bitmap;
+import openfl.display.BitmapData;
+
 import Shape;
 
 
@@ -42,12 +45,15 @@ class ScreenMain extends Screen
 
 
 		// CLASS TEST
-		// String -> Array<Int> -> Model (Shapes) -> Array<Int> -> String
-		var original = "EgAAFjxKKyZGRp4mm0aeRFaaeUSamnlEVokBRJqJAUNmmnhDqpp4FzxZvCxVV90sqmfdRGaaREYBRVVG70VVBh5FVRxVRO8cqkTv";
+		// String -> Array<UInt> -> Model (Shapes) -> Array<UInt> -> String
+		var original = "EgQCAJn_Zv8zETxKKyZGRp4mm0aeRFaaeUSamnlEVokBRJqJAUNmmnhDqpp4FzxZvCxVV90sqmfdRGaaREYBRVVG70VVCh5FVRxVRO8cqkTv";
+		var original = "FAQA____Ezw5DkBLCjwAWldvAGlIj1CrKhJwRZrNMEtIzmJFGhKCq5rNAiNnvALNRc0CzXgSAiNFEgJ4Zg9MacxpDng7eAoPDwBDEt4BQ97eAQMt3gE.";
+		//var original = "BxAA_wD_DCM0AQy8RQEMZ6sBXHgBAUwB3gFAq0UBEQgIvQ..";
+		//var original = "AgAAAUonAUZZNAc.";
 		var decoded = Base64.decodeBase64(original);
 		var model = ModelIO.loadModel(decoded);
 		var demodel = ModelIO.saveModel(model);
-		var reencoded = Base64.encodeBase64(demodel);
+		var reencoded = Base64.encodeBase64(demodel,true);
 
 		trace('original:',original);
 		trace('decoded:',decoded);
@@ -59,16 +65,25 @@ class ScreenMain extends Screen
 		if (original!=reencoded) passed = false;
 		// END TEST
 
-		var text = new Text(APP.APP_NAME,PLIK.adjustInt(250),APP.COLOR_WHITE);
+		var ren = new ModelRenderer(Std.int(352),Std.int(480));
+		var bpd = ren.render(model,-1,true);
+		var bp = new Bitmap(bpd);
+		bp.smoothing = true;
+		//bp.scaleX = bp.scaleY = 1/4;
+		bp.x = rwidth/2-bp.width/2;
+		bp.y = rheight/2-bp.height/2;
+		addChild(bp);
+
+		var text = new Text(APP.APP_NAME,PLIK.adjustInt(100),APP.COLOR_BLACK);
 		text.t.setAnchoredPivot(Transformation.ANCHOR_MIDDLE_CENTER);
 		text.t.x = rwidth/2;
-		text.t.y = rheight/2-PLIK.adjust(100);
+		text.t.y = PLIK.adjust(150);
 		addChild(text);
 
-		text = new Text("TEST "+(passed?"PASSED":"NOT PASSED"),PLIK.adjustInt(100),APP.COLOR_WHITE);
+		text = new Text("TEST "+(passed?"PASSED":"NOT PASSED"),PLIK.adjustInt(50),APP.COLOR_BLACK);
 		text.t.setAnchoredPivot(Transformation.ANCHOR_MIDDLE_CENTER);
 		text.t.x = rwidth/2;
-		text.t.y = rheight/2+PLIK.adjust(100);
+		text.t.y = PLIK.adjust(270);
 		addChild(text);
 
 		super.initialize(); // init_super at the end

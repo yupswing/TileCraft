@@ -27,11 +27,11 @@ class Main {
 		Lib.current.stage.removeEventListener(Event.ENTER_FRAME, stageReady);
 
 		// ------------------------------
-		// "PRINT" LOADING SPLASH
+		// "PRUInt" LOADING SPLASH
 
     Lib.current.stage.color = APP.COLOR_WHITE;
 		_loadingBitmap = new Bitmap(openfl.Assets.getBitmapData('assets/graphics/generic/loading.png',false));
-		_loadingBitmap.scaleX = _loadingBitmap.scaleY = Lib.current.stage.stageWidth/_loadingBitmap.width/2;
+		_loadingBitmap.scaleX = _loadingBitmap.scaleY = Lib.current.stage.stageWidth/_loadingBitmap.width;
 		_loadingBitmap.smoothing = true;
 		_loadingBitmap.x = Lib.current.stage.stageWidth/2-_loadingBitmap.width/2;
 		_loadingBitmap.y = Lib.current.stage.stageHeight/2-_loadingBitmap.height/2;

@@ -8,9 +8,9 @@ Original idea http://www.lostgarden.com/2013/10/prototyping-challenge-3d-modelin
 
 ## Todos
 
-[ ] Conversion of Java code to Haxe code <-- in progress
-[ ] Interface improvements
-[ ] 90deg rotations (xyz) changing positions and primitive type
+ - [ ] Conversion of Java code to Haxe code <-- in progress
+ - [ ] Interface improvements
+ - [ ] 90deg rotations (xyz) changing positions and primitive type
 
 ## Utilities
 
@@ -18,7 +18,11 @@ Original idea http://www.lostgarden.com/2013/10/prototyping-challenge-3d-modelin
 
 ````
 (public|private) (static )?([a-z]+)([^{;]+\([^{]+)
-$1 $2 function$4:$3
+$1 $2function$4:$3
+````
+````
+(int|byte|float|boolean)\[\] ([a-z0-9]+)
+$2:Array<$1>
 ````
 ````
 (int|byte|float|boolean) ([a-z0-9]+)

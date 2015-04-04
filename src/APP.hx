@@ -33,7 +33,7 @@ class APP
   #elseif web "web"
   #else "---"
   #end;
-	public static inline var APP_BGCOLOR = 0x242424 ;
+	public static inline var APP_BGCOLOR = 0xEEEEEE ;
 
 
 	///////////////////////////////////////////////////////////////////////////
@@ -53,18 +53,18 @@ class APP
 	public static inline var FONT_SQUARE:String = "assets/fonts/Square.ttf";
   public static inline var FONT_04B_03:String = "assets/fonts/Square.ttf";
 
-	public static inline var COLOR_WHITE:Int = 	0xFFFFFF;
-	public static inline var COLOR_LIGHT:Int = 	0xDCDCDC;
-	public static inline var COLOR_BLACK:Int = 	0x000000;
-	public static inline var COLOR_DARK:Int = 	0x242424;
-	public static inline var COLOR_ORANGE:Int = 0xffb500;
-	public static inline var COLOR_RED:Int = 	0xcf2d00;
-	public static inline var COLOR_GREEN:Int = 	0x98ca00;
+	public static inline var COLOR_WHITE:UInt = 	0xFFFFFF;
+	public static inline var COLOR_LIGHT:UInt = 	0xDCDCDC;
+	public static inline var COLOR_BLACK:UInt = 	0x000000;
+	public static inline var COLOR_DARK:UInt = 	0x242424;
+	public static inline var COLOR_ORANGE:UInt = 0xffb500;
+	public static inline var COLOR_RED:UInt = 	0xcf2d00;
+	public static inline var COLOR_GREEN:UInt = 	0x98ca00;
 
 	///////////////////////////////////////////////////////////////////////////
 	// atlasIcon REGIONS
 
-	public static inline var ICON_POINTER = 'pointer.png';
+	public static inline var ICON_POUIntER = 'poUInter.png';
 	public static inline var ICON_DELETE = 'delete.png';
 	public static inline var ICON_EYE_OPEN = 'eye_open.png';
 	public static inline var ICON_EYE_CLOSED = 'eye_closed.png';

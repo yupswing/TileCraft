@@ -2,19 +2,19 @@ package;
 
 class Slice {
 
-		public var y1:Int;
-    public var y2:Int;
-    public var z1:Int;
-    public var z2:Int;
-    public var color:Int;
-    public var index:Int;
+		public var y1:UInt;
+    public var y2:UInt;
+    public var z1:UInt;
+    public var z2:UInt;
+    public var color:UInt;
+    public var index:UInt;
     public var normal:Float;
 
-    public function new(y1:Int, z1:Int, y2:Int, z2:Int, color:Int, index:Int, normal:Float) {
-      this.set(y1, z1, y2, z2, color, index, normal);
+    public function new() {
+			//nothing
     }
 
-		public function set(y1:Int, z1:Int, y2:Int, z2:Int, color:Int, index:Int, normal:Float):Void{
+		public function set(y1:UInt, z1:UInt, y2:UInt, z2:UInt, color:UInt, index:UInt, normal:Float):Void{
 			this.y1 = y1;
 			this.z1 = z1;
 			this.y2 = y2;
@@ -24,21 +24,21 @@ class Slice {
 			this.normal = normal;
 		}
 
-		// public function new(l:Slice){
-		// 	this.y1 = l.y1;
-		// 	this.z1 = l.z1;
-		// 	this.y2 = l.y2;
-		// 	this.z2 = l.z2;
-		// 	this.color = l.color;
-		// 	this.index = l.index;
-		// 	this.normal = l.normal;
-		// }
+		public function setFromSlice(l:Slice){
+			this.y1 = l.y1;
+			this.z1 = l.z1;
+			this.y2 = l.y2;
+			this.z2 = l.z2;
+			this.color = l.color;
+			this.index = l.index;
+			this.normal = l.normal;
+		}
 
 		public function overlaps(s:Slice):Bool{
 			return s.y1 < y2 && s.y2 > y1 && s.z1 < z2 && s.z2 > z1;
 		}
 
-		public function sub(s:Slice, slices:Array<Slice>, offset:Int):Int{
+		public function sub(s:Slice, slices:Array<Slice>, offset:UInt):UInt{
 			// process z2 plane
 			if(s.z2 < z2){
 				slices[offset++].set(y1,s.z2,y2,z2,color,index,normal);
@@ -48,8 +48,8 @@ class Slice {
 				slices[offset++].set(y1,z1,y2,s.z1,color,index,s.normal);
 			}
 			// process middle
-			var top:Int = Std.int(Math.min(s.z2, z2)); //toround
-			var bot:Int = Std.int(Math.max(s.z1, z1)); //toround
+			var top:UInt = Std.int(Math.min(s.z2, z2)); //toround
+			var bot:UInt = Std.int(Math.max(s.z1, z1)); //toround
 			if(s.y1 > y1 && s.y2 < y2){
 				slices[offset++].set(y1,bot,s.y1,top,color,index,normal);
 				slices[offset++].set(s.y2,bot,y2,top,color,index,normal);
@@ -65,12 +65,12 @@ class Slice {
 			return offset;
 		}
 
-		public function compare(s:Slice):Int {
-			if(z2 <= s.z1){
+		public static function compare(s1:Slice,s2:Slice):Int {
+			if(s1.z2 <= s2.z1){
 				return -1;
-			} else if (s.z2 <= z1){
+			} else if (s2.z2 <= s1.z1){
 				return 1;
-			} else if (s.y1 >= y2){
+			} else if (s2.y1 >= s1.y2){
 				return -1;
 			} else {
 				return 1;
