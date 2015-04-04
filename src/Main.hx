@@ -27,7 +27,7 @@ class Main {
 		Lib.current.stage.removeEventListener(Event.ENTER_FRAME, stageReady);
 
 		// ------------------------------
-		// "PRUInt" LOADING SPLASH
+		// "PRINT" LOADING SPLASH
 
     Lib.current.stage.color = APP.COLOR_WHITE;
 		_loadingBitmap = new Bitmap(openfl.Assets.getBitmapData('assets/graphics/generic/loading.png',false));

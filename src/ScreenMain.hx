@@ -66,7 +66,7 @@ class ScreenMain extends Screen
 		// END TEST
 
 		var ren = new ModelRenderer(Std.int(352),Std.int(480));
-		var bpd = ren.render(model,-1,true);
+		var bpd = ren.render(model,-1,false);
 		var bp = new Bitmap(bpd);
 		bp.smoothing = true;
 		//bp.scaleX = bp.scaleY = 1/4;

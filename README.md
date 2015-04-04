@@ -12,6 +12,17 @@ Original idea http://www.lostgarden.com/2013/10/prototyping-challenge-3d-modelin
  - [ ] Interface improvements
  - [ ] 90deg rotations (xyz) changing positions and primitive type
 
+## Progress
+
+Renderer translated (and minor fixes)
+
+It looks almost the same as the original one
+
+
+#### This is the test Model
+http://www.angryoctopus.co.nz/lgmodler/index.php?model=FAQA____Ezw5DkBLCjwAWldvAGlIj1CrKhJwRZrNMEtIzmJFGhKCq5rNAiNnvALNRc0CzXgSAiNFEgJ4Zg9MacxpDng7eAoPDwBDEt4BQ97eAQMt3gE.
+(NEKO is very slow on light rendering, run native instead)
+
 ## Utilities
 
 ### Conversion regexp from java to haxe
