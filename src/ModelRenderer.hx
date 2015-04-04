@@ -195,10 +195,10 @@ class ModelRenderer {
 	}
 
   private static function sortSlices(slices:Array<Slice>,compare:Slice->Slice->Int,count:Int) {
-    for (i in 1...count) {
+    for (i in 0...count) {
       var smallsub = i;
       for (j in i+1...count) {
-        if (compare(slices[j],slices[smallsub])<0) {
+        if (compare(slices[j],slices[smallsub])<=0) {
           smallsub = j;
         }
       }

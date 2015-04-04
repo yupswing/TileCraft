@@ -35,6 +35,8 @@ class ScreenMain extends Screen
 		super();
 		cycle = false;
 		title = "Main";
+		rwidth = 1024;
+		rheight = 576;
 	}
 
 	public override function initialize():Void {
@@ -46,8 +48,9 @@ class ScreenMain extends Screen
 
 		// CLASS TEST
 		// String -> Array<UInt> -> Model (Shapes) -> Array<UInt> -> String
-		var original = "EgQCAJn_Zv8zETxKKyZGRp4mm0aeRFaaeUSamnlEVokBRJqJAUNmmnhDqpp4FzxZvCxVV90sqmfdRGaaREYBRVVG70VVCh5FVRxVRO8cqkTv";
+		//var original = "EgQCAJn_Zv8zETxKKyZGRp4mm0aeRFaaeUSamnlEVokBRJqJAUNmmnhDqpp4FzxZvCxVV90sqmfdRGaaREYBRVVG70VVCh5FVRxVRO8cqkTv";
 		var original = "FAQA____Ezw5DkBLCjwAWldvAGlIj1CrKhJwRZrNMEtIzmJFGhKCq5rNAiNnvALNRc0CzXgSAiNFEgJ4Zg9MacxpDng7eAoPDwBDEt4BQ97eAQMt3gE.";
+		//var original = "DAAACGneAQlLXCgIS1wBW0dcv19Her9ri1y_b4t6v2mLzJ1ZR7ydCEusmgBpXiVAaaxH";
 		//var original = "BxAA_wD_DCM0AQy8RQEMZ6sBXHgBAUwB3gFAq0UBEQgIvQ..";
 		//var original = "AgAAAUonAUZZNAc.";
 		var decoded = Base64.decodeBase64(original);
@@ -66,11 +69,32 @@ class ScreenMain extends Screen
 		// END TEST
 
 		var ren = new ModelRenderer(Std.int(352),Std.int(480));
+		var bpd = ren.render(model,-1,true);
+		var bp = new Bitmap(bpd);
+		bp.smoothing = true;
+		bp.x = rwidth/2-bp.width/2+PLIK.adjust(700);
+		bp.y = rheight/2-bp.height/2;
+		addChild(bp);
+
+		var ren = new ModelRenderer(Std.int(352),Std.int(480));
 		var bpd = ren.render(model,-1,false);
 		var bp = new Bitmap(bpd);
 		bp.smoothing = true;
-		//bp.scaleX = bp.scaleY = 1/4;
-		bp.x = rwidth/2-bp.width/2;
+		bp.x = rwidth/2-bp.width/2-PLIK.adjust(50);
+		bp.y = rheight/2-bp.height/2;
+		addChild(bp);
+
+		var bp = new Bitmap(bpd);
+		bp.smoothing = true;
+		bp.scaleX = bp.scaleY = 0.5;
+		bp.x = rwidth/2-bp.width/2-PLIK.adjust(610);
+		bp.y = rheight/2-bp.height/2;
+		addChild(bp);
+
+		var bp = new Bitmap(bpd);
+		bp.smoothing = true;
+		bp.scaleX = bp.scaleY = 0.25;
+		bp.x = rwidth/2-bp.width/2-PLIK.adjust(900);
 		bp.y = rheight/2-bp.height/2;
 		addChild(bp);
 
@@ -111,6 +135,10 @@ class ScreenMain extends Screen
 	}
 
 	private override function update(delta:Float):Void {
+
+	}
+
+	public override function resize() {
 
 	}
 
