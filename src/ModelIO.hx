@@ -64,7 +64,6 @@ class ModelIO {
 			s.setBoundsX(x>>4, (x&0xF) + 1);
 			s.setBoundsY(y>>4, (y&0xF) + 1);
 			s.setBoundsZ(z>>4, (z&0xF) + 1);
-			trace(s);
 			m.addShape(s);
 		}
 		return m;

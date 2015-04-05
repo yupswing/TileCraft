@@ -50,7 +50,6 @@ class Base64 {
 			var size:Int = Std.int(Math.min(last+1 - s, 4));
 			var a:Int = decodeChar(src.charCodeAt(s));
 			var b:Int = decodeChar(src.charCodeAt(s+1));
-      trace(size);
 			if(size == 4){
 				decodeBlockA(a, b, decodeChar(src.charCodeAt(s+2)), decodeChar(src.charCodeAt(s+3)), dest, d);
 			} else if (size == 3){
@@ -77,7 +76,6 @@ class Base64 {
 		} else if (c == '_'.charCodeAt(0)){
 			return 63;
 		} else {
-      trace(c);
 			return -1;
 		}
 	}

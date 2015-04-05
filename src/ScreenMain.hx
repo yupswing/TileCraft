@@ -93,8 +93,8 @@ class ScreenMain extends Screen
 		// END TEST
 
 		var ren = new ModelRenderer(Std.int(352),Std.int(480));
-		var bpd = ren.render(model,-1,true);
-		var bp = new Bitmap(bpd);
+		var bpd_preview = ren.render(model,-1,true);
+		var bp = new Bitmap(bpd_preview);
 		bp.smoothing = true;
 		bp.x = rwidth/2-bp.width/2+PLIK.adjust(650);
 		bp.y = rheight/2-bp.height/2;
@@ -108,9 +108,9 @@ class ScreenMain extends Screen
 		bp.y = rheight/2-bp.height/2;
 		addChild(bp);
 
-		var bp = new Bitmap(bpd);
-		bp.smoothing = true;
-		bp.scaleX = bp.scaleY = 0.25;
+		var bp = new Bitmap(PostFX.scale(PostFX.fxaa(bpd,8),0.25));
+		//var bp = new Bitmap(PostProcessing.scale(bpd,0.25));
+		//var bp = new Bitmap(PostProcessing.fxaa(bpd,8));
 		bp.x = rwidth/2-bp.width/2-PLIK.adjust(550);
 		bp.y = rheight/2-bp.height/2;
 		addChild(bp);
