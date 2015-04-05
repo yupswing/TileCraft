@@ -64,42 +64,46 @@ class APP
 	///////////////////////////////////////////////////////////////////////////
 	// atlasIcon REGIONS
 
-	public static inline var ICON_POIntER = 'poInter.png';
+	public static inline var ICON_POINTER = 'pointer.png';
 	public static inline var ICON_DELETE = 'delete.png';
 	public static inline var ICON_EYE_OPEN = 'eye_open.png';
 	public static inline var ICON_EYE_CLOSED = 'eye_closed.png';
 	public static inline var ICON_LOCK_OPEN = 'lock_open.png';
 	public static inline var ICON_LOCK_CLOSED = 'lock_closed.png';
-	public static inline var ICON_ROUND1 = 'round_01.png';
-	public static inline var ICON_ROUND2 = 'round_02.png';
-	public static inline var ICON_ROUND3 = 'round_03.png';
-	public static inline var ICON_ROUND4 = 'round_04.png';
-	public static inline var ICON_SHAPE0 = 'shape0.png';
-	public static inline var ICON_SHAPE0_OUTLINE = 'shape0_outline.png';
-	public static inline var ICON_SHAPE1 = 'shape1.png';
-	public static inline var ICON_SHAPE1_OUTLINE = 'shape1_outline.png';
-	public static inline var ICON_SHAPE2 = 'shape2.png';
-	public static inline var ICON_SHAPE2_OUTLINE = 'shape2_outline.png';
-	public static inline var ICON_SHAPE3 = 'shape3.png';
-	public static inline var ICON_SHAPE3_OUTLINE = 'shape3_outline.png';
-	public static inline var ICON_SHAPE4 = 'shape4.png';
-	public static inline var ICON_SHAPE4_OUTLINE = 'shape4_outline.png';
-	public static inline var ICON_SHAPE5 = 'shape5.png';
-	public static inline var ICON_SHAPE5_OUTLINE = 'shape5_outline.png';
-	public static inline var ICON_SHAPE6 = 'shape6.png';
-	public static inline var ICON_SHAPE6_OUTLINE = 'shape6_outline.png';
-	public static inline var ICON_SHAPE7 = 'shape7.png';
-	public static inline var ICON_SHAPE7_OUTLINE = 'shape7_outline.png';
-	public static inline var ICON_SHAPE8 = 'shape8.png';
-	public static inline var ICON_SHAPE8_OUTLINE = 'shape8_outline.png';
-	public static inline var ICON_SHAPE9 = 'shape9.png';
-	public static inline var ICON_SHAPE9_OUTLINE = 'shape9_outline.png';
-	public static inline var ICON_SHAPE10 = 'shape10.png';
-	public static inline var ICON_SHAPE10_OUTLINE = 'shape10_outline.png';
-	public static inline var ICON_SHAPE11 = 'shape11.png';
-	public static inline var ICON_SHAPE11_OUTLINE = 'shape11_outline.png';
-	public static inline var ICON_SHAPE12 = 'shape12.png';
-	public static inline var ICON_SHAPE12_OUTLINE = 'shape12_outline.png';
+
+	public static inline var ICON_ROUND0 = 'round_0.png';
+	public static inline var ICON_ROUND1 = 'round_1.png';
+	public static inline var ICON_ROUND2 = 'round_2.png';
+	public static inline var ICON_ROUND3 = 'round_3.png';
+
+	public static inline var ICON_SH_CUBE = 'sh_cube.png';
+	public static inline var ICON_SH_ROUND_UP = 'sh_round_up.png';
+	public static inline var ICON_SH_ROUND_SIDE = 'sh_round_side.png';
+	public static inline var ICON_SH_CYLINDER_UP = 'sh_cylinder_up.png';
+	public static inline var ICON_SH_CYLINDER_SIDE = 'sh_cylinder_side.png';
+	public static inline var ICON_SH_RAMP_UP = 'sh_ramp_up.png';
+	public static inline var ICON_SH_RAMP_DOWN = 'sh_ramp_down.png';
+	public static inline var ICON_SH_ARCH_UP = 'sh_arch_up.png';
+	public static inline var ICON_SH_ARCH_DOWN = 'sh_arch_down.png';
+	public static inline var ICON_SH_CORNER_SE = 'sh_corner_se.png';
+	public static inline var ICON_SH_CORNER_SW = 'sh_corner_sw.png';
+	public static inline var ICON_SH_CORNER_NE = 'sh_corner_ne.png';
+	public static inline var ICON_SH_CORNER_NW = 'sh_corner_nw.png';
+
+	public static inline var ICON_SHT_CUBE = 'sht_cube.png';
+	public static inline var ICON_SHT_ROUND_UP = 'sht_round_up.png';
+	public static inline var ICON_SHT_ROUND_SIDE = 'sht_round_side.png';
+	public static inline var ICON_SHT_CYLINDER_UP = 'sht_cylinder_up.png';
+	public static inline var ICON_SHT_CYLINDER_SIDE = 'sht_cylinder_side.png';
+	public static inline var ICON_SHT_RAMP_UP = 'sht_ramp_up.png';
+	public static inline var ICON_SHT_RAMP_DOWN = 'sht_ramp_down.png';
+	public static inline var ICON_SHT_ARCH_UP = 'sht_arch_up.png';
+	public static inline var ICON_SHT_ARCH_DOWN = 'sht_arch_down.png';
+	public static inline var ICON_SHT_CORNER_SE = 'sht_corner_se.png';
+	public static inline var ICON_SHT_CORNER_SW = 'sht_corner_sw.png';
+	public static inline var ICON_SHT_CORNER_NE = 'sht_corner_ne.png';
+	public static inline var ICON_SHT_CORNER_NW = 'sht_corner_nw.png';
+
 
 	///////////////////////////////////////////////////////////////////////////
 	// MEMORY MANAGEMENT

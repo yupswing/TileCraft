@@ -2,8 +2,8 @@ package;
 
 enum Kind {
 	CUBE;
-	ROUND_CUBE_UP;
-	ROUND_CUBE_SIDE;
+	ROUND_UP;
+	ROUND_SIDE;
 	CYLINDER_UP;
 	CYLINDER_SIDE;
 	RAMP_UP;
@@ -107,7 +107,7 @@ class Shape {
 			dest.z1 = Std.int(z - (z2 - z1)*gh*dt*0.5);
 			dest.z2 = Std.int(z + (z2 - z1)*gh*dt*0.5);
 			dest.normal = 0.5 + 0.5*dt;
-		case ROUND_CUBE_UP:
+		case ROUND_UP:
 			var corner:Float = Math.min(x2 - x1, y2 - y1)/4.0;
 			var r:Float = corner/(x2 - x1);
 			if(dt < r){
@@ -121,7 +121,7 @@ class Shape {
 				dest.y1 += Std.int(corner*gh*dt);
 				dest.y2 -= Std.int(corner*gh*dt);
 			}
-		case ROUND_CUBE_SIDE:
+		case ROUND_SIDE:
 			var corner:Float = Math.min(z2 - z1, x2 - x1)/4.0;
 			var r:Float = corner/(x2 - x1);
 			if(dt < r){

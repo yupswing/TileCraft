@@ -74,14 +74,14 @@ class Main {
 
 		// ------------------------------
     // DEBUG
-   	//#if debug
+   	#if debug
     var performance = new com.akifox.plik.debug.Performance(
     						PLIK.getFont(APP.FONT_SQUARE),
     						openfl.Assets.getBitmapData('assets/debug/akifox_logo_small.png',false),
     						true,
     						true);
-    Lib.current.stage.addChild(performance);
-    //#end
+    _container.addChild(performance);
+    #end
 
 		// ------------------------------
     // REMOVE AND DISPOSE LOADING SPLASH
