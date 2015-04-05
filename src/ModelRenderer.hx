@@ -54,7 +54,8 @@ class ModelRenderer {
 		var palette:Array<Int> = m.getPalette();
 
 
-    trace('FILL');
+		trace('>>> START RENDERING'); var startRender = haxe.Timer.stamp();
+    trace('> BASE FILL'); var start = haxe.Timer.stamp();
     arrayIntFill(color, 0x00000000);
     arrayIntFill(yDepth, 0);
     arrayIntFill(heightMap, 0);
@@ -69,7 +70,8 @@ class ModelRenderer {
         arrayIntFill(yDepth, Std.int(y - h/2), y*w, (y+1)*w);
 			}
 		}
-    trace('SLICE START');
+    trace('< BASE FILL END ' + Std.int((haxe.Timer.stamp()-start)*100)/100);
+    trace('> SLICE ELAB START'); var start = haxe.Timer.stamp();
 
 		var size:Int = m.getSize();
 		var gh:Int = Std.int(h/(size*2));
@@ -147,14 +149,14 @@ class ModelRenderer {
 		}
 
 
-    trace('LIGHT START');
-    var start = haxe.Timer.stamp();
+		trace('< SLICE ELAB END ' + Std.int((haxe.Timer.stamp()-start)*100)/100);
+    trace('> APPLY LIGHT START'); var start = haxe.Timer.stamp();
 		if(preview){
 			previewLight();
 		} else {
 			light();
 		}
-    trace('LIGHT END ' + (haxe.Timer.stamp()-start));
+    trace('< APPLY LIGHT END ' + Std.int((haxe.Timer.stamp()-start)*100)/100);
 
     // trace('BA START');
     // var ba = new openfl.utils.ByteArray();
@@ -169,7 +171,7 @@ class ModelRenderer {
     // ba = null;
     // trace('BP END');
 
-    trace('BP START');
+		trace('> DRAW BITMAP START'); var start = haxe.Timer.stamp();
     buffer.lock();
     //write to buffer
     for(y in 0...h){
@@ -178,7 +180,8 @@ class ModelRenderer {
       }
     }
     buffer.unlock();
-    trace('BP END');
+    trace('< DRAW BITMAP END ' + Std.int((haxe.Timer.stamp()-start)*100)/100);
+    trace('<<< TOTAL RENDERING TIME ' + Std.int((haxe.Timer.stamp()-startRender)*100)/100);
 
     return buffer;
 	}

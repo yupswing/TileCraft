@@ -42,11 +42,6 @@ class ScreenMain extends Screen
 		rheight = 576;
 	}
 
-	public function getColor(index:Int) {
-		if (_model==null) return 0;
-		return _model.getColor(index);
-	}
-
 	public override function initialize():Void {
     trace(rwidth);
     trace(rheight);
@@ -56,32 +51,45 @@ class ScreenMain extends Screen
 
 		// CLASS TEST
 		// String -> Array<Int> -> Model (Shapes) -> Array<Int> -> String
+
+		// EXAMPLE MODELS
+
 		// stupid guy
 		//var original = "EgQCAJn_Zv8zETxKKyZGRp4mm0aeRFaaeUSamnlEVokBRJqJAUNmmnhDqpp4FzxZvCxVV90sqmfdRGaaREYBRVVG70VVCh5FVRxVRO8cqkTv";
+
 		// complex shape
 		var original = "FQQA____Ezw5DkBLCjwAWldvAGlIj1CrKhJwRZrNMEtIzmJFGhKCq5rNAiNnvALNRc0CzXgSAiNFEgJ4Zj9MacxpDng7eEMS3gFD3t4BAy3eAUBF3gFDq-8B";
+
 		// home
 		//var original = "DAAACGneAQlLXCgIS1wBW0dcv19Her9ri1y_b4t6v2mLzJ1ZR7ydCEusmgBpXiVAaaxH";
+
 		// random stuff
 		//var original = "BxAA_wD_DCM0AQy8RQEMZ6sBXHgBAUwB3gFAq0UBEQgIvQ..";
+
 		//var original = "AQAAAUpJCA.."; //just a cube
-		//var original = "AgAAAUonAUZZNAc.";
+
 		// farm
 		//var original = "EgAC____OxK8AUo0qwFLq5oBO828AQgeVSI5IlUDOd1VAwGKARIxegEiMYgBATGqAQE2EYgBOCM0GDYUJZs2IzS8FgUWmjbudwI27xKJ";
-		//var original = "AQAEAGb_QFYjAQ..";
+
 		var decoded = Base64.decodeBase64(original);
 		var model = _model = ModelIO.loadModel(decoded);
 		var demodel = ModelIO.saveModel(model);
 		var reencoded = Base64.encodeBase64(demodel,true);
 
-		trace('original:',original);
-		trace('decoded:',decoded);
-		trace('model:',model);
-		trace('demodel:',demodel);
-		trace('reencoded:',reencoded);
+		// trace('original:',original);
+		// trace('decoded:',decoded);
+		// trace('model:',model);
+		// trace('demodel:',demodel);
+		// trace('reencoded:',reencoded);
 
 		var passed:Bool = true;
 		if (original!=reencoded) passed = false;
+
+		trace('original data: ' + original);
+		trace('reencoded data: ' + original);
+		trace('comparison test passed: ' + passed);
+		trace('-----------------------------------');
+
 		// END TEST
 
 		var ren = new ModelRenderer(Std.int(352),Std.int(480));
