@@ -1,4 +1,12 @@
-# Tilecraft
+[![TileCraft](https://img.shields.io/badge/app-TileCraft%201.0.0%20alpha3-brightgreen.svg)]() <!--TODEPLOY-->
+[![MIT License](https://img.shields.io/badge/license-GNU%20GPL%203-blue.svg)](LICENSE)
+[![Status](https://img.shields.io/badge/type-Alpha-orange.svg)](#)
+
+[![Haxe 3](https://img.shields.io/badge/language-Haxe%203-orange.svg)](http://www.haxe.org)
+[![OpenFL 2](https://img.shields.io/badge/require-OpenFL 2-red.svg)](http://www.openfl.org)
+[![Cross platform](https://img.shields.io/badge/platform-cross%20platform-lightgrey.svg)](http://www.openfl.org)
+
+# TileCraft (alpha)
 
 Conversion (and improvements) on LGMODELER (Java App) to Haxe
 
@@ -6,13 +14,18 @@ Original project https://github.com/angryoctopus/lgmodeler
 
 Original idea http://www.lostgarden.com/2013/10/prototyping-challenge-3d-modeling-tool.html
 
+## Alpha status
+
+The project is in development stage. **!! Not fully working prototype !!**
+The beta status will be reached on a full prototype.
+
 ## Todos
 
  - [ ] Conversion of Java code to Haxe code
    - [x] Internal Model
    - [x] I/O + Base64 encoder/decoder
    - [x] Renderer (Fast+Lights)
-   - [ ] Interface **<-- in progress**
+   - [ ] GUInterface **<-- in progress**
  - Interface mprovements
    - [ ] Copy, Paste, ALT (center transformation), SHIFT (keep it square), Rotation (single element, whole context)
    - [ ] Minimap (Fast top and Side view)
@@ -33,9 +46,11 @@ http://www.angryoctopus.co.nz/lgmodler/index.php?model=FQQA____Ezw5DkBLCjwAWldvA
 
 ## Comparison with original LGmodeler renderer
 
+### Model View Render (full)
 ![Comparison](https://dl.dropboxusercontent.com/u/683344/akifox/tilecraft/git/comparison.png)
 
-
+### Final PNG Render
+![Comparison](https://dl.dropboxusercontent.com/u/683344/akifox/tilecraft/git/rendercomparison.png)
 
 ## Utilities
 

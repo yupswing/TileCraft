@@ -145,11 +145,17 @@ class PostFX {
 
 				// fix for blending issues with alpha
 				// it blurs the pixels around
-				c.a += texture2D(tex, posPos.xy + vec2(1.0,1.0)*rcpFrame.xy).a;
-				c.a += texture2D(tex, posPos.xy + vec2(-1.0,1.0)*rcpFrame.xy).a;
-				c.a += texture2D(tex, posPos.xy + vec2(-1.0,-1.0)*rcpFrame.xy).a;
-				c.a += texture2D(tex, posPos.xy + vec2(1.0,-1.0)*rcpFrame.xy).a;
-				c.a *= 0.21;
+				float alpha = c.a;
+				alpha += texture2D(tex, posPos.xy + vec2(1.0,1.0)*rcpFrame.xy).a;
+				alpha += texture2D(tex, posPos.xy + vec2(-1.0,1.0)*rcpFrame.xy).a;
+				alpha += texture2D(tex, posPos.xy + vec2(-1.0,-1.0)*rcpFrame.xy).a;
+				alpha += texture2D(tex, posPos.xy + vec2(1.0,-1.0)*rcpFrame.xy).a;
+				alpha /=5.0;
+				//alpha *= 0.21;
+				// if (c.a==0)
+				 	  c.a = alpha;
+				// else
+				// 	c.a = min(c.a,alpha);
 
 			  return vec4(fxaa,c.a);
 			}

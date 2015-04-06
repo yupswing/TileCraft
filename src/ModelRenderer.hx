@@ -284,7 +284,7 @@ class ModelRenderer {
 		}
 	}
 
-  private static inline var SHADOW_TABLE_LENGTH = 255;
+  private static inline var SHADOW_TABLE_LENGTH = 256;
 	private static var SHADOW_TABLE:Array<Float> = [for(i in 0...SHADOW_TABLE_LENGTH) 1.0-Math.pow(i/SHADOW_TABLE_LENGTH, 0.5)*0.5];
 
 

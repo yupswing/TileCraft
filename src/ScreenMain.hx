@@ -69,7 +69,7 @@ class ScreenMain extends Screen
 		//var original = "AQAAAUpJCA.."; //just a cube
 
 		// farm
-		//var original = "EgAC____OxK8AUo0qwFLq5oBO828AQgeVSI5IlUDOd1VAwGKARIxegEiMYgBATGqAQE2EYgBOCM0GDYUJZs2IzS8FgUWmjbudwI27xKJ";
+		//var original = "EwAC____OxK8AUo0qwFLq5oBO828ATgjNBg5IlUDOd1VAwgeVSIBigESMXoBIjGIAQExqgEBUYgAMzYRiAE2FCWbNiM0vBYFFpo27ncCNt40BA..";
 
 		var decoded = Base64.decodeBase64(original);
 		var model = _model = ModelIO.loadModel(decoded);
@@ -92,7 +92,7 @@ class ScreenMain extends Screen
 
 		// END TEST
 
-		var ren = new ModelRenderer(Std.int(352),Std.int(480));
+		var ren = new ModelRenderer(Std.int(320),Std.int(480));
 		var bpd_preview = ren.render(model,-1,true);
 		var bp = new Bitmap(bpd_preview);
 		bp.smoothing = true;
@@ -100,7 +100,7 @@ class ScreenMain extends Screen
 		bp.y = rheight/2-bp.height/2;
 		addChild(bp);
 
-		var ren = new ModelRenderer(Std.int(352),Std.int(480));
+		var ren = new ModelRenderer(Std.int(320),Std.int(480));
 		var bpd = ren.render(model,-1,false);
 		var bp = new Bitmap(bpd);
 		bp.smoothing = true;
@@ -108,12 +108,23 @@ class ScreenMain extends Screen
 		bp.y = rheight/2-bp.height/2;
 		addChild(bp);
 
-		var bp = new Bitmap(PostFX.scale(PostFX.fxaa(bpd,8),0.25));
-		//var bp = new Bitmap(PostProcessing.scale(bpd,0.25));
-		//var bp = new Bitmap(PostProcessing.fxaa(bpd,8));
+		var bpd_fx = PostFX.scale(PostFX.fxaa(bpd,8),0.25);
+		//var bpd_fx = PostFX.scale(bpd,0.25);
+		var bp = new Bitmap(bpd_fx);
 		bp.x = rwidth/2-bp.width/2-PLIK.adjust(550);
 		bp.y = rheight/2-bp.height/2;
 		addChild(bp);
+
+		//var b:openfl.utils.ByteArray = bpd_fx.encode("png", 1);
+		//trace("data:image/png;base64,"+haxe.crypto.Base64.encode(b));
+
+		// Saving the BitmapData to a file
+		// var b:openfl.utils.ByteArray = bpd_fx.bitmapData.encode("png", 1);
+		// var fo:sys.io.FileOutput = sys.io.File.write("test_out.png", true);
+		// fo.writeString(b.toString());
+		// fo.close();
+
+
 
 		// STATIC INTERFACE ---------------------------------------------
 
@@ -150,7 +161,7 @@ class ScreenMain extends Screen
 		// COLOR TOOLBAR ---------------------------------------------
 
 		var colorToolbar = new ColorToolbar(this,2);
-		var colorToolbarAction = function(colorIndex:Int) { trace(_model.getColor(colorIndex)); }
+		var colorToolbarAction = function(colorIndex:Int) { Lib.current.stage.color = _model.getColor(colorIndex); }
 		colorToolbar.setPalette(_model.getPalette());
 		for (i in 0...16) {
 			colorToolbar.addColorButton(colorToolbarAction);
