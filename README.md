@@ -1,4 +1,4 @@
-[![TileCraft](https://img.shields.io/badge/app-TileCraft%201.0.0%20alpha3-brightgreen.svg)]() <!--- TODEPLOY --->
+[![TileCraft](https://img.shields.io/badge/app-TileCraft%201.0.0%20alpha3-brightgreen.svg)]()
 [![MIT License](https://img.shields.io/badge/license-GNU%20GPL%203-blue.svg)](LICENSE)
 [![Status](https://img.shields.io/badge/status-Alpha-orange.svg)](#)
 
