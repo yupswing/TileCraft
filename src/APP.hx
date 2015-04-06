@@ -71,6 +71,12 @@ class APP
 	public static inline var ICON_LOCK_OPEN = 'lock_open.png';
 	public static inline var ICON_LOCK_CLOSED = 'lock_closed.png';
 
+	public static inline var ICON_NEW = 'new.png';
+	public static inline var ICON_OPEN = 'open.png';
+	public static inline var ICON_SAVE = 'save.png';
+	public static inline var ICON_QUIT = 'quit.png';
+	public static inline var ICON_RENDER = 'render.png';
+
 	public static inline var ICON_ROUND0 = 'round_0.png';
 	public static inline var ICON_ROUND1 = 'round_1.png';
 	public static inline var ICON_ROUND2 = 'round_2.png';

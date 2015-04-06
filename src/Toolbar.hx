@@ -123,7 +123,7 @@ class ColorToolbar extends Toolbar
   var _palette:Array<Int> = [for (i in 0...16) 0];
 
 	public function new (parentScreen:ScreenMain,buttonsPerRow:Int) {
-		super(parentScreen,buttonsPerRow);
+		super(parentScreen,buttonsPerRow,true);
     _selected = 1; // default select is first color after hole
 	}
 
@@ -136,7 +136,7 @@ class ColorToolbar extends Toolbar
     return _palette[index];
   }
 
-  public override function addButton(name:String,icon:AtlasRegion,f:Int->Void=null) {
+  public override function addButton(name:String,?icon:AtlasRegion=null,?f:Int->Void=null) {
     addColorButton(f);
   }
 
@@ -162,11 +162,13 @@ class Toolbar extends SpriteContainer
   var _buttonsOffsetY = 12;
   var _parentScreen:ScreenMain;
   var _selected = 0;
+  var _selectable:Bool = false;
 
-	public function new (parentScreen:ScreenMain,buttonsPerRow:Int) {
+	public function new (parentScreen:ScreenMain,buttonsPerRow:Int,selectable:Bool) {
 		super();
     _parentScreen = parentScreen;
     _buttonsPerRow = buttonsPerRow;
+    _selectable = selectable;
 		addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
 	}
 
@@ -174,18 +176,22 @@ class Toolbar extends SpriteContainer
     return _buttons[_selected].name;
   }
 
-  public function addButton(name:String,icon:AtlasRegion,f:Int->Void=null) {
-    var button = new Button(_buttons.length,name,icon,f);
+  public function addButton(name:String,?icon:AtlasRegion=null,?f:Int->Void=null) {
+    var button:Button=null;
+    if (icon!=null) {
+      button = new Button(_buttons.length,name,icon,f);
+      if (_selectable && (_buttons.length==_selected))
+        button.selected = true;
+      button.x = Std.int((_buttons.length)%_buttonsPerRow)*(Button.WIDTH+_buttonsOffsetX)+_buttonsOffsetZeroX;
+      button.y = Std.int((_buttons.length)/_buttonsPerRow)*(Button.HEIGHT+_buttonsOffsetY)+_buttonsOffsetZeroY;
+      addChild(button);
+    }
     _buttons.push(button);
-    addChild(button);
-    if (_buttons.length-1==_selected) button.selected = true;
-    button.x = Std.int((_buttons.length-1)%_buttonsPerRow)*(Button.WIDTH+_buttonsOffsetX)+_buttonsOffsetZeroX;
-    button.y = Std.int((_buttons.length-1)/_buttonsPerRow)*(Button.HEIGHT+_buttonsOffsetY)+_buttonsOffsetZeroY;
   }
 
   public function redraw() {
     for (el in _buttons) {
-      el.draw();
+      if (el!=null) el.draw();
     }
   }
 
@@ -198,9 +204,11 @@ class Toolbar extends SpriteContainer
 
     var index = y*_buttonsPerRow+x;
     if (index<_buttons.length && _buttons[index] != null) {
-      _buttons[_selected].selected = false;
-      _buttons[index].selected = true;
-      _selected = index;
+      if (_selectable) {
+        _buttons[_selected].selected = false;
+        _buttons[index].selected = true;
+        _selected = index;
+      }
       _buttons[index].action();
     }
 

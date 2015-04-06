@@ -115,10 +115,19 @@ class ScreenMain extends Screen
 		bp.y = rheight/2-bp.height/2;
 		addChild(bp);
 
+		// STATIC INTERFACE ---------------------------------------------
+
+		// model+color toolbar bg
 		graphics.beginFill(0x242424,0.95);
 		graphics.drawRect(0,0,103,rheight);
 
-		var toolbar = new Toolbar(this,2);
+		// action toolbar bg
+		graphics.beginFill(0x242424,0.95);
+		graphics.drawRect(0,0,rwidth,50);
+
+		// MODEL TOOLBAR ---------------------------------------------
+
+		var toolbar = new Toolbar(this,2,true);
 		toolbar.addButton("pointer",				APP.atlasSprites.getRegion(APP.ICON_POINTER));
 		toolbar.addButton("sh_cube",				APP.atlasSprites.getRegion(APP.ICON_SH_CUBE));
 		toolbar.addButton("sh_round_up",		APP.atlasSprites.getRegion(APP.ICON_SH_ROUND_UP));
@@ -135,29 +144,44 @@ class ScreenMain extends Screen
 		toolbar.addButton("sh_corner_nw",		APP.atlasSprites.getRegion(APP.ICON_SH_CORNER_NW));
 
 		toolbar.x = 20;
-		toolbar.y = 30;
+		toolbar.y = 60;
 		addChild(toolbar);
 
+		// COLOR TOOLBAR ---------------------------------------------
+
 		var colorToolbar = new ColorToolbar(this,2);
+		var colorToolbarAction = function(colorIndex:Int) { trace(_model.getColor(colorIndex)); }
 		colorToolbar.setPalette(_model.getPalette());
 		for (i in 0...16) {
-			colorToolbar.addColorButton(function(colorIndex:Int) { trace(_model.getColor(colorIndex)); });
+			colorToolbar.addColorButton(colorToolbarAction);
 		}
 		colorToolbar.x = 20;
 		colorToolbar.y = toolbar.y + toolbar.height + 20;
 		addChild(colorToolbar);
 
-		var text = new Text(APP.APP_NAME,PLIK.adjustInt(100),APP.COLOR_BLACK);
+		// ACTION TOOLBAR ---------------------------------------------
+
+		var actionToolbarAction = function(index:Int) { trace("NOT IMPLEMENTED"); }
+		var actionToolbar = new Toolbar(this,1000,false);
+		actionToolbar.addButton("new",				APP.atlasSprites.getRegion(APP.ICON_NEW),			actionToolbarAction);
+		actionToolbar.addButton("open",				APP.atlasSprites.getRegion(APP.ICON_OPEN),		actionToolbarAction);
+		actionToolbar.addButton("save",				APP.atlasSprites.getRegion(APP.ICON_SAVE),		actionToolbarAction);
+		actionToolbar.addButton("render",			APP.atlasSprites.getRegion(APP.ICON_RENDER),	actionToolbarAction);
+		//actionToolbar.addButton("-");
+		actionToolbar.addButton("quit",				APP.atlasSprites.getRegion(APP.ICON_QUIT),		actionToolbarAction);
+		actionToolbar.x = 120;
+		actionToolbar.y = 10;
+		addChild(actionToolbar);
+
+		// APP TITLE ---------------------------------------------
+
+		var text = new Text("T I L E\nCRAFT",18,APP.COLOR_ORANGE,openfl.text.TextFormatAlign.CENTER);
 		text.t.setAnchoredPivot(Transformation.ANCHOR_MIDDLE_CENTER);
-		text.t.x = rwidth/2;
-		text.t.y = PLIK.adjust(60);
+		text.t.x = 50;
+		text.t.y = 25;
 		addChild(text);
 
-		text = new Text("TEST "+(passed?"PASSED":"NOT PASSED"),PLIK.adjustInt(50),APP.COLOR_BLACK);
-		text.t.setAnchoredPivot(Transformation.ANCHOR_MIDDLE_CENTER);
-		text.t.x = rwidth/2;
-		text.t.y = PLIK.adjust(120);
-		addChild(text);
+		// ---------------------------------------------
 
 		super.initialize(); // init_super at the end
 	}
