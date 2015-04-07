@@ -143,20 +143,6 @@ class PostFX {
 			  vec2 rcpFrame = vec2(1.0/width, 1.0/height);
 			  vec3 fxaa = FxaaPixelShader(posPos, tex, rcpFrame);
 
-				// fix for blending issues with alpha
-				// it blurs the pixels around
-				float alpha = c.a;
-				alpha += texture2D(tex, posPos.xy + vec2(1.0,1.0)*rcpFrame.xy).a;
-				alpha += texture2D(tex, posPos.xy + vec2(-1.0,1.0)*rcpFrame.xy).a;
-				alpha += texture2D(tex, posPos.xy + vec2(-1.0,-1.0)*rcpFrame.xy).a;
-				alpha += texture2D(tex, posPos.xy + vec2(1.0,-1.0)*rcpFrame.xy).a;
-				alpha /=5.0;
-				//alpha *= 0.21;
-				// if (c.a==0)
-				 	  c.a = alpha;
-				// else
-				// 	c.a = min(c.a,alpha);
-
 			  return vec4(fxaa,c.a);
 			}
 
@@ -174,6 +160,141 @@ class PostFX {
 			bp = ShaderCompositing.compositeParams(composite, shader,
 																							[{name: "uImage0Width", value: bitmapdata.width, type: Float},
 																							 {name: "uImage0Height", value: bitmapdata.height, type: Float}]);
+
+			composite.delete();
+			composite = null;
+		}
+		ShaderCompositing.clean ();
+		return bp;
+
+	}
+
+public static function fxaaOutline(bitmapdata:BitmapData,passes:Int=1,outline:Int=0):BitmapData {
+	if (!OpenGLView.isSupported)
+		trace("Couldn't get openGL view");
+
+	if (outline==0) outline = 1;
+
+	var shader = "
+		/*
+		FXAA fragment shader by Timothy Lottes
+		http://timothylottes.blogspot.com/
+		GLSL version by Geeks3D
+		http://www.geeks3d.com/
+		modified and adapted to BGE by Martins Upitis
+		http://devlog-martinsh.blogspot.com/
+		modified by Simone Cingano
+		http://akifox.com
+
+		You need to provide
+			vTexCoord: Fragment Coordinates
+			uImage0: the Texture
+			uImage0Width: the Texture Width
+			uImage0Height: the Texture Height
+		*/
+
+		#version 120
+		varying vec2 vTexCoord;
+
+		uniform sampler2D uImage0; //redered scene texture
+		uniform float uImage0Width; //texture width
+		uniform float uImage0Height; //texture height
+		uniform float uOutline; //texture height
+
+		float width = uImage0Width;
+		float height = uImage0Height;
+
+		float FXAA_SUBPIX_SHIFT = 1.0/4.0;
+		vec2 rcpFrame = vec2(1.0/width, 1.0/height);
+		vec4 posPos = vec4(vTexCoord.st,vTexCoord.st -(rcpFrame * (0.5 + FXAA_SUBPIX_SHIFT)));
+
+		vec3 FxaaPixelShader(vec4 posPos, sampler2D tex, vec2 rcpFrame)
+		{
+			//posPos   // Output of FxaaVertexShader interpolated across screen
+			//tex      // Input texture.
+			//rcpFrame // Constant {1.0/frameWidth, 1.0/frameHeight}
+			/*---------------------------------------------------------*/
+			#define FXAA_REDUCE_MIN   (1.0/128.0)
+			#define FXAA_REDUCE_MUL   (1.0/8.0)
+			#define FXAA_SPAN_MAX     8.0
+			/*---------------------------------------------------------*/
+			vec3 rgbNW = texture2D(tex, posPos.zw).xyz;
+			vec3 rgbNE = texture2D(tex, posPos.zw + vec2(1.0,0.0)*rcpFrame.xy).xyz;
+			vec3 rgbSW = texture2D(tex, posPos.zw + vec2(0.0,1.0)*rcpFrame.xy).xyz;
+			vec3 rgbSE = texture2D(tex, posPos.zw + vec2(1.0,1.0)*rcpFrame.xy).xyz;
+			vec3 rgbM  = texture2D(tex, posPos.xy).xyz;
+			/*---------------------------------------------------------*/
+			vec3 luma = vec3(0.299, 0.587, 0.114);
+			float lumaNW = dot(rgbNW, luma);
+			float lumaNE = dot(rgbNE, luma);
+			float lumaSW = dot(rgbSW, luma);
+			float lumaSE = dot(rgbSE, luma);
+			float lumaM  = dot(rgbM,  luma);
+			/*---------------------------------------------------------*/
+			float lumaMin = min(lumaM, min(min(lumaNW, lumaNE), min(lumaSW, lumaSE)));
+			float lumaMax = max(lumaM, max(max(lumaNW, lumaNE), max(lumaSW, lumaSE)));
+			/*---------------------------------------------------------*/
+			vec2 dir;
+			dir.x = -((lumaNW + lumaNE) - (lumaSW + lumaSE));
+			dir.y =  ((lumaNW + lumaSW) - (lumaNE + lumaSE));
+			/*---------------------------------------------------------*/
+			float dirReduce = max(
+				(lumaNW + lumaNE + lumaSW + lumaSE) * (0.25 * FXAA_REDUCE_MUL),
+				FXAA_REDUCE_MIN);
+			float rcpDirMin = 1.0/(min(abs(dir.x), abs(dir.y)) + dirReduce);
+			dir = min(vec2( FXAA_SPAN_MAX,  FXAA_SPAN_MAX),
+					max(vec2(-FXAA_SPAN_MAX, -FXAA_SPAN_MAX),
+					dir * rcpDirMin)) * rcpFrame.xy;
+			/*--------------------------------------------------------*/
+			vec3 rgbA = (1.0/2.0) * (
+			texture2D(tex, posPos.xy + dir * (1.0/3.0 - 0.5)).xyz +
+			texture2D(tex, posPos.xy + dir * (2.0/3.0 - 0.5)).xyz);
+			vec3 rgbB = rgbA * (1.0/2.0) + (1.0/4.0) * (
+			texture2D(tex, posPos.xy + dir * (0.0/3.0 - 0.5)).xyz +
+				texture2D(tex, posPos.xy + dir * (3.0/3.0 - 0.5)).xyz);
+			float lumaB = dot(rgbB, luma);
+			if((lumaB < lumaMin) || (lumaB > lumaMax)) return rgbA;
+			return rgbB;
+		}
+
+		vec4 PostFX(sampler2D tex, vec2 uv, float outline)
+		{
+			vec4 c = texture2D(tex, uv.xy);
+			vec2 rcpFrame = vec2(1.0/width, 1.0/height);
+			vec3 fxaa = FxaaPixelShader(posPos, tex, rcpFrame);
+
+			// fix for blending issues with alpha
+			// it blurs the pixels around
+			float alpha = c.a*outline;
+			alpha += texture2D(tex, posPos.xy + vec2(1.0,1.0)*rcpFrame.xy).a;
+			alpha += texture2D(tex, posPos.xy + vec2(-1.0,1.0)*rcpFrame.xy).a;
+			alpha += texture2D(tex, posPos.xy + vec2(-1.0,-1.0)*rcpFrame.xy).a;
+			alpha += texture2D(tex, posPos.xy + vec2(1.0,-1.0)*rcpFrame.xy).a;
+			// alpha += texture2D(tex, posPos.xy + vec2(2.0,2.0)*rcpFrame.xy).a;
+			// alpha += texture2D(tex, posPos.xy + vec2(-2.0,2.0)*rcpFrame.xy).a;
+			// alpha += texture2D(tex, posPos.xy + vec2(-2.0,-2.0)*rcpFrame.xy).a;
+			// alpha += texture2D(tex, posPos.xy + vec2(2.0,-2.0)*rcpFrame.xy).a;
+			// alpha /=(outline+8.0);
+			alpha /=(outline+4.0);
+
+			return vec4(fxaa,alpha);
+		}
+
+		void main()
+		{
+			gl_FragColor = PostFX(uImage0, vTexCoord, uOutline);
+			//gl_FragColor = texture2D(uImage0, vTexCoord.xy, uOutline);
+		}";
+
+		ShaderCompositing.init(bitmapdata.width, bitmapdata.height);
+		var bp = bitmapdata.clone();
+		for (el in 0...passes) {
+			var composite = ShaderCompositing.uploadLayers ([bp]);
+
+			bp = ShaderCompositing.compositeParams(composite, shader,
+																							[{name: "uImage0Width", value: bitmapdata.width, type: Float},
+																							{name: "uImage0Height", value: bitmapdata.height, type: Float},
+																							{name: "uOutline", value: outline, type: Float}]);
 
 			composite.delete();
 			composite = null;
@@ -260,7 +381,14 @@ class ShaderCompositing {
 			GL.bindTexture (GL.TEXTURE_2D, texture);
 			GL.texParameteri (GL.TEXTURE_2D, GL.TEXTURE_WRAP_S, GL.CLAMP_TO_EDGE);
 			GL.texParameteri (GL.TEXTURE_2D, GL.TEXTURE_WRAP_T, GL.CLAMP_TO_EDGE);
-			GL.texImage2D (GL.TEXTURE_2D, 0, GL.RGBA, layer.width, layer.height, 0, GL.RGBA, GL.UNSIGNED_BYTE, new UInt8Array (BitmapData.getRGBAPixels (layer.clone())));
+			GL.texImage2D (GL.TEXTURE_2D, 0, GL.RGBA, layer.width, layer.height, 0, GL.RGBA, GL.UNSIGNED_BYTE, new UInt8Array (
+					#if !v2
+					//TODO maybe not working on NEXT
+					layer.clone().getPixels(new openfl.geom.Rectangle(0,0,layer.width,layer.height))
+					#else
+					BitmapData.getRGBAPixels(layer.clone())
+					#end
+			));
 			GL.texParameteri (GL.TEXTURE_2D, GL.TEXTURE_MAG_FILTER, GL.LINEAR);
 			GL.texParameteri (GL.TEXTURE_2D, GL.TEXTURE_MIN_FILTER, GL.LINEAR);
 			GL.bindTexture (GL.TEXTURE_2D, null);
@@ -366,13 +494,19 @@ class ShaderCompositing {
 
     GL.blendEquationSeparate(GL.FUNC_ADD,GL.FUNC_ADD);
 		GL.blendFuncSeparate(GL.SRC_ALPHA, GL.ONE_MINUS_SRC_ALPHA, GL.ONE, GL.ZERO);
+		//GL.blendFuncSeparate(GL.SRC_ALPHA, GL.ZERO, GL.SRC_ALPHA, GL.ZERO);
 		GL.enable (GL.BLEND);
 
 		GL.uniformMatrix4fv (matrixUniform, false, group.matrix);
 
 		GL.bindBuffer (GL.ARRAY_BUFFER, group.buffer);
+		#if v2
 		GL.vertexAttribPointer (vertexAttribute, 3, GL.FLOAT, false, 5 * Float32Array.SBYTES_PER_ELEMENT, 0);
 		GL.vertexAttribPointer (textureAttribute, 2, GL.FLOAT, false, 5 * Float32Array.SBYTES_PER_ELEMENT, 3 * Float32Array.SBYTES_PER_ELEMENT);
+		#else
+		GL.vertexAttribPointer (vertexAttribute, 3, GL.FLOAT, false, 5 * Float32Array.BYTES_PER_ELEMENT, 0);
+		GL.vertexAttribPointer (textureAttribute, 2, GL.FLOAT, false, 5 * Float32Array.BYTES_PER_ELEMENT, 3 * Float32Array.BYTES_PER_ELEMENT);
+		#end
 
 		var layerIndex = 0;
 		for (texture in group.textures) {
@@ -395,16 +529,29 @@ class ShaderCompositing {
 
     var size:Int = width * height;
 
-        var result_rgba = new ByteArray (size*4);
-        GL.readPixels (0, 0, width, height, GL.RGBA, GL.UNSIGNED_BYTE, result_rgba);
+		#if v2
+    var result_rgba = new ByteArray (size*4);
+		#else
+		//TODO not working on NEXT
+		var result_rgba = new ArrayBufferView(size*4);
+		#end
+    GL.readPixels (0, 0, width, height, GL.RGBA, GL.UNSIGNED_BYTE, result_rgba);
 
-        var result_argb = new ByteArray (size*4);
+    var result_argb = new ByteArray (size*4);
 		for (i in 0...size) {
 
+			#if v2
 			var r = result_rgba.readUnsignedByte ();
 			var g = result_rgba.readUnsignedByte ();
 			var b = result_rgba.readUnsignedByte ();
 			var a = result_rgba.readUnsignedByte ();
+			#else
+			//TODO not working on NEXT
+			var r = result_rgba.getUInt32(i*4+0);
+			var g = result_rgba.getUInt32(i*4+1);
+			var b = result_rgba.getUInt32(i*4+2);
+			var a = result_rgba.getUInt32(i*4+3);
+			#end
 
 			result_argb.writeByte (a);
 			result_argb.writeByte (r);
@@ -477,7 +624,12 @@ class LayerGroup {
 		GL.bindBuffer (GL.ARRAY_BUFFER, null);
 
 		var matrix_3d = Matrix3D.createOrtho (0, width, height, 0, -1000, 1000);
+		#if v2
+		//TODO maybe not working on NEXT
 		matrix = Float32Array.fromMatrix (matrix_3d);
+		#else
+		matrix = Float32Array.fromMatrix(matrix_3d);
+		#end
 
 	}
 

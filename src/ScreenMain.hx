@@ -26,7 +26,9 @@ import openfl.display.Bitmap;
 import openfl.display.BitmapData;
 
 import Shape;
-import Toolbar;
+import gui.*;
+
+using hxColorToolkit.ColorToolkit;
 
 
 class ScreenMain extends Screen
@@ -58,10 +60,10 @@ class ScreenMain extends Screen
 		//var original = "EgQCAJn_Zv8zETxKKyZGRp4mm0aeRFaaeUSamnlEVokBRJqJAUNmmnhDqpp4FzxZvCxVV90sqmfdRGaaREYBRVVG70VVCh5FVRxVRO8cqkTv";
 
 		// complex shape
-		var original = "FQQA____Ezw5DkBLCjwAWldvAGlIj1CrKhJwRZrNMEtIzmJFGhKCq5rNAiNnvALNRc0CzXgSAiNFEgJ4Zj9MacxpDng7eEMS3gFD3t4BAy3eAUBF3gFDq-8B";
+		//var original = "FQQA____Ezw5DkBLCjwAWldvAGlIj1CrKhJwRZrNMEtIzmJFGhKCq5rNAiNnvALNRc0CzXgSAiNFEgJ4Zj9MacxpDng7eEMS3gFD3t4BAy3eAUBF3gFDq-8B";
 
 		// home
-		//var original = "DAAACGneAQlLXCgIS1wBW0dcv19Her9ri1y_b4t6v2mLzJ1ZR7ydCEusmgBpXiVAaaxH";
+		var original = "DAAACGneAQk8XCgIPF0SWzdcv183er9rjFy_b4x6v2mMzJ1ZN7ydCDysmgBpXiVAaaxH";
 
 		// random stuff
 		//var original = "BxAA_wD_DCM0AQy8RQEMZ6sBXHgBAUwB3gFAq0UBEQgIvQ..";
@@ -108,7 +110,7 @@ class ScreenMain extends Screen
 		bp.y = rheight/2-bp.height/2;
 		addChild(bp);
 
-		var bpd_fx = PostFX.scale(PostFX.fxaa(bpd,8),0.25);
+		var bpd_fx = PostFX.scale(PostFX.fxaaOutline(bpd,8,8),0.25);
 		//var bpd_fx = PostFX.scale(bpd,0.25);
 		var bp = new Bitmap(bpd_fx);
 		bp.x = rwidth/2-bp.width/2-PLIK.adjust(550);
@@ -136,23 +138,35 @@ class ScreenMain extends Screen
 		graphics.beginFill(0x242424,0.95);
 		graphics.drawRect(0,0,rwidth,50);
 
+		var button = new Button();
+		button.x = 130;
+		button.y = 100;
+		button.style = Style.button();
+		button.selectable = true;
+		button.listen = true;
+		button.actionF = function(button:Button) { trace(button); };
+		button.text = new Text("Button test",18,APP.COLOR_DARK,openfl.text.TextFormatAlign.CENTER);
+		button.icon = APP.atlasSprites.getRegion(APP.ICON_CHECKBOX).toBitmapData();
+		button.iconSelected = APP.atlasSprites.getRegion(APP.ICON_CHECKBOX_CHECKED).toBitmapData();
+		addChild(button);
+
 		// MODEL TOOLBAR ---------------------------------------------
 
-		var toolbar = new Toolbar(this,2,true);
-		toolbar.addButton("pointer",				APP.atlasSprites.getRegion(APP.ICON_POINTER));
-		toolbar.addButton("sh_cube",				APP.atlasSprites.getRegion(APP.ICON_SH_CUBE));
-		toolbar.addButton("sh_round_up",		APP.atlasSprites.getRegion(APP.ICON_SH_ROUND_UP));
-		toolbar.addButton("sh_round_side",	APP.atlasSprites.getRegion(APP.ICON_SH_ROUND_SIDE));
-		toolbar.addButton("sh_cylinder_up",	APP.atlasSprites.getRegion(APP.ICON_SH_CYLINDER_UP));
-		toolbar.addButton("sh_cylinder_side",APP.atlasSprites.getRegion(APP.ICON_SH_CYLINDER_SIDE));
-		toolbar.addButton("sh_ramp_up",			APP.atlasSprites.getRegion(APP.ICON_SH_RAMP_UP));
-		toolbar.addButton("sh_ramp_down",		APP.atlasSprites.getRegion(APP.ICON_SH_RAMP_DOWN));
-		toolbar.addButton("sh_arch_up",			APP.atlasSprites.getRegion(APP.ICON_SH_ARCH_UP));
-		toolbar.addButton("sh_arch_down",		APP.atlasSprites.getRegion(APP.ICON_SH_ARCH_DOWN));
-		toolbar.addButton("sh_corner_se",		APP.atlasSprites.getRegion(APP.ICON_SH_CORNER_SE));
-		toolbar.addButton("sh_corner_sw",		APP.atlasSprites.getRegion(APP.ICON_SH_CORNER_SW));
-		toolbar.addButton("sh_corner_ne",		APP.atlasSprites.getRegion(APP.ICON_SH_CORNER_NE));
-		toolbar.addButton("sh_corner_nw",		APP.atlasSprites.getRegion(APP.ICON_SH_CORNER_NW));
+		var toolbar = new Toolbar(this,2,true,Style.toolbar(),Style.toolbarButton());
+		toolbar.addButton("pointer",null,					APP.atlasSprites.getRegion(APP.ICON_POINTER).toBitmapData());
+		toolbar.addButton("sh_cube",null,					APP.atlasSprites.getRegion(APP.ICON_SH_CUBE).toBitmapData());
+		toolbar.addButton("sh_round_up",null,			APP.atlasSprites.getRegion(APP.ICON_SH_ROUND_UP).toBitmapData());
+		toolbar.addButton("sh_round_side",null,		APP.atlasSprites.getRegion(APP.ICON_SH_ROUND_SIDE).toBitmapData());
+		toolbar.addButton("sh_cylinder_up",null,	APP.atlasSprites.getRegion(APP.ICON_SH_CYLINDER_UP).toBitmapData());
+		toolbar.addButton("sh_cylinder_side",null,APP.atlasSprites.getRegion(APP.ICON_SH_CYLINDER_SIDE).toBitmapData());
+		toolbar.addButton("sh_ramp_up",null,			APP.atlasSprites.getRegion(APP.ICON_SH_RAMP_UP).toBitmapData());
+		toolbar.addButton("sh_ramp_down",null,		APP.atlasSprites.getRegion(APP.ICON_SH_RAMP_DOWN).toBitmapData());
+		toolbar.addButton("sh_arch_up",null,			APP.atlasSprites.getRegion(APP.ICON_SH_ARCH_UP).toBitmapData());
+		toolbar.addButton("sh_arch_down",null,		APP.atlasSprites.getRegion(APP.ICON_SH_ARCH_DOWN).toBitmapData());
+		toolbar.addButton("sh_corner_se",null,		APP.atlasSprites.getRegion(APP.ICON_SH_CORNER_SE).toBitmapData());
+		toolbar.addButton("sh_corner_sw",null,		APP.atlasSprites.getRegion(APP.ICON_SH_CORNER_SW).toBitmapData());
+		toolbar.addButton("sh_corner_ne",null,		APP.atlasSprites.getRegion(APP.ICON_SH_CORNER_NE).toBitmapData());
+		toolbar.addButton("sh_corner_nw",null,		APP.atlasSprites.getRegion(APP.ICON_SH_CORNER_NW).toBitmapData());
 
 		toolbar.x = 20;
 		toolbar.y = 60;
@@ -160,11 +174,52 @@ class ScreenMain extends Screen
 
 		// COLOR TOOLBAR ---------------------------------------------
 
-		var colorToolbar = new ColorToolbar(this,2);
-		var colorToolbarAction = function(colorIndex:Int) { Lib.current.stage.color = _model.getColor(colorIndex); }
-		colorToolbar.setPalette(_model.getPalette());
-		for (i in 0...16) {
-			colorToolbar.addColorButton(colorToolbarAction);
+		var makeColorIcon = function(size:Int,color:Int):BitmapData {
+			var span = 2;
+			var round = 8;
+			var hole = false;
+			if (color==-1) {
+				hole = true;
+				span += 1;
+				color = 0x2a8299;
+			}
+
+			var shape = new openfl.display.Shape();
+			var matrix = new openfl.geom.Matrix();
+			matrix.createGradientBox(size,size,90*Math.PI/180);
+			shape.graphics.beginGradientFill(openfl.display.GradientType.LINEAR,[ColorToolkit.shiftBrighteness(color,25),ColorToolkit.shiftBrighteness(color,-25)],[1,1],[0,255],matrix);
+			shape.graphics.drawRoundRect(0,0,size,size,round);
+			shape.graphics.endFill();
+
+			if (hole) {
+				var grid = 5;
+				var div = (size-span*2)/grid;
+        for (y in 0...grid) {
+          for (x in 0...grid) {
+            if ((x+y)%2==0) shape.graphics.beginFill(0x999999);
+						else shape.graphics.beginFill(0xEEEEEE);
+						shape.graphics.drawRect(div*x+span,div*y+span,div,div);
+          }
+        }
+			} else {
+				shape.graphics.beginFill(color);
+				shape.graphics.drawRoundRect(span,span,size-span*2,size-span*2,round);
+				shape.graphics.endFill();
+			}
+
+			var bd = new BitmapData(size,size,true,0);
+			bd.draw(shape);
+			shape = null;
+			return bd;
+
+		};
+
+		var colorToolbar = new Toolbar(this,2,true,Style.toolbar(),Style.toolbarButtonFull());
+		var colorToolbarAction = function(button:Button) { Lib.current.stage.color = _model.getColor(cast(button.value,Int)); };
+		//colorToolbar.setPalette(_model.getPalette());
+		colorToolbar.addButton('palette0',0,makeColorIcon(26,-1),colorToolbarAction);
+		for (i in 1...16) {
+			colorToolbar.addButton('palette$i',i,makeColorIcon(26,_model.getColor(i)),colorToolbarAction);
 		}
 		colorToolbar.x = 20;
 		colorToolbar.y = toolbar.y + toolbar.height + 20;
@@ -172,21 +227,21 @@ class ScreenMain extends Screen
 
 		// ACTION TOOLBAR ---------------------------------------------
 
-		var actionToolbarAction = function(index:Int) { trace("NOT IMPLEMENTED"); }
-		var actionToolbar = new Toolbar(this,1000,false);
-		actionToolbar.addButton("new",				APP.atlasSprites.getRegion(APP.ICON_NEW),			actionToolbarAction);
-		actionToolbar.addButton("open",				APP.atlasSprites.getRegion(APP.ICON_OPEN),		actionToolbarAction);
-		actionToolbar.addButton("save",				APP.atlasSprites.getRegion(APP.ICON_SAVE),		actionToolbarAction);
-		actionToolbar.addButton("render",			APP.atlasSprites.getRegion(APP.ICON_RENDER),	actionToolbarAction);
+		var actionToolbarAction = function(button:Button) { trace("NOT IMPLEMENTED"); }
+		var actionToolbar = new Toolbar(this,1000,false,Style.toolbar(),Style.toolbarButton());
+		actionToolbar.addButton("new",null,			APP.atlasSprites.getRegion(APP.ICON_NEW).toBitmapData(),		actionToolbarAction);
+		actionToolbar.addButton("open",null,		APP.atlasSprites.getRegion(APP.ICON_OPEN).toBitmapData(),		actionToolbarAction);
+		actionToolbar.addButton("save",null,		APP.atlasSprites.getRegion(APP.ICON_SAVE).toBitmapData(),		actionToolbarAction);
+		actionToolbar.addButton("render",null,	APP.atlasSprites.getRegion(APP.ICON_RENDER).toBitmapData(),	actionToolbarAction);
 		//actionToolbar.addButton("-");
-		actionToolbar.addButton("quit",				APP.atlasSprites.getRegion(APP.ICON_QUIT),		actionToolbarAction);
+		actionToolbar.addButton("quit",null,		APP.atlasSprites.getRegion(APP.ICON_QUIT).toBitmapData(),		actionToolbarAction);
 		actionToolbar.x = 120;
 		actionToolbar.y = 10;
 		addChild(actionToolbar);
 
 		// APP TITLE ---------------------------------------------
 
-		var text = new Text("T I L E\nCRAFT",18,APP.COLOR_ORANGE,openfl.text.TextFormatAlign.CENTER);
+		var text = new Text("TILE\nCRAFT",18,APP.COLOR_ORANGE,openfl.text.TextFormatAlign.CENTER,APP.FONT_SQUARE);
 		text.t.setAnchoredPivot(Transformation.ANCHOR_MIDDLE_CENTER);
 		text.t.x = 50;
 		text.t.y = 25;

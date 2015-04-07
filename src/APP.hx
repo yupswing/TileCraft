@@ -51,7 +51,9 @@ class APP
 	// COLORS
 
 	public static inline var FONT_SQUARE:String = "assets/fonts/Square.ttf";
-  public static inline var FONT_04B_03:String = "assets/fonts/Square.ttf";
+  public static inline var FONT_04B_03:String = "assets/fonts/04B_03.ttf";
+  public static inline var FONT_LATO_BOLD:String = "assets/fonts/Lato-Bold.ttf";
+  public static inline var FONT_LATO_LIGHT:String = "assets/fonts/Lato-Light.ttf";
 
 	public static inline var COLOR_WHITE:Int = 	0xFFFFFF;
 	public static inline var COLOR_LIGHT:Int = 	0xDCDCDC;
@@ -70,6 +72,9 @@ class APP
 	public static inline var ICON_EYE_CLOSED = 'eye_closed.png';
 	public static inline var ICON_LOCK_OPEN = 'lock_open.png';
 	public static inline var ICON_LOCK_CLOSED = 'lock_closed.png';
+
+	public static inline var ICON_CHECKBOX = 'checkbox.png';
+	public static inline var ICON_CHECKBOX_CHECKED = 'checkbox_checked.png';
 
 	public static inline var ICON_NEW = 'new.png';
 	public static inline var ICON_OPEN = 'open.png';
@@ -118,6 +123,8 @@ class APP
 
 		PLIK.preloadFont(APP.FONT_SQUARE);
     PLIK.preloadFont(APP.FONT_04B_03);
+		PLIK.preloadFont(APP.FONT_LATO_LIGHT);
+		PLIK.preloadFont(APP.FONT_LATO_BOLD);
 
 		if (APP.atlasSprites==null) APP.atlasSprites = Gfx.getTextureAtlas('sprites.xml');
 
