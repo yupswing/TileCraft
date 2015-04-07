@@ -142,7 +142,7 @@ class Shape {
 			dest.normal = 0.9;
 		case RAMP_DOWN:
 			dest.z2 = Std.int(Math.min(dest.z2, dest.z1 + Std.int(gh*(1.0 - dt)*(z2 - z1))+1));
-			dest.normal = 0.8;
+			dest.normal = 0.75; //TODO check if all right
 		case ARCH_UP:
 			dest.z1 = dest.z2 - 1 - Std.int(gh*(1.0 - dt)*(z2 - z1));
 		case ARCH_DOWN:

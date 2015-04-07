@@ -10,7 +10,9 @@ import com.akifox.plik.Data;
 import com.akifox.plik.Gfx;
 import com.akifox.plik.Sfx;
 import openfl.events.*;
+import openfl.display.BitmapData;
 import haxe.Timer;
+using hxColorToolkit.ColorToolkit;
 class APP
 {
 
@@ -114,6 +116,46 @@ class APP
 	public static inline var ICON_SHT_CORNER_SW = 'sht_corner_sw.png';
 	public static inline var ICON_SHT_CORNER_NE = 'sht_corner_ne.png';
 	public static inline var ICON_SHT_CORNER_NW = 'sht_corner_nw.png';
+
+	public static function makeColorIcon(size:Int,color:Int):BitmapData {
+		var span = 2;
+		var round = 8;
+		var hole = false;
+		if (color==-1) {
+			hole = true;
+			span += 1;
+			color = 0x2a8299;
+		}
+
+		var shape = new openfl.display.Shape();
+		var matrix = new openfl.geom.Matrix();
+		matrix.createGradientBox(size,size,90*Math.PI/180);
+		shape.graphics.beginGradientFill(openfl.display.GradientType.LINEAR,[ColorToolkit.shiftBrighteness(color,25),ColorToolkit.shiftBrighteness(color,-25)],[1,1],[0,255],matrix);
+		shape.graphics.drawRoundRect(0,0,size,size,round);
+		shape.graphics.endFill();
+
+		if (hole) {
+			var grid = 5;
+			var div = (size-span*2)/grid;
+			for (y in 0...grid) {
+				for (x in 0...grid) {
+					if ((x+y)%2==0) shape.graphics.beginFill(0x999999);
+					else shape.graphics.beginFill(0xEEEEEE);
+					shape.graphics.drawRect(div*x+span,div*y+span,div,div);
+				}
+			}
+		} else {
+			shape.graphics.beginFill(color);
+			shape.graphics.drawRoundRect(span,span,size-span*2,size-span*2,round);
+			shape.graphics.endFill();
+		}
+
+		var bd = new BitmapData(size,size,true,0);
+		bd.draw(shape);
+		shape = null;
+		return bd;
+
+	};
 
 
 	///////////////////////////////////////////////////////////////////////////

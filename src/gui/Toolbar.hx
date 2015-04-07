@@ -21,16 +21,15 @@ class Toolbar extends SpriteContainer
   var _buttonsPerRow = 4;
   var _buttonsWidth = 32;
   var _buttonsHeight = 32;
-  var _parentScreen:ScreenMain;
   var _selected:Button = null;
   var _selectable:Bool = false;
 
   var _styleButton:Style;
   var _style:Style;
 
-	public function new (parentScreen:ScreenMain,buttonsPerRow:Int,selectable:Bool, style:Style, styleButton:Style) {
+	public function new (buttonsPerRow:Int, selectable:Bool, style:Style, styleButton:Style) {
 		super();
-    _parentScreen = parentScreen;
+    if (buttonsPerRow<=0) buttonsPerRow = 256; // 1 row only
     _buttonsPerRow = buttonsPerRow;
     _selectable = selectable;
     _style = style;
@@ -44,6 +43,21 @@ class Toolbar extends SpriteContainer
   public function getButtonByIndex(index:Int):Button {
     if (index>=_buttons.length || index<0) return null;
     return _buttons[index];
+  }
+
+  public function selectByIndex(index:Int):Button {
+    var button = getButtonByIndex(index);
+    if (button==null) return null;
+    select(button);
+    return button;
+  }
+
+  private function select(button:Button):Bool {
+    if (button==null || !button.selectable) return false;
+    if (_selected != null) _selected.isSelected = false;
+    _selected = button;
+    button.isSelected = true;
+    return true;
   }
 
   public function addButton(id:String,value:Dynamic=null,icon:BitmapData=null,?actionF:Button->Void=null) {
@@ -65,8 +79,7 @@ class Toolbar extends SpriteContainer
       if (_selectable) {
         button.selectable = true;
         if (_selectable && (_buttons.length==0)) {
-          _selected = button;
-          button.isSelected = true;
+          select(button);
         }
       }
       button.x = Std.int((_buttons.length)%_buttonsPerRow)*(_buttonsWidth+_style.padding)+_style.margin;
@@ -76,38 +89,9 @@ class Toolbar extends SpriteContainer
     _buttons.push(button);
   }
 
-  public function redraw() {
-    for (el in _buttons) {
-      if (el!=null) el.draw();
-    }
-  }
-
   public function onClick(button:Button) {
-    if (_selectable && button!=_selected && _selected != null) {
-      //deselect previous button
-      _selected.isSelected = false;
-    }
-    button.isSelected = true;
-    _selected = button;
-    //fire action
-    button.actionAlt();
-
-		// var _tfe_x = (event.stageX - this.x - _parentScreen.x) / _parentScreen.currentScale;
-		// var _tfe_y = (event.stageY - this.y - _parentScreen.y) / _parentScreen.currentScale;
-    //
-    // var y = Std.int((_tfe_y-_style.margin) / (_buttonsWidth+_style.padding));
-    // var x = Std.int((_tfe_x-_style.margin) / (_buttonsHeight+_style.padding));
-    //
-    // var index = y*_buttonsPerRow+x;
-    // if (index<_buttons.length && _buttons[index] != null) {
-    //   if (_selectable) {
-    //     _buttons[_selected].isSelected = false;
-    //     _buttons[index].isSelected = true;
-    //     _selected = index;
-    //   }
-    //   _buttons[index].click();
-    // }
-
+    if (_selectable) select(button); //change selected
+    button.actionAlt(); //fire action
   }
 
 

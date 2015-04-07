@@ -81,6 +81,7 @@ class Button extends SpriteContainer {
     public var icon(get,set):BitmapData;
     private function get_icon():BitmapData {return _icon;}
     private function set_icon(value:BitmapData):BitmapData {
+      if (_icon!=null) _icon.dispose(); //TODO double check if ok to dispose
       _icon = value;
       this.draw();
       return value;
@@ -92,6 +93,7 @@ class Button extends SpriteContainer {
     public var iconOver(get,set):BitmapData;
     private function get_iconOver():BitmapData {return _iconOver;}
     private function set_iconOver(value:BitmapData):BitmapData {
+      if (_iconOver!=null) _iconOver.dispose(); //TODO double check if ok to dispose
       _iconOver = value;
       if (_isOver) this.draw();
       return value;
@@ -103,6 +105,7 @@ class Button extends SpriteContainer {
     public var iconSelected(get,set):BitmapData;
     private function get_iconSelected():BitmapData {return _iconSelected;}
     private function set_iconSelected(value:BitmapData):BitmapData {
+      if (_iconSelected!=null) _iconSelected.dispose(); //TODO double check if ok to dispose
       _iconSelected = value;
       if (_isSelected) this.draw();
       return value;
@@ -275,7 +278,6 @@ class Button extends SpriteContainer {
 
     public function select() {
       if (!_selectable) return;
-      trace('select!');
       set_isSelected(!_isSelected);
     }
 

@@ -138,21 +138,21 @@ class ScreenMain extends Screen
 		graphics.beginFill(0x242424,0.95);
 		graphics.drawRect(0,0,rwidth,50);
 
-		var button = new Button();
-		button.x = 130;
-		button.y = 100;
-		button.style = Style.button();
-		button.selectable = true;
-		button.listen = true;
-		button.actionF = function(button:Button) { trace(button); };
-		button.text = new Text("Button test",18,APP.COLOR_DARK,openfl.text.TextFormatAlign.CENTER);
-		button.icon = APP.atlasSprites.getRegion(APP.ICON_CHECKBOX).toBitmapData();
-		button.iconSelected = APP.atlasSprites.getRegion(APP.ICON_CHECKBOX_CHECKED).toBitmapData();
-		addChild(button);
+		// var button = new Button();
+		// button.x = 130;
+		// button.y = 100;
+		// button.style = Style.button();
+		// button.selectable = true;
+		// button.listen = true;
+		// button.actionF = function(button:Button) { trace(button); };
+		// button.text = new Text("Button test",18,APP.COLOR_DARK,openfl.text.TextFormatAlign.CENTER);
+		// button.icon = APP.atlasSprites.getRegion(APP.ICON_CHECKBOX).toBitmapData();
+		// button.iconSelected = APP.atlasSprites.getRegion(APP.ICON_CHECKBOX_CHECKED).toBitmapData();
+		// addChild(button);
 
 		// MODEL TOOLBAR ---------------------------------------------
 
-		var toolbar = new Toolbar(this,2,true,Style.toolbar(),Style.toolbarButton());
+		var toolbar = new Toolbar(2,true,Style.toolbar(),Style.toolbarButton());
 		toolbar.addButton("pointer",null,					APP.atlasSprites.getRegion(APP.ICON_POINTER).toBitmapData());
 		toolbar.addButton("sh_cube",null,					APP.atlasSprites.getRegion(APP.ICON_SH_CUBE).toBitmapData());
 		toolbar.addButton("sh_round_up",null,			APP.atlasSprites.getRegion(APP.ICON_SH_ROUND_UP).toBitmapData());
@@ -174,61 +174,35 @@ class ScreenMain extends Screen
 
 		// COLOR TOOLBAR ---------------------------------------------
 
-		var makeColorIcon = function(size:Int,color:Int):BitmapData {
-			var span = 2;
-			var round = 8;
-			var hole = false;
-			if (color==-1) {
-				hole = true;
-				span += 1;
-				color = 0x2a8299;
-			}
-
-			var shape = new openfl.display.Shape();
-			var matrix = new openfl.geom.Matrix();
-			matrix.createGradientBox(size,size,90*Math.PI/180);
-			shape.graphics.beginGradientFill(openfl.display.GradientType.LINEAR,[ColorToolkit.shiftBrighteness(color,25),ColorToolkit.shiftBrighteness(color,-25)],[1,1],[0,255],matrix);
-			shape.graphics.drawRoundRect(0,0,size,size,round);
-			shape.graphics.endFill();
-
-			if (hole) {
-				var grid = 5;
-				var div = (size-span*2)/grid;
-        for (y in 0...grid) {
-          for (x in 0...grid) {
-            if ((x+y)%2==0) shape.graphics.beginFill(0x999999);
-						else shape.graphics.beginFill(0xEEEEEE);
-						shape.graphics.drawRect(div*x+span,div*y+span,div,div);
-          }
-        }
-			} else {
-				shape.graphics.beginFill(color);
-				shape.graphics.drawRoundRect(span,span,size-span*2,size-span*2,round);
-				shape.graphics.endFill();
-			}
-
-			var bd = new BitmapData(size,size,true,0);
-			bd.draw(shape);
-			shape = null;
-			return bd;
-
-		};
-
-		var colorToolbar = new Toolbar(this,2,true,Style.toolbar(),Style.toolbarButtonFull());
+		var colorToolbar = new Toolbar(2,true,Style.toolbar(),Style.toolbarButtonFull());
 		var colorToolbarAction = function(button:Button) { Lib.current.stage.color = _model.getColor(cast(button.value,Int)); };
 		//colorToolbar.setPalette(_model.getPalette());
-		colorToolbar.addButton('palette0',0,makeColorIcon(26,-1),colorToolbarAction);
+		colorToolbar.addButton('palette0',0,APP.makeColorIcon(26,-1),colorToolbarAction);
 		for (i in 1...16) {
-			colorToolbar.addButton('palette$i',i,makeColorIcon(26,_model.getColor(i)),colorToolbarAction);
+			colorToolbar.addButton('palette$i',i,APP.makeColorIcon(26,_model.getColor(i)),colorToolbarAction);
 		}
+		colorToolbar.selectByIndex(1);
 		colorToolbar.x = 20;
 		colorToolbar.y = toolbar.y + toolbar.height + 20;
 		addChild(colorToolbar);
 
+		// SPECTRUM ---------------------------------------------
+
+		var spectrum = new Spectrum(function(color:Int) {
+			var button:Button = colorToolbar.getSelected();
+			var index:Int = cast(button.value,Int);
+			if (index==0) return; //value is the index
+			button.icon = APP.makeColorIcon(26,color);
+			_model.setColor(index,color);
+		});
+		spectrum.x = 120;
+		spectrum.y = colorToolbar.y;
+		addChild(spectrum);
+
 		// ACTION TOOLBAR ---------------------------------------------
 
 		var actionToolbarAction = function(button:Button) { trace("NOT IMPLEMENTED"); }
-		var actionToolbar = new Toolbar(this,1000,false,Style.toolbar(),Style.toolbarButton());
+		var actionToolbar = new Toolbar(0,false,Style.toolbar(),Style.toolbarButton());
 		actionToolbar.addButton("new",null,			APP.atlasSprites.getRegion(APP.ICON_NEW).toBitmapData(),		actionToolbarAction);
 		actionToolbar.addButton("open",null,		APP.atlasSprites.getRegion(APP.ICON_OPEN).toBitmapData(),		actionToolbarAction);
 		actionToolbar.addButton("save",null,		APP.atlasSprites.getRegion(APP.ICON_SAVE).toBitmapData(),		actionToolbarAction);
