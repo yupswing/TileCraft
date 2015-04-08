@@ -14,7 +14,7 @@ import com.akifox.plik.*;
 import com.akifox.plik.atlas.*;
 import com.akifox.transform.Transformation;
 
-class Toolbar extends SpriteContainer
+class Toolbar extends SpriteContainer implements IStyle
 {
 
   var _buttons:Array<Button> = new Array<Button>();
@@ -25,7 +25,14 @@ class Toolbar extends SpriteContainer
   var _selectable:Bool = false;
 
   var _styleButton:Style;
-  var _style:Style;
+
+  var _style:Style = new Style();
+  public var style(get,set):Style;
+  private function get_style():Style {return _style;}
+  private function set_style(value:Style):Style {
+    _style = value;
+    return value;
+  }
 
 	public function new (buttonsPerRow:Int, selectable:Bool, style:Style, styleButton:Style) {
 		super();
@@ -62,7 +69,7 @@ class Toolbar extends SpriteContainer
 
   public function addButton(id:String,value:Dynamic=null,icon:BitmapData=null,?actionF:Button->Void=null,?actionAltF:Button->Void=null) {
     var button:Button=null;
-    //if (icon!=null) {
+    if (icon!=null) {
       button = new Button();
       button.id = id;
       button.value = value;
@@ -85,10 +92,10 @@ class Toolbar extends SpriteContainer
           select(button);
         }
       }
-      button.x = Std.int((_buttons.length)%_buttonsPerRow)*(_buttonsWidth+_style.padding)+_style.margin;
-      button.y = Std.int((_buttons.length)/_buttonsPerRow)*(_buttonsHeight+_style.padding)+_style.margin;
+      button.x = Std.int((_buttons.length)%_buttonsPerRow)*(_buttonsWidth+_style.offset);
+      button.y = Std.int((_buttons.length)/_buttonsPerRow)*(_buttonsHeight+_style.offset);
       addChild(button);
-    //}
+    }
     _buttons.push(button);
   }
 

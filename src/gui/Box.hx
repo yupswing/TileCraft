@@ -7,7 +7,7 @@ import openfl.events.MouseEvent;
 import openfl.geom.Matrix;
 using hxColorToolkit.ColorToolkit;
 
-class Box extends SpriteContainer {
+class Box extends SpriteContainer implements IStyle {
 
 
     //*****************************************************************
@@ -41,19 +41,7 @@ class Box extends SpriteContainer {
 
     public function draw() {
 		  graphics.clear();
-
-      var w:Float = this.width+_style.padding*2;
-      var h:Float = this.height+_style.padding*2;
-
-      if (_style.outline_size>0) {
-        graphics.lineStyle(_style.outline_size,_style.outline_color);
-        graphics.drawRoundRect(0,0,w,h,_style.rounded,_style.rounded);
-        graphics.lineStyle(null);
-      }
-
-			graphics.beginFill(_style.background_color);
-      graphics.drawRoundRect(0,0,w,h,_style.rounded,_style.rounded);
-			graphics.endFill();
+      Style.drawBackground(this,_style);
     }
 
 }

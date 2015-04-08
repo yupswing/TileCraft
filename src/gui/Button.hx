@@ -7,7 +7,7 @@ import openfl.events.MouseEvent;
 import openfl.geom.Matrix;
 using hxColorToolkit.ColorToolkit;
 
-class Button extends SpriteContainer {
+class Button extends SpriteContainer implements IStyle {
 
 
     //*****************************************************************
@@ -69,6 +69,10 @@ class Button extends SpriteContainer {
       _text = value;
       this.draw();
       return value;
+    }
+
+    public function makeText(string:String) {
+      set_text(new Text(string,_style.font_size,_style.color,openfl.text.TextFormatAlign.CENTER,_style.font_name));
     }
 
     //*****************************************************************
@@ -214,33 +218,6 @@ class Button extends SpriteContainer {
       h = Math.max(h,_style.getHeight());
       w = Math.max(w,_style.getWidth());
 
-      // draw background
-      var outline_color = _style.outline_color;
-      if (_isSelected) outline_color = _style.selected_outline_color;
-      if (_isOver) outline_color = _style.over_outline_color;
-
-      if (_style.outline_size>0) {
-        graphics.lineStyle(_style.outline_size,outline_color);
-        graphics.drawRoundRect(_style.margin,_style.margin,w-_style.margin*2,h-_style.margin*2,_style.rounded,_style.rounded);
-        graphics.lineStyle(null);
-      }
-
-      var bg_color = _style.background_color;
-      if (_isSelected) bg_color = _style.selected_background_color;
-      if (_isOver) bg_color = _style.over_background_color;
-
-			var matrix = new openfl.geom.Matrix();
-			matrix.createGradientBox(w-_style.margin,h-_style.margin,90*Math.PI/180);
-			graphics.beginGradientFill(openfl.display.GradientType.LINEAR,[ColorToolkit.shiftBrighteness(bg_color,15),ColorToolkit.shiftBrighteness(bg_color,-15)],[1,1],[0,255],matrix);
-			graphics.drawRoundRect(_style.margin,_style.margin,w-_style.margin*2,h-_style.margin*2,_style.rounded);
-			graphics.endFill();
-
-      if (_style.bevel>0) {
-  			graphics.beginFill(bg_color);
-  			graphics.drawRoundRect(_style.margin+_style.bevel,_style.margin+_style.bevel,w-(_style.margin+_style.bevel)*2,h-(_style.margin+_style.bevel)*2,_style.rounded,_style.rounded);
-  			graphics.endFill();
-      }
-
       var object_x = _style.margin + _style.padding;
       var object_y = _style.margin + _style.padding;
 
@@ -263,6 +240,8 @@ class Button extends SpriteContainer {
         _text.x = object_x;
         _text.y = object_y + ty_offset;
       }
+
+      Style.drawBackground(this,_style,_isSelected,_isOver);
 
     }
 

@@ -1,4 +1,5 @@
 package gui;
+using hxColorToolkit.ColorToolkit;
 
 typedef Property = {
   var kind : Kind;
@@ -11,41 +12,86 @@ enum Kind {
   String;
 }
 
+
 class Style {
 
-  public function getWidth():Int {
-    return height + padding*2 + margin*2;
-  }
-  public function getHeight():Int {
-    return width + padding*2 + margin*2;
-  }
+    public function getWidth():Int {
+      return height + padding*2 + margin*2;
+    }
+    public function getHeight():Int {
+      return width + padding*2 + margin*2;
+    }
 
-    public var margin = 0;
-    public var padding = 8;
-    public var rounded = 8;
-    public var elements_padding = 8;
+    public var margin:Int = 0;
+    public var padding:Int = 0;
+    public var offset:Int = 0; //offset between internal elements
+    public var rounded:Int = 0;
+    public var width:Int = 0;
+    public var height:Int = 0;
+    public var outline_size:Int = 0;
+    public var bevel:Int = 0;
+    public var color:Int = 0;
+    public var font_name:String = "";
+    public var font_size:Int = 16;
+    public var background_color:Int = 0;
+    public var over_background_color:Int = 0;
+    public var selected_background_color:Int = 0;
+    public var outline_color:Int = 0;
+    public var over_outline_color:Int = 0;
+    public var selected_outline_color:Int = 0;
 
-    public var width = 0;
-    public var height = 0;
+    public function get(key:String):Dynamic {
+      return Reflect.getProperty(this, key);
+    }
 
-    public var outline_size = 3;
-    public var bevel = 3;
+    public function getInt(key:String):Int {
+      var value:Dynamic = get(key);
+      if (value==null) return -1;
+      return Std.int(value);
+    }
 
-    public var background_color = 0xdddddd;
-    public var over_background_color = 0xffffff;
-    public var selected_background_color = 0xeeeeee;
+    public function getFloat(key:String):Float {
+      var value:Dynamic = get(key);
+      if (value==null) return -1;
+      return cast(value,Float);
+    }
 
-    public var outline_color = 0xaaaaaa;
-    public var over_outline_color = 0xffcf00;
-    public var selected_outline_color = 0xcccccc;
+    public function getColor(key:String):Int {
+      var value:Dynamic = get(key);
+      if (value==null) return 0;
+      return toColor(Std.int(value));
+    }
+
+    public function getAlpha(key:String):Float {
+      var value:Dynamic = get(key);
+      if (value==null) return 0;
+      return toAlpha(Std.int(value));
+    }
+
+    public static function toColor(color:Int):Int {
+      return color>>8;
+    }
+
+    public static function toAlpha(color:Int):Float {
+      return (color&0xFF)/256;
+    }
+
+    public function getString(key:String):String {
+      var value:Dynamic = get(key);
+      if (value==null) return "";
+      return Std.string(value);
+    }
 
     public function copy(style:Style) {
       this.width = style.width;
       this.height = style.height;
       this.margin = style.margin;
       this.padding = style.padding;
+      this.offset = style.offset;
       this.rounded = style.rounded;
-      this.elements_padding = style.elements_padding;
+      this.color = style.color;
+      this.font_name = style.font_name;
+      this.font_size = style.font_size;
       this.outline_size = style.outline_size;
       this.background_color = style.background_color;
       this.over_background_color = style.over_background_color;
@@ -55,82 +101,137 @@ class Style {
       this.selected_outline_color = style.selected_outline_color;
     }
 
+    public function new(defaults:Dynamic = null) {
+    	set(defaults);
+    }
+
+    public function set(values:Dynamic = null):Style {
+      if (values==null) return this;
+    	for (field in Reflect.fields(values)) {
+    		if (Reflect.getProperty(this, field) != null) {
+    			Reflect.setProperty(this, field, Reflect.field(values, field));
+    		}
+    	}
+      return this;
+    }
+
+    //****************************************************************/
+
     public static function button():Style {
-      var style:Style = new Style();
-      style.margin = 0;
-      style.padding = 8;
-      style.rounded = 8;
-
-      style.width = 20;
-      style.height = 20;
-
-      style.outline_size = 3;
-      style.bevel = 2;
-
-      style.background_color = 0xdddddd;
-      style.over_background_color = 0xeeeeee;
-      style.selected_background_color = 0xdddddd;
-
-      style.outline_color = 0xaaaaaa;
-      style.over_outline_color = 0xffcf00;
-      style.outline_color = 0xaaaaaa;
-
-      return style;
+      return new Style({
+        'margin':0,
+        'padding':8,
+        'rounded':8,
+        'width':20,
+        'height':20,
+        'outline_size':3,
+        'bevel':2,
+        'background_color':0xddddddFF,
+        'over_background_color':0xeeeeeeFF,
+        'selected_background_color':0xddddddFF,
+        'outline_color':0xaaaaaaFF,
+        'over_outline_color':0xffcf00FF,
+        'selected_outline_color':0xaaaaaaFF
+      });
     }
     public static function miniButton():Style {
-      var style:Style = button();
-      style.padding = 2;
-      style.outline_size = 2;
-      style.bevel = 1;
-      return style;
+      return button().set({
+        'padding' : 2,
+        'outline_size' : 2,
+        'bevel' : 1
+      });
     }
 
     public static function toolbarButton():Style {
-      var style:Style = button();
-      style.padding = 3;
-      style.outline_size = 6;
-      style.width = 20;
-      style.height = 20;
-
-      style.outline_color = 0x242424;
-      style.over_outline_color = 0xffd97d;
-      style.selected_outline_color = 0xffb500;
-
-      return style;
+      return button().set({
+        'padding' : 3,
+        'outline_size' : 6,
+        'outline_color':0,
+        'over_outline_color':0xffd97dFF,
+        'selected_outline_color':0xffb500FF
+      });
     }
 
     public static function toolbarButtonFull():Style {
-      var style:Style = toolbarButton();
-      style.padding = 0;
-      style.background_color = style.outline_color;
-      style.over_background_color = style.over_outline_color ;
-      style.selected_background_color = style.selected_outline_color;
-      return style;
+      return toolbarButton().set({
+        'padding' : 0,
+        'background_color' : 6,
+        'over_background_color':0,
+        'over_outline_color':0xffd97dFF,
+        'selected_background_color':0xffb500FF
+      });
     }
 
     public static function toolbar():Style {
-      var style:Style = new Style();
-      style.margin = 0;
-      style.padding = 1;
-      style.rounded = 8;
+      return new Style({
+          'padding':1,
+          'offset':1,
+          'rounded':8,
+          'outline_size':0,
+          'background_color':0xddddddFF
+        });
+    }
 
-      style.outline_size = 0;
-      style.background_color = 0xdddddd;
-
-      return style;
+    public static function colorpicker():Style {
+      return new Style({
+          'margin':0,
+          'padding':20,
+          'rounded':8,
+          'offset':10,
+          'outline_size':0,
+          'background_color':0x242424CC
+        });
     }
 
     public static function box():Style {
-      var style:Style = new Style();
-      style.margin = 0;
-      style.padding = 10;
-      style.rounded = 8;
+      return new Style({
+          'margin':0,
+          'padding':10,
+          'rounded':8,
+          'offset':10,
+          'outline_size':5,
+          'background_color':0x242424CC,
+          'outline_color':0xffb400CC
+        });
+    }
 
-      style.outline_size = 2;
-      style.background_color = 0x242424;
-      style.outline_color = 0xbe8600;
+    public static function drawBackground(target:openfl.display.DisplayObject,targetStyle:Style,?isSelected:Bool=false,?isOver:Bool=false) {
 
-      return style;
+      var w = target.width+targetStyle.padding*2;
+      var h = target.height+targetStyle.padding*2;
+      var graphics = target.graphics;
+
+      // draw background
+      if (targetStyle.outline_size>0) {
+        var outline = targetStyle.outline_color;
+        if (isSelected) outline = targetStyle.selected_outline_color;
+        if (isOver) outline = targetStyle.over_outline_color;
+        var outline_color = toColor(outline);
+        var outline_alpha = toAlpha(outline);
+
+        graphics.lineStyle(targetStyle.outline_size,outline_color,outline_alpha);
+        graphics.drawRoundRect(0,0,w,h,targetStyle.rounded,targetStyle.rounded);
+        graphics.lineStyle(null);
+      }
+
+      var background = targetStyle.background_color;
+      if (isSelected) background = targetStyle.selected_background_color;
+      if (isOver) background = targetStyle.over_background_color;
+
+      var background_color = toColor(background);
+      var background_alpha = toAlpha(background);
+
+      if (targetStyle.bevel>0) {
+  			var matrix = new openfl.geom.Matrix();
+  			matrix.createGradientBox(w,h,90*Math.PI/180);
+  			graphics.beginGradientFill(openfl.display.GradientType.LINEAR,[ColorToolkit.shiftBrighteness(background_color,15),ColorToolkit.shiftBrighteness(background_color,-15)],[background_alpha,background_alpha],[0,255],matrix);
+  			graphics.drawRoundRect(0,0,w,h,targetStyle.rounded);
+  			graphics.endFill();
+      }
+
+			graphics.beginFill(background_color,background_alpha);
+			graphics.drawRoundRect(targetStyle.bevel,targetStyle.bevel,w-targetStyle.bevel*2,h-targetStyle.bevel*2,targetStyle.rounded,targetStyle.rounded);
+			graphics.endFill();
     }
 
 }

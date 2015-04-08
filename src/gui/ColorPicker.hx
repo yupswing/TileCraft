@@ -6,12 +6,20 @@ import openfl.display.BitmapData;
 import openfl.events.MouseEvent;
 using hxColorToolkit.ColorToolkit;
 
-class ColorPicker extends SpriteContainer {
+class ColorPicker extends SpriteContainer implements IStyle {
 
     var _spectrum:BitmapData;
     var _slider:BitmapData;
     var _bitmapSpectrum:Bitmap;
     var _bitmapSlider:Bitmap;
+
+    var _style:Style = new Style();
+    public var style(get,set):Style;
+    private function get_style():Style {return _style;}
+    private function set_style(value:Style):Style {
+      _style = value;
+      return value;
+    }
 
     var _frameWidth:Int;
     var _frameHeight:Int;
@@ -23,9 +31,6 @@ class ColorPicker extends SpriteContainer {
 
     var _selectorSlider:ShapeContainer;
     var _selectorSliderSize:Int = 7;
-
-    public var _offset = 10;
-    public var _padding = 5;
 
     var _byteArrayUtil:openfl.utils.ByteArray;
 
@@ -56,26 +61,24 @@ class ColorPicker extends SpriteContainer {
 
   	public function new (action:Int->Void,?width:Int=360,?height:Int=150,?side:Int=30) {
   		super();
+      _style = Style.colorpicker();
       _frameWidth = width;
       _frameHeight = height;
       _frameSide = side;
       _action = action;
 
-      //graphics.beginFill(0xFF0000);
-      //graphics.drawRect(0,0,_frameWidth+_frameSide+_offset+_padding*2,_frameHeight+_padding*2);
-
       _byteArrayUtil = new openfl.utils.ByteArray();
 
       _spectrum = new BitmapData(_frameWidth,_frameHeight,false,0);
       _bitmapSpectrum = new Bitmap(_spectrum);
-      _bitmapSpectrum.x = _padding;
-      _bitmapSpectrum.y = _padding;
+      _bitmapSpectrum.x = _style.padding;
+      _bitmapSpectrum.y = _style.padding;
       addChild(_bitmapSpectrum);
 
       _slider = new BitmapData(_frameSide,_frameHeight,false,0);
       _bitmapSlider = new Bitmap(_slider);
-      _bitmapSlider.x = _frameWidth+_offset+_padding;
-      _bitmapSlider.y = _padding;
+      _bitmapSlider.x = _frameWidth+_style.offset+_style.padding;
+      _bitmapSlider.y = _style.padding;
       addChild(_bitmapSlider);
 
       selectorSpectrum = new ShapeContainer();
@@ -83,12 +86,14 @@ class ColorPicker extends SpriteContainer {
       addChild(selectorSpectrum);
 
       _selectorSlider = new ShapeContainer();
-      _selectorSlider.x = _frameWidth+_offset+_padding;
+      _selectorSlider.x = _frameWidth+_style.offset+_style.padding;
       drawSelectorSlider();
       addChild(_selectorSlider);
 
       // Select default (HSB 180,50,50)
       selector(0x408080);
+
+      Style.drawBackground(this,_style);
   	}
 
     public override function destroy() {
@@ -103,14 +108,14 @@ class ColorPicker extends SpriteContainer {
       _colorHSB = hsb;
       drawSpectrum();
       drawSide();
-      selectorSpectrum.x = Std.int(hsb.hue*_frameWidth/360-selectorSpectrumSize*0.5)+_padding;
-      selectorSpectrum.y = Std.int((hsb.saturation*_frameHeight/100)-selectorSpectrumSize*0.5)+_padding;
-      _selectorSlider.y = Std.int(_frameHeight-(hsb.brightness*_frameHeight/100)-_selectorSliderSize/2)+_padding;
+      selectorSpectrum.x = Std.int(hsb.hue*_frameWidth/360-selectorSpectrumSize*0.5)+_style.padding;
+      selectorSpectrum.y = Std.int((hsb.saturation*_frameHeight/100)-selectorSpectrumSize*0.5)+_style.padding;
+      _selectorSlider.y = Std.int(_frameHeight-(hsb.brightness*_frameHeight/100)-_selectorSliderSize/2)+_style.padding;
     }
 
     private inline function selectorManual(color:Int,x:Int,y:Int) {
       _colorHSB = color.toHSB();
-      if (x>_frameWidth+_padding) {
+      if (x>_frameWidth+_style.padding) {
         _selectorSlider.y = y-_selectorSliderSize/2;
         drawSpectrum();
       } else {
@@ -217,13 +222,13 @@ class ColorPicker extends SpriteContainer {
       var y = Std.int(event.localY);
 
       // out of big boundaries
-      if (x<_padding || x>_padding+_frameWidth+_offset+_frameSide || y<_padding || y>_padding+_frameHeight) return;
+      if (x<_style.padding || x>_style.padding+_frameWidth+_style.offset+_frameSide || y<_style.padding || y>_style.padding+_frameHeight) return;
 
       var color = -1;
-      if (x > _padding+_frameWidth+_offset && x < _padding+_frameWidth+_offset+_frameSide) {
-        color = _slider.getPixel(x-_frameWidth-_offset-_padding,y-_padding);
-      } else if (x > _padding && x < _padding+_frameWidth) {
-        color = _spectrum.getPixel(x-_padding,y-_padding);
+      if (x > _style.padding+_frameWidth+_style.offset && x < _style.padding+_frameWidth+_style.offset+_frameSide) {
+        color = _slider.getPixel(x-_frameWidth-_style.offset-_style.padding,y-_style.padding);
+      } else if (x > _style.padding && x < _style.padding+_frameWidth) {
+        color = _spectrum.getPixel(x-_style.padding,y-_style.padding);
       }
       //out of precise boundaries
       if (color==-1) return;
@@ -244,18 +249,18 @@ class ColorPicker extends SpriteContainer {
 
     private function onMouseOut(event:MouseEvent) {
       if (!_isChoosing) return;
-      trace('out');
+      //trace('out');
       onMouseUp(event);
-      var x = Std.int(event.localX);
-      var y = Std.int(event.localY);
-      trace(x,y);
-      if (x<_padding) x = _padding;
-      if (x>_padding+_frameWidth+_offset+_frameSide) x = _padding+_frameWidth+_offset+_frameSide;
-      if (y<_padding) y = _padding;
-      if (y>_padding+_frameHeight) y = _padding+_frameHeight;
-      event.localX = x;
-      event.localY = y;
-      trace(x,y,event.localX,event.localY);
+      // var x = Std.int(event.localX);
+      // var y = Std.int(event.localY);
+      // trace(x,y);
+      // if (x<_style.padding) x = _style.padding;
+      // if (x>_style.padding+_frameWidth+_style.offset+_frameSide) x = _style.padding+_frameWidth+_style.offset+_frameSide;
+      // if (y<_style.padding) y = _style.padding;
+      // if (y>_style.padding+_frameHeight) y = _style.padding+_frameHeight;
+      // event.localX = x;
+      // event.localY = y;
+      // trace(x,y,event.localX,event.localY);
       onMouseMove(event);
     }
 
