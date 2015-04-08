@@ -173,9 +173,33 @@ class ScreenMain extends Screen
 		addChild(toolbar);
 
 		// COLOR TOOLBAR ---------------------------------------------
-
 		var colorToolbar = new Toolbar(2,true,Style.toolbar(),Style.toolbarButtonFull());
-		var colorToolbarAction = function(button:Button) { Lib.current.stage.color = _model.getColor(cast(button.value,Int)); };
+
+		//---
+
+		var spectrumAction = function(color:Int) {
+			var button:Button = colorToolbar.getSelected();
+			var index:Int = cast(button.value,Int);
+			if (index==0) return; //hole
+			button.icon = APP.makeColorIcon(26,color);
+			_model.setColor(index,color);
+		}
+
+		//---
+
+		var spectrum = new Spectrum(spectrumAction);
+
+		//---
+
+		var colorToolbarAction = function(button:Button) {
+				var value:Int = cast(button.value,Int);
+				if (value==0) return; //hole
+				//Lib.current.stage.color = _model.getColor(value);
+				spectrum.selector(_model.getColor(value));
+		};
+
+		//---
+
 		//colorToolbar.setPalette(_model.getPalette());
 		colorToolbar.addButton('palette0',0,APP.makeColorIcon(26,-1),colorToolbarAction);
 		for (i in 1...16) {
@@ -186,15 +210,8 @@ class ScreenMain extends Screen
 		colorToolbar.y = toolbar.y + toolbar.height + 20;
 		addChild(colorToolbar);
 
-		// SPECTRUM ---------------------------------------------
+		//---
 
-		var spectrum = new Spectrum(function(color:Int) {
-			var button:Button = colorToolbar.getSelected();
-			var index:Int = cast(button.value,Int);
-			if (index==0) return; //value is the index
-			button.icon = APP.makeColorIcon(26,color);
-			_model.setColor(index,color);
-		});
 		spectrum.x = 120;
 		spectrum.y = colorToolbar.y;
 		addChild(spectrum);
