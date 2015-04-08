@@ -228,6 +228,7 @@ class ModelRenderer {
 	}
 
 	private function previewLight(){
+		trace('preview light');
     var y:Int = 0;
     while(y < h){
       var x:Int = 0;
@@ -244,6 +245,7 @@ class ModelRenderer {
 	private static inline var LIGHT_Y_RADIUS:Int = 10;
 
 	private function light(){
+		trace('full light');
 		var h2:Int = Std.int(h/2);
     var y:Int = 0;
 		while(y < h){

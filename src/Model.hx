@@ -62,7 +62,8 @@ class Model {
 	}
 
 	public function setColor(index:Int, rgb:Int) {
-		colors[index] = rgb;
+		//colors[index] = ~(0xFFFFFF^rgb); //TODO check why inverted colors
+		colors[index] = rgb|0xFF000000; //this two lines are equivalent
 	}
 
 }

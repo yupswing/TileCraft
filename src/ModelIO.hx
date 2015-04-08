@@ -6,7 +6,8 @@ class ModelIO {
 
 	private static inline var COLOR_COUNT = 16;
 	public static var DEFAULT_PALETTE:Array<Int> = [
-		0xFFd5f6ff,
+		//0xFFd5f6ff, // original hole color
+		0xFFFF0000, // new hole color
 		0xFF4045BB,
 		0xFF3EA5F2,
 		0xFFB3DBEE,

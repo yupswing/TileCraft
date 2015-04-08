@@ -44,6 +44,43 @@ class ScreenMain extends Screen
 		rheight = 576;
 	}
 
+	var wait:BitmapData;
+	var model:Model;
+
+	var testPreviewBitmap:Bitmap;
+	var testFinalBitmap:Bitmap;
+	var testRenderBitmap:Bitmap;
+
+	var rendererPreview:ModelRenderer;
+	var rendererFinal:ModelRenderer;
+
+	public function renderTest() {
+
+		//testPreviewBitmap.bitmapData = null;
+		//testRenderBitmap.bitmapData = wait;
+		//testRenderBitmap.x = rwidth/2-testRenderBitmap.width/2;
+		//testRenderBitmap.y = rheight/2-testRenderBitmap.height/2;
+		//testFinalBitmap.bitmapData = null;
+
+		trace(model.getPalette());
+
+		Actuate.timer(0.01).onComplete( function() {
+
+			testPreviewBitmap.bitmapData = rendererPreview.render(model,-1,true);
+			testPreviewBitmap.x = rwidth/2-testPreviewBitmap.width/2+PLIK.adjust(650);
+			testPreviewBitmap.y = rheight/2-testPreviewBitmap.height/2;
+
+			var bpd = rendererFinal.render(model,-1,false);
+			testRenderBitmap.bitmapData = bpd;
+			testRenderBitmap.x = rwidth/2-testRenderBitmap.width/2;
+			testRenderBitmap.y = rheight/2-testRenderBitmap.height/2;
+
+			testFinalBitmap.bitmapData = PostFX.scale(PostFX.fxaaOutline(bpd,8,8),0.25);
+			testFinalBitmap.x = rwidth/2-testFinalBitmap.width/2-PLIK.adjust(550);
+			testFinalBitmap.y = rheight/2-testFinalBitmap.height/2;
+		});
+	}
+
 	public override function initialize():Void {
     trace(rwidth);
     trace(rheight);
@@ -60,10 +97,10 @@ class ScreenMain extends Screen
 		//var original = "EgQCAJn_Zv8zETxKKyZGRp4mm0aeRFaaeUSamnlEVokBRJqJAUNmmnhDqpp4FzxZvCxVV90sqmfdRGaaREYBRVVG70VVCh5FVRxVRO8cqkTv";
 
 		// complex shape
-		//var original = "FQQA____Ezw5DkBLCjwAWldvAGlIj1CrKhJwRZrNMEtIzmJFGhKCq5rNAiNnvALNRc0CzXgSAiNFEgJ4Zj9MacxpDng7eEMS3gFD3t4BAy3eAUBF3gFDq-8B";
+		var original = "FQQA____Ezw5DkBLCjwAWldvAGlIj1CrKhJwRZrNMEtIzmJFGhKCq5rNAiNnvALNRc0CzXgSAiNFEgJ4Zj9MacxpDng7eEMS3gFD3t4BAy3eAUBF3gFDq-8B";
 
 		// home
-		var original = "DAAACGneAQk8XCgIPF0SWzdcv183er9rjFy_b4x6v2mMzJ1ZN7ydCDysmgBpXiVAaaxH";
+		//var original = "DAAACGneAQk8XCgIPF0SWzdcv183er9rjFy_b4x6v2mMzJ1ZN7ydCDysmgBpXiVAaaxH";
 
 		// random stuff
 		//var original = "BxAA_wD_DCM0AQy8RQEMZ6sBXHgBAUwB3gFAq0UBEQgIvQ..";
@@ -74,7 +111,7 @@ class ScreenMain extends Screen
 		//var original = "EwAC____OxK8AUo0qwFLq5oBO828ATgjNBg5IlUDOd1VAwgeVSIBigESMXoBIjGIAQExqgEBUYgAMzYRiAE2FCWbNiM0vBYFFpo27ncCNt40BA..";
 
 		var decoded = Base64.decodeBase64(original);
-		var model = _model = ModelIO.loadModel(decoded);
+		model = _model = ModelIO.loadModel(decoded);
 		var demodel = ModelIO.saveModel(model);
 		var reencoded = Base64.encodeBase64(demodel,true);
 
@@ -94,29 +131,6 @@ class ScreenMain extends Screen
 
 		// END TEST
 
-		var ren = new ModelRenderer(Std.int(320),Std.int(480));
-		var bpd_preview = ren.render(model,-1,true);
-		var bp = new Bitmap(bpd_preview);
-		bp.smoothing = true;
-		bp.x = rwidth/2-bp.width/2+PLIK.adjust(650);
-		bp.y = rheight/2-bp.height/2;
-		addChild(bp);
-
-		var ren = new ModelRenderer(Std.int(320),Std.int(480));
-		var bpd = ren.render(model,-1,false);
-		var bp = new Bitmap(bpd);
-		bp.smoothing = true;
-		bp.x = rwidth/2-bp.width/2;
-		bp.y = rheight/2-bp.height/2;
-		addChild(bp);
-
-		var bpd_fx = PostFX.scale(PostFX.fxaaOutline(bpd,8,8),0.25);
-		//var bpd_fx = PostFX.scale(bpd,0.25);
-		var bp = new Bitmap(bpd_fx);
-		bp.x = rwidth/2-bp.width/2-PLIK.adjust(550);
-		bp.y = rheight/2-bp.height/2;
-		addChild(bp);
-
 		//var b:openfl.utils.ByteArray = bpd_fx.encode("png", 1);
 		//trace("data:image/png;base64,"+haxe.crypto.Base64.encode(b));
 
@@ -126,6 +140,18 @@ class ScreenMain extends Screen
 		// fo.writeString(b.toString());
 		// fo.close();
 
+		rendererPreview = new ModelRenderer(Std.int(320),Std.int(480));
+		rendererFinal = new ModelRenderer(Std.int(320),Std.int(480));
+
+		wait = openfl.Assets.getBitmapData('assets/graphics/generic/wait.png',true);
+		testPreviewBitmap = new Bitmap(null);
+		addChild(testPreviewBitmap);
+
+		testRenderBitmap = new Bitmap(null);
+		addChild(testRenderBitmap);
+
+		testFinalBitmap = new Bitmap(null);
+		addChild(testFinalBitmap);
 
 
 		// STATIC INTERFACE ---------------------------------------------
@@ -183,6 +209,7 @@ class ScreenMain extends Screen
 			if (index==0) return; //hole
 			button.icon = APP.makeColorIcon(26,color);
 			_model.setColor(index,color);
+			renderTest();
 		}
 
 		//---
@@ -230,7 +257,7 @@ class ScreenMain extends Screen
 		actionToolbar.addButton("open",null,		APP.atlasSprites.getRegion(APP.ICON_OPEN).toBitmapData(),		actionToolbarAction);
 		actionToolbar.addButton("save",null,		APP.atlasSprites.getRegion(APP.ICON_SAVE).toBitmapData(),		actionToolbarAction);
 		actionToolbar.addButton("-");
-		actionToolbar.addButton("render",null,	APP.atlasSprites.getRegion(APP.ICON_RENDER).toBitmapData(),	actionToolbarAction);
+		actionToolbar.addButton("render",null,	APP.atlasSprites.getRegion(APP.ICON_RENDER).toBitmapData(),	function(_) {renderTest();});
 		actionToolbar.addButton("-");
 		actionToolbar.addButton("copy",null,		APP.atlasSprites.getRegion(APP.ICON_COPY).toBitmapData(),		actionToolbarAction);
 		actionToolbar.addButton("paste",null,	APP.atlasSprites.getRegion(APP.ICON_PASTE).toBitmapData(),	actionToolbarAction);
@@ -251,6 +278,7 @@ class ScreenMain extends Screen
 		// ---------------------------------------------
 
 		super.initialize(); // init_super at the end
+
 	}
 
 	public override function unload():Void {
@@ -259,6 +287,7 @@ class ScreenMain extends Screen
 
 	public override function start() {
 		super.start();  // call resume
+		renderTest();
 	}
 
 	public override function hold():Void {
