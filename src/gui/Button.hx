@@ -54,6 +54,7 @@ class Button extends SpriteContainer {
     public var actionAltF(get,set):Button->Void;
     private function get_actionAltF():Button->Void {return _actionAltF;}
     private function set_actionAltF(value:Button->Void):Button->Void {
+      this.doubleClickEnabled = (value!=null);
       return _actionAltF = value;
     }
 
@@ -154,11 +155,13 @@ class Button extends SpriteContainer {
       if (value) {
         //hookers on
     		addEventListener(MouseEvent.CLICK, onClick);
+    		addEventListener(MouseEvent.DOUBLE_CLICK, onDoubleClick);
     		addEventListener(MouseEvent.MOUSE_OVER, onMouseOver);
     		addEventListener(MouseEvent.MOUSE_OUT, onMouseOut);
       } else {
         //hookers off
     		removeEventListener(MouseEvent.CLICK, onClick);
+        removeEventListener(MouseEvent.DOUBLE_CLICK, onDoubleClick);
         removeEventListener(MouseEvent.MOUSE_OVER, onMouseOver);
         removeEventListener(MouseEvent.MOUSE_OUT, onMouseOut);
       }
@@ -206,22 +209,21 @@ class Button extends SpriteContainer {
         ty_offset = Std.int((ih-th)/2);
       }
 
-      var h = Math.max(th,ih) + _style.margin*2 + _style.padding*2;
-      var w = tw+iw + _style.margin*2 + _style.padding*spans;
-      // graphics.beginFill(0xFF0000);
-      // graphics.drawRect(0,0,w,h);
-      // graphics.endFill();
+      var h:Float = Math.max(th,ih) + _style.margin*2 + _style.padding*2;
+      var w:Float = tw+iw + _style.margin*2 + _style.padding*spans;
+      h = Math.max(h,_style.getHeight());
+      w = Math.max(w,_style.getWidth());
 
       // draw background
       var outline_color = _style.outline_color;
       if (_isSelected) outline_color = _style.selected_outline_color;
       if (_isOver) outline_color = _style.over_outline_color;
 
-      graphics.lineStyle(_style.outline_size,outline_color);
-      graphics.drawRoundRect(_style.margin,_style.margin,w-_style.margin*2,h-_style.margin*2,_style.rounded,_style.rounded);
-      graphics.lineStyle(null);
-
-
+      if (_style.outline_size>0) {
+        graphics.lineStyle(_style.outline_size,outline_color);
+        graphics.drawRoundRect(_style.margin,_style.margin,w-_style.margin*2,h-_style.margin*2,_style.rounded,_style.rounded);
+        graphics.lineStyle(null);
+      }
 
       var bg_color = _style.background_color;
       if (_isSelected) bg_color = _style.selected_background_color;
@@ -233,11 +235,11 @@ class Button extends SpriteContainer {
 			graphics.drawRoundRect(_style.margin,_style.margin,w-_style.margin*2,h-_style.margin*2,_style.rounded);
 			graphics.endFill();
 
-      var bevel_size = 2;
-
-			graphics.beginFill(bg_color);
-			graphics.drawRoundRect(_style.margin+bevel_size,_style.margin+bevel_size,w-(_style.margin+bevel_size)*2,h-(_style.margin+bevel_size)*2,_style.rounded,_style.rounded);
-			graphics.endFill();
+      if (_style.bevel>0) {
+  			graphics.beginFill(bg_color);
+  			graphics.drawRoundRect(_style.margin+_style.bevel,_style.margin+_style.bevel,w-(_style.margin+_style.bevel)*2,h-(_style.margin+_style.bevel)*2,_style.rounded,_style.rounded);
+  			graphics.endFill();
+      }
 
       var object_x = _style.margin + _style.padding;
       var object_y = _style.margin + _style.padding;
@@ -268,6 +270,10 @@ class Button extends SpriteContainer {
       this.click();
     }
 
+    private function onDoubleClick(event:MouseEvent) {
+      this.doubleClick();
+    }
+
     private function onMouseOver(event:MouseEvent) {
       this.set_isOver(true);
     }
@@ -284,6 +290,10 @@ class Button extends SpriteContainer {
     public function click() {
       select();
       action();
+    }
+
+    public function doubleClick() {
+      actionAlt();
     }
 
     public function action() {

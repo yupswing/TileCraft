@@ -177,7 +177,7 @@ class ScreenMain extends Screen
 
 		//---
 
-		var spectrumAction = function(color:Int) {
+		var colorPickerAction = function(color:Int) {
 			var button:Button = colorToolbar.getSelected();
 			var index:Int = cast(button.value,Int);
 			if (index==0) return; //hole
@@ -187,15 +187,26 @@ class ScreenMain extends Screen
 
 		//---
 
-		var spectrum = new Spectrum(spectrumAction);
+		_colorPicker = new BoxColorPicker(colorPickerAction,function() {hideColorPicker();});
+		_colorPicker.x = 120;
+		_colorPicker.y = rheight-20-_colorPicker.height;
 
 		//---
 
 		var colorToolbarAction = function(button:Button) {
 				var value:Int = cast(button.value,Int);
+				if (value==0) {
+					hideColorPicker();
+					return; //hole
+				}
+				Lib.current.stage.color = _model.getColor(value);
+				if (_colorPickerOnStage) showColorPicker(_model.getColor(value));
+		};
+
+		var colorToolbarActionAlt = function(button:Button) {
+				var value:Int = cast(button.value,Int);
 				if (value==0) return; //hole
-				//Lib.current.stage.color = _model.getColor(value);
-				spectrum.selector(_model.getColor(value));
+				showColorPicker(_model.getColor(value));
 		};
 
 		//---
@@ -203,18 +214,13 @@ class ScreenMain extends Screen
 		//colorToolbar.setPalette(_model.getPalette());
 		colorToolbar.addButton('palette0',0,APP.makeColorIcon(26,-1),colorToolbarAction);
 		for (i in 1...16) {
-			colorToolbar.addButton('palette$i',i,APP.makeColorIcon(26,_model.getColor(i)),colorToolbarAction);
+			colorToolbar.addButton('palette$i',i,APP.makeColorIcon(26,_model.getColor(i)),colorToolbarAction,colorToolbarActionAlt);
 		}
 		colorToolbar.selectByIndex(1);
 		colorToolbar.x = 20;
 		colorToolbar.y = toolbar.y + toolbar.height + 20;
 		addChild(colorToolbar);
 
-		//---
-
-		spectrum.x = 120;
-		spectrum.y = colorToolbar.y;
-		addChild(spectrum);
 
 		// ACTION TOOLBAR ---------------------------------------------
 
@@ -223,8 +229,12 @@ class ScreenMain extends Screen
 		actionToolbar.addButton("new",null,			APP.atlasSprites.getRegion(APP.ICON_NEW).toBitmapData(),		actionToolbarAction);
 		actionToolbar.addButton("open",null,		APP.atlasSprites.getRegion(APP.ICON_OPEN).toBitmapData(),		actionToolbarAction);
 		actionToolbar.addButton("save",null,		APP.atlasSprites.getRegion(APP.ICON_SAVE).toBitmapData(),		actionToolbarAction);
+		actionToolbar.addButton("-");
 		actionToolbar.addButton("render",null,	APP.atlasSprites.getRegion(APP.ICON_RENDER).toBitmapData(),	actionToolbarAction);
-		//actionToolbar.addButton("-");
+		actionToolbar.addButton("-");
+		actionToolbar.addButton("copy",null,		APP.atlasSprites.getRegion(APP.ICON_COPY).toBitmapData(),		actionToolbarAction);
+		actionToolbar.addButton("paste",null,	APP.atlasSprites.getRegion(APP.ICON_PASTE).toBitmapData(),	actionToolbarAction);
+		actionToolbar.addButton("-");
 		actionToolbar.addButton("quit",null,		APP.atlasSprites.getRegion(APP.ICON_QUIT).toBitmapData(),		actionToolbarAction);
 		actionToolbar.x = 120;
 		actionToolbar.y = 10;
@@ -262,6 +272,24 @@ class ScreenMain extends Screen
 
     // HOOKERS ON
 
+	}
+
+	var _colorPicker:BoxColorPicker;
+	var _colorPickerOnStage:Bool = false;
+
+	private function showColorPicker(color:Int) {
+		_colorPicker.selector(color);
+		if (_colorPickerOnStage) return;
+		addChild(_colorPicker);
+		_colorPicker.show();
+		_colorPickerOnStage = true;
+	}
+
+	private function hideColorPicker() {
+		if (!_colorPickerOnStage) return;
+		_colorPicker.hide();
+		removeChild(_colorPicker);
+		_colorPickerOnStage = false;
 	}
 
 	private override function update(delta:Float):Void {

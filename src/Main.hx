@@ -57,7 +57,7 @@ class Main {
 		// PREFERENCES
 		PLIK.initPref();
 
-		PLIK.setDefaultFont(APP.FONT_LATO_LIGHT);
+		PLIK.setDefaultFont(APP.FONT_SQUARE);
 
 		// INITIALIZE GFX
 		Gfx.setBasePath("assets/graphics/generic/"); // no multiresolution

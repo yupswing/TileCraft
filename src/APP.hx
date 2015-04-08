@@ -53,7 +53,7 @@ class APP
 	// COLORS
 
 	public static inline var FONT_SQUARE:String = "assets/fonts/Square.ttf";
-  public static inline var FONT_04B_03:String = "assets/fonts/04B_03.ttf";
+  public static inline var FONT_04B_03:String = "assets/fonts/04B_03.TTF";
   public static inline var FONT_LATO_BOLD:String = "assets/fonts/Lato-Bold.ttf";
   public static inline var FONT_LATO_LIGHT:String = "assets/fonts/Lato-Light.ttf";
 
@@ -69,7 +69,6 @@ class APP
 	// atlasIcon REGIONS
 
 	public static inline var ICON_POINTER = 'pointer.png';
-	public static inline var ICON_DELETE = 'delete.png';
 	public static inline var ICON_EYE_OPEN = 'eye_open.png';
 	public static inline var ICON_EYE_CLOSED = 'eye_closed.png';
 	public static inline var ICON_LOCK_OPEN = 'lock_open.png';
@@ -79,7 +78,11 @@ class APP
 	public static inline var ICON_CHECKBOX_CHECKED = 'checkbox_checked.png';
 
 	public static inline var ICON_NEW = 'new.png';
+	public static inline var ICON_COPY = 'copy.png';
+	public static inline var ICON_PASTE = 'paste.png';
 	public static inline var ICON_OPEN = 'open.png';
+	public static inline var ICON_DELETE = 'delete.png';
+	public static inline var ICON_OK = 'ok.png';
 	public static inline var ICON_SAVE = 'save.png';
 	public static inline var ICON_QUIT = 'quit.png';
 	public static inline var ICON_RENDER = 'render.png';

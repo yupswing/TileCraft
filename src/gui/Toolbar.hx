@@ -60,7 +60,7 @@ class Toolbar extends SpriteContainer
     return true;
   }
 
-  public function addButton(id:String,value:Dynamic=null,icon:BitmapData=null,?actionF:Button->Void=null) {
+  public function addButton(id:String,value:Dynamic=null,icon:BitmapData=null,?actionF:Button->Void=null,?actionAltF:Button->Void=null) {
     var button:Button=null;
     //if (icon!=null) {
       button = new Button();
@@ -68,8 +68,11 @@ class Toolbar extends SpriteContainer
       button.value = value;
       button.listen = true;
       button.style = _styleButton;
-      button.actionF = onClick;
-      button.actionAltF = actionF;
+      button.actionF = function(button:Button) {
+                          if (_selectable) select(button); //change selected
+                          if (actionF!=null) actionF(button); //fire action
+                       };
+      if (actionAltF!=null) button.actionAltF = actionAltF;
       button.icon = icon;
       if (_buttons.length==0) {
         //set width & height same as first button
@@ -87,11 +90,6 @@ class Toolbar extends SpriteContainer
       addChild(button);
     //}
     _buttons.push(button);
-  }
-
-  public function onClick(button:Button) {
-    if (_selectable) select(button); //change selected
-    button.actionAlt(); //fire action
   }
 
 
