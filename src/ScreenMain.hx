@@ -421,10 +421,16 @@ class ScreenMain extends Screen
 
 		// APP TITLE ---------------------------------------------
 
-		var text = new Text("TILECRAFT",16,APP.COLOR_ORANGE,openfl.text.TextFormatAlign.CENTER,APP.FONT_SQUARE);
+		var text = new Text("TILECRAFT",18,APP.COLOR_ORANGE,openfl.text.TextFormatAlign.CENTER,APP.FONT_SQUARE);
 		text.t.setAnchoredPivot(Transformation.ANCHOR_MIDDLE_CENTER);
 		text.t.x = TOOLBAR_WIDTH/2;
 		text.t.y = ACTIONBAR_HEIGHT/2;
+		addChild(text);
+
+		var text = new Text("alpha4",8,APP.COLOR_ORANGE,openfl.text.TextFormatAlign.CENTER,APP.FONT_LATO_BOLD);
+		text.t.setAnchoredPivot(Transformation.ANCHOR_MIDDLE_CENTER);
+		text.t.x = TOOLBAR_WIDTH/2;
+		text.t.y = ACTIONBAR_HEIGHT/2+11;
 		addChild(text);
 
 		// ---------------------------------------------
