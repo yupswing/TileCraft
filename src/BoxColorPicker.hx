@@ -30,7 +30,7 @@ class BoxColorPicker extends Box {
       _buttonClose.y = style.padding;
       addChild(_buttonClose);
 
-      _colorPicker.y = style.padding+_buttonClose.height+style.offset;
+      _colorPicker.y = style.padding+_buttonClose.height;//+style.offset;
       addChild(_colorPicker);
 
 

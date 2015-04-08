@@ -55,12 +55,19 @@ class ScreenMain extends Screen
 	var rendererPreview:ModelRenderer;
 	var rendererFinal:ModelRenderer;
 
+	var renderModes = [0.5,0.25,0.125];
+	var renderMode = 0;
+
+	var backgroundRenderColor = -1;
+
 	public static inline var ACTIONBAR_HEIGHT = 40;
 	public static inline var STATUSBAR_HEIGHT = 40;
 	public static inline var TOOLBAR_WIDTH = 100;
 	public static inline var SHAPELIST_WIDTH = 250;
 	public static inline var PREVIEW_WIDTH = 200;
 	public static inline var BASE_SPAN = 20;
+
+	var backgroundRender = new ShapeContainer();
 
 	public function renderTest() {
 
@@ -70,9 +77,7 @@ class ScreenMain extends Screen
 		//testRenderBitmap.y = rheight/2-testRenderBitmap.height/2;
 		//testFinalBitmap.bitmapData = null;
 
-		trace(model.getPalette());
-
-		Actuate.timer(0.01).onComplete( function() {
+		//Actuate.timer(0.01).onComplete( function() {
 
 			// testPreviewBitmap.bitmapData = rendererPreview.render(model,-1,true);
 			// testPreviewBitmap.x = rwidth/2-testPreviewBitmap.width/2+PLIK.adjust(650);
@@ -83,18 +88,66 @@ class ScreenMain extends Screen
 			testRenderBitmap.x = TOOLBAR_WIDTH+(rwidth-TOOLBAR_WIDTH-SHAPELIST_WIDTH-PREVIEW_WIDTH)/2-testRenderBitmap.width/2;
 			testRenderBitmap.y = (rheight-ACTIONBAR_HEIGHT-STATUSBAR_HEIGHT)/2-testRenderBitmap.height/2+ACTIONBAR_HEIGHT;
 
-			//testFinalBitmap.bitmapData = PostFX.scale(PostFX.fxaaOutline(bpd,8,8),0.25);
-			testFinalBitmap.bitmapData = PostFX.scale(PostFX.fxaaOutline(bpd,8,8),0.125);
+			testFinalBitmap.bitmapData = PostFX.scale(PostFX.fxaaOutline(bpd,8,8),renderModes[renderMode]);
 			testFinalBitmap.x = rwidth-PREVIEW_WIDTH-SHAPELIST_WIDTH+(PREVIEW_WIDTH/2-testFinalBitmap.width/2);
-			testFinalBitmap.y = rheight-STATUSBAR_HEIGHT-BASE_SPAN-testFinalBitmap.height;
-		});
+			testFinalBitmap.y = rheight-STATUSBAR_HEIGHT-testFinalBitmap.height;
+		//});
+	}
+
+	public function renderBackground() {
+			backgroundRender.graphics.clear();
+			var color = backgroundRenderColor;
+			var alpha = 0.9;
+			var span = 0; //BASE_SPAN
+			if (backgroundRenderColor==-1) {
+				//transparent
+
+				APP.makeChessboard(backgroundRender.graphics,Std.int(20*renderModes[renderMode]),0,0,PREVIEW_WIDTH,testFinalBitmap.height+span,0xBBBBBB,0xEEEEEE);
+
+			} else {
+				backgroundRender.graphics.beginFill(backgroundRenderColor);
+				backgroundRender.graphics.drawRect(0,0,
+																					PREVIEW_WIDTH,testFinalBitmap.height+span);
+
+				var shiftColor:Int=0;
+				if (color<0x888888) {
+					shiftColor = ColorToolkit.shiftBrighteness(color,30);
+				}	else {
+					shiftColor = ColorToolkit.shiftBrighteness(color,-30);
+				}
+				backgroundRender.graphics.beginFill(shiftColor,alpha);
+				backgroundRender.graphics.drawRect(PREVIEW_WIDTH/2-testFinalBitmap.width/2,span,
+							testFinalBitmap.width,testFinalBitmap.height/2);
+
+				if (color<0x888888) {
+					shiftColor = ColorToolkit.shiftBrighteness(color,15);
+				}	else {
+					shiftColor = ColorToolkit.shiftBrighteness(color,-15);
+				}
+				backgroundRender.graphics.beginFill(shiftColor,alpha);
+				backgroundRender.graphics.drawRect(PREVIEW_WIDTH/2-testFinalBitmap.width/2,span+testFinalBitmap.height/2,
+				testFinalBitmap.width,testFinalBitmap.height/2);
+	}
+			backgroundRender.graphics.endFill();
+
+			backgroundRender.x = rwidth-SHAPELIST_WIDTH-PREVIEW_WIDTH;
+			backgroundRender.y = rheight-STATUSBAR_HEIGHT-backgroundRender.height;
+	}
+
+	public function renderModeLoop(_) {
+		renderMode++;
+		if (renderMode>=renderModes.length) renderMode = 0;
+		renderTest();
+		renderBackground();
 	}
 
 	public override function initialize():Void {
-    trace(rwidth);
-    trace(rheight);
-    trace(PLIK.adjust(rwidth));
-		trace(ModelIO.DEFAULT_PALETTE);
+    // trace(rwidth);
+    // trace(rheight);
+    // trace(PLIK.adjust(rwidth));
+		// trace(ModelIO.DEFAULT_PALETTE);
+
+		addChild(backgroundRender);
 
 
 		// CLASS TEST
@@ -106,7 +159,7 @@ class ScreenMain extends Screen
 		//var original = "EgQCAJn_Zv8zETxKKyZGRp4mm0aeRFaaeUSamnlEVokBRJqJAUNmmnhDqpp4FzxZvCxVV90sqmfdRGaaREYBRVVG70VVCh5FVRxVRO8cqkTv";
 
 		// complex shape
-		var original = "FQQA____Ezw5DkBLCjwAWldvAGlIj1CrKhJwRZrNMEtIzmJFGhKCq5rNAiNnvALNRc0CzXgSAiNFEgJ4Zj9MacxpDng7eEMS3gFD3t4BAy3eAUBF3gFDq-8B";
+		//var original = "FQQA____Ezw5DkBLCjwAWldvAGlIj1CrKhJwRZrNMEtIzmJFGhKCq5rNAiNnvALNRc0CzXgSAiNFEgJ4Zj9MacxpDng7eEMS3gFD3t4BAy3eAUBF3gFDq-8B";
 		var original = "Ff___wAAQEW7PqXys9vuJDI_OVJXUpAjpswzUUY1p3At____9-F2vjJB33qSfoaPprO8Ezw5DkBLCjwAWldvAGlIj1CrKhJwRZrNMEtIzmJFGhKCq5rNAiNnvALNRc0CzXgSAiNFEgJ4Zj9MacxpDng7eEMS3gFD3t4BAy3eAUBF3gFDq-8B";
 
 		// home
@@ -249,7 +302,7 @@ class ScreenMain extends Screen
 					hideColorPicker();
 					return; //hole
 				}
-				Lib.current.stage.color = _model.getColor(value);
+				//Lib.current.stage.color = _model.getColor(value);
 				if (_colorPickerOnStage) showColorPicker(_model.getColor(value));
 		};
 
@@ -346,16 +399,21 @@ class ScreenMain extends Screen
 
 		// PREVIEW TOOLBAR ---------------------------------------------
 
+		var previewColorToolbarAction = function(button:Button) {
+			backgroundRenderColor = cast(button.value,Int);
+			renderBackground();
+		};
+
 		var previewColorToolbar = new Toolbar(0,true,Style.toolbar(),Style.toolbarMiniButtonFull());
-		previewColorToolbar.addButton('preview0',0,APP.makeColorIcon(18,-1),colorToolbarAction);
-		previewColorToolbar.addButton('preview1',0,APP.makeColorIcon(18,0),colorToolbarAction);
-		previewColorToolbar.addButton('preview2',0,APP.makeColorIcon(18,0xFFFFFF),colorToolbarAction);
+		previewColorToolbar.addButton('preview0',-1,APP.makeColorIcon(24,-1),previewColorToolbarAction);
+		previewColorToolbar.addButton('preview1',0,APP.makeColorIcon(24,0),previewColorToolbarAction);
+		previewColorToolbar.addButton('preview2',0xFFFFFF,APP.makeColorIcon(24,0xFFFFFF),previewColorToolbarAction);
 		previewColorToolbar.x = rwidth-SHAPELIST_WIDTH-PREVIEW_WIDTH+BASE_SPAN/2;
 		previewColorToolbar.y = rheight-STATUSBAR_HEIGHT/2-previewColorToolbar.height/2;
 		addChild(previewColorToolbar);
 
 		var previewActionToolbar = new Toolbar(0,false,Style.toolbar(),Style.toolbarMiniButton());
-		previewActionToolbar.addButton('resize',0,APP.atlasSprites.getRegion(APP.ICON_RESIZE).toBitmapData());
+		previewActionToolbar.addButton('resize',0,APP.atlasSprites.getRegion(APP.ICON_RESIZE).toBitmapData(),renderModeLoop);
 		previewActionToolbar.addButton('save',0,APP.atlasSprites.getRegion(APP.ICON_SAVE).toBitmapData());
 		previewActionToolbar.x = rwidth-SHAPELIST_WIDTH-BASE_SPAN/2-previewActionToolbar.width;
 		previewActionToolbar.y = rheight-STATUSBAR_HEIGHT/2-previewActionToolbar.height/2;
@@ -370,9 +428,11 @@ class ScreenMain extends Screen
 		addChild(text);
 
 		// ---------------------------------------------
+		renderTest();
+		renderBackground();
+
 
 		super.initialize(); // init_super at the end
-
 	}
 
 	public override function unload():Void {
@@ -381,7 +441,6 @@ class ScreenMain extends Screen
 
 	public override function start() {
 		super.start();  // call resume
-		renderTest();
 	}
 
 	public override function hold():Void {

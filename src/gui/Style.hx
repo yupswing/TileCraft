@@ -154,7 +154,7 @@ class Style {
 
     public static function toolbarMiniButton():Style {
       return toolbarButton().set({
-        'padding' : 1,
+        'padding' : 2,
         'rounded':12,
         'background_color':0xddddddFF,
         'outline_size' : 5,
@@ -176,7 +176,7 @@ class Style {
 
     public static function toolbarMiniButtonFull():Style {
       return toolbarButtonFull().set({
-        'outline_size' : 2,
+        'outline_size' : 4,
         'background_color' : 0,
         'over_background_color':0,
         'over_outline_color':0xffd97dFF,

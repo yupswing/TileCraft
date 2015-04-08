@@ -88,6 +88,7 @@ class APP
 	public static inline var ICON_RENDER = 'render.png';
 	public static inline var ICON_CLOSE = 'close.png';
 	public static inline var ICON_RESIZE = 'resize.png';
+	public static inline var ICON_PALETTE = 'palette.png';
 
 	public static inline var ICON_ROUND0 = 'round_0.png';
 	public static inline var ICON_ROUND1 = 'round_1.png';
@@ -122,11 +123,23 @@ class APP
 	public static inline var ICON_SHT_CORNER_NE = 'sht_corner_ne.png';
 	public static inline var ICON_SHT_CORNER_NW = 'sht_corner_nw.png';
 
+
+	public static function makeChessboard(graphics:openfl.display.Graphics,size:Int,offset_x:Int,offset_y:Int,width:Float,height:Float,color0:Int,color1:Int) {
+			var gridX = Math.ceil(width/size);
+			var gridY = Math.ceil(height/size);
+			for (y in 0...gridY) {
+				for (x in 0...gridX) {
+					if ((x+y)%2==0) graphics.beginFill(color0);
+					else graphics.beginFill(color1);
+					graphics.drawRect(size*x+offset_x,size*y+offset_y,(size*x+size>width?width-size*x:size),(size*y+size>height?height-size*y:size));
+				}
+			}
+	}
+
 	public static function makeColorIcon(size:Int,color:Int):BitmapData {
 		var span = Std.int(size/10);
 		var round = 8;
 		var hole = false;
-		trace(color);
 		if (color==-1) {
 			hole = true;
 			span += 1;
