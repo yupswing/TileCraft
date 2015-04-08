@@ -1,4 +1,4 @@
-[![TileCraft](https://img.shields.io/badge/app-TileCraft%201.0.0%20alpha3-brightgreen.svg)]()
+[![TileCraft](https://img.shields.io/badge/app-TileCraft%201.0.0%20alpha4-brightgreen.svg)]()
 [![MIT License](https://img.shields.io/badge/license-GNU%20GPL%203-blue.svg)](LICENSE)
 [![Status](https://img.shields.io/badge/status-Alpha-orange.svg)](#)
 
@@ -27,6 +27,7 @@ The beta status will be reached on a full prototype.
    - [x] I/O + Base64 encoder/decoder
    - [x] Renderer (Fast+Lights)
    - [ ] GUInterface **<-- in progress**
+   - [ ] Model wysiwyg editor **<-- in progress**
  - Interface mprovements
    - [ ] Copy, Paste, ALT (center transformation), SHIFT (keep it square), Rotation (single element, whole context)
    - [ ] Minimap (Fast top and Side view)
@@ -38,6 +39,9 @@ The beta status will be reached on a full prototype.
    - [ ] output different size
    - [ ] batch renderer and save to file
    - [ ] online repository
+
+## Current interface (alpha4)
+![Comparison](https://dl.dropboxusercontent.com/u/683344/akifox/tilecraft/git/interface.png)
 
 ## Progress
 
