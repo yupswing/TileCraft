@@ -54,7 +54,7 @@ class Model {
 	}
 
 	public function getColor(index:Int):Int {
-		return colors[index];
+		return colors[index]&0xFFFFFF;
 	}
 
 	public function getPalette():Array<Int> {

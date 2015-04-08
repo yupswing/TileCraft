@@ -92,8 +92,8 @@ class Toolbar extends SpriteContainer implements IStyle
           select(button);
         }
       }
-      button.x = Std.int((_buttons.length)%_buttonsPerRow)*(_buttonsWidth+_style.offset);
-      button.y = Std.int((_buttons.length)/_buttonsPerRow)*(_buttonsHeight+_style.offset);
+      button.x = Std.int((_buttons.length)%_buttonsPerRow)*(_buttonsWidth+_style.offset)+_style.offset;
+      button.y = Std.int((_buttons.length)/_buttonsPerRow)*(_buttonsHeight+_style.offset)+_style.offset;
       addChild(button);
     }
     _buttons.push(button);

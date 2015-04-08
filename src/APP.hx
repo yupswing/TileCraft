@@ -86,6 +86,8 @@ class APP
 	public static inline var ICON_SAVE = 'save.png';
 	public static inline var ICON_QUIT = 'quit.png';
 	public static inline var ICON_RENDER = 'render.png';
+	public static inline var ICON_CLOSE = 'close.png';
+	public static inline var ICON_RESIZE = 'resize.png';
 
 	public static inline var ICON_ROUND0 = 'round_0.png';
 	public static inline var ICON_ROUND1 = 'round_1.png';
@@ -121,9 +123,10 @@ class APP
 	public static inline var ICON_SHT_CORNER_NW = 'sht_corner_nw.png';
 
 	public static function makeColorIcon(size:Int,color:Int):BitmapData {
-		var span = 2;
+		var span = Std.int(size/10);
 		var round = 8;
 		var hole = false;
+		trace(color);
 		if (color==-1) {
 			hole = true;
 			span += 1;

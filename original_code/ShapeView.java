@@ -13,7 +13,7 @@ import java.awt.image.DataBufferInt;
 import javax.swing.JComponent;
 
 public class ShapeView extends JComponent {
-	
+
 	private Stroke outlineStroke = new BasicStroke(1.5f);
 	private Color outlineColor = Color.DARK_GRAY;
 	private Color fillColor = Color.LIGHT_GRAY;
@@ -22,7 +22,7 @@ public class ShapeView extends JComponent {
 	private boolean selected;
 	private BufferedImage icon;
 	private ModelShapeList shapeList;
-	
+
 	public ShapeView(final ModelShapeList shapeList, final Shape shape){
 		this.shape = shape;
 		this.shapeList = shapeList;
@@ -41,19 +41,19 @@ public class ShapeView extends JComponent {
 //				}
 //			}
 //		};
-//		
+//
 //		addMouseListener(ma);
 	}
-	
+
 	public Shape getShape(){
 		return shape;
 	}
-	
+
 	public void setSelected(boolean selected){
 		this.selected = selected;
 		repaint();
 	}
-	
+
 	public void paint(Graphics g){
 		Graphics2D g2d = (Graphics2D)g;
 		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -71,11 +71,11 @@ public class ShapeView extends JComponent {
 		g2d.drawImage(Resources.LOCK_ICONS[shape.locked()?1:0], 70, 0, null);
 		g2d.drawImage(Resources.DELETE_ICON, getWidth() - 32, 0, null);
 	}
-	
+
 	public void update(Graphics g){
 		paint(g);
 	}
-	
+
 	public void updateIcon(){
 		Graphics g = icon.getGraphics();
 		if(shape.getColor() == 0){
@@ -101,8 +101,8 @@ public class ShapeView extends JComponent {
 			}
 		}
 	}
-	
-	
-	
-	
+
+
+
+
 }

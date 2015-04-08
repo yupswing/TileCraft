@@ -8,28 +8,33 @@ class BoxColorPicker extends Box {
     var _colorPicker:ColorPicker;
     var _buttonClose:Button;
 
-  	public function new (action:Int->Void,actionClose:Void->Void) {
+    var _width:Float = 0;
+
+  	public function new (width:Float,action:Int->Void,actionClose:Void->Void) {
       var style = Style.box();
   		super(style);
 
+      _width = width;
+
       _buttonClose = new Button();
       _colorPicker = new ColorPicker(action);
+      _colorPicker.x = _width/2-_colorPicker.width/2;
 
-      _buttonClose.style = Style.miniButton();
+      _buttonClose.style = Style.toolbarMiniButton();
+      trace(_buttonClose.style.over_background_color);
       _buttonClose.listen = true;
       _buttonClose.actionF = function(button:Button) { actionClose(); };
-      _buttonClose.text = new Text("Close",14,APP.COLOR_DARK,openfl.text.TextFormatAlign.CENTER);
-      _buttonClose.icon = APP.atlasSprites.getRegion(APP.ICON_OK).toBitmapData();
-      _buttonClose.x = _colorPicker.width+style.padding-_buttonClose.width;
+      //_buttonClose.text = new Text("Close",14,APP.COLOR_DARK,openfl.text.TextFormatAlign.CENTER);
+      _buttonClose.icon = APP.atlasSprites.getRegion(APP.ICON_CLOSE).toBitmapData();
+      _buttonClose.x = _colorPicker.width+_colorPicker.x-_buttonClose.width;
       _buttonClose.y = style.padding;
       addChild(_buttonClose);
 
-      _colorPicker.x = style.padding;
       _colorPicker.y = style.padding+_buttonClose.height+style.offset;
       addChild(_colorPicker);
 
 
-      draw();
+      draw(width);
   	}
 
     public function show() {

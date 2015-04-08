@@ -28,6 +28,8 @@ import openfl.display.BitmapData;
 import Shape;
 import gui.*;
 
+import systools.Dialogs;
+
 using hxColorToolkit.ColorToolkit;
 
 
@@ -41,10 +43,9 @@ class ScreenMain extends Screen
 		cycle = false;
 		title = "Main";
 		rwidth = 1024;
-		rheight = 576;
+		rheight = 620;
 	}
 
-	var wait:BitmapData;
 	var model:Model;
 
 	var testPreviewBitmap:Bitmap;
@@ -53,6 +54,13 @@ class ScreenMain extends Screen
 
 	var rendererPreview:ModelRenderer;
 	var rendererFinal:ModelRenderer;
+
+	public static inline var ACTIONBAR_HEIGHT = 40;
+	public static inline var STATUSBAR_HEIGHT = 40;
+	public static inline var TOOLBAR_WIDTH = 100;
+	public static inline var SHAPELIST_WIDTH = 250;
+	public static inline var PREVIEW_WIDTH = 200;
+	public static inline var BASE_SPAN = 20;
 
 	public function renderTest() {
 
@@ -66,18 +74,19 @@ class ScreenMain extends Screen
 
 		Actuate.timer(0.01).onComplete( function() {
 
-			testPreviewBitmap.bitmapData = rendererPreview.render(model,-1,true);
-			testPreviewBitmap.x = rwidth/2-testPreviewBitmap.width/2+PLIK.adjust(650);
-			testPreviewBitmap.y = rheight/2-testPreviewBitmap.height/2;
+			// testPreviewBitmap.bitmapData = rendererPreview.render(model,-1,true);
+			// testPreviewBitmap.x = rwidth/2-testPreviewBitmap.width/2+PLIK.adjust(650);
+			// testPreviewBitmap.y = rheight/2-testPreviewBitmap.height/2;
 
 			var bpd = rendererFinal.render(model,-1,false);
 			testRenderBitmap.bitmapData = bpd;
-			testRenderBitmap.x = rwidth/2-testRenderBitmap.width/2;
-			testRenderBitmap.y = rheight/2-testRenderBitmap.height/2;
+			testRenderBitmap.x = TOOLBAR_WIDTH+(rwidth-TOOLBAR_WIDTH-SHAPELIST_WIDTH-PREVIEW_WIDTH)/2-testRenderBitmap.width/2;
+			testRenderBitmap.y = (rheight-ACTIONBAR_HEIGHT-STATUSBAR_HEIGHT)/2-testRenderBitmap.height/2+ACTIONBAR_HEIGHT;
 
-			testFinalBitmap.bitmapData = PostFX.scale(PostFX.fxaaOutline(bpd,8,8),0.25);
-			testFinalBitmap.x = rwidth/2-testFinalBitmap.width/2-PLIK.adjust(550);
-			testFinalBitmap.y = rheight/2-testFinalBitmap.height/2;
+			//testFinalBitmap.bitmapData = PostFX.scale(PostFX.fxaaOutline(bpd,8,8),0.25);
+			testFinalBitmap.bitmapData = PostFX.scale(PostFX.fxaaOutline(bpd,8,8),0.125);
+			testFinalBitmap.x = rwidth-PREVIEW_WIDTH-SHAPELIST_WIDTH+(PREVIEW_WIDTH/2-testFinalBitmap.width/2);
+			testFinalBitmap.y = rheight-STATUSBAR_HEIGHT-BASE_SPAN-testFinalBitmap.height;
 		});
 	}
 
@@ -98,6 +107,7 @@ class ScreenMain extends Screen
 
 		// complex shape
 		var original = "FQQA____Ezw5DkBLCjwAWldvAGlIj1CrKhJwRZrNMEtIzmJFGhKCq5rNAiNnvALNRc0CzXgSAiNFEgJ4Zj9MacxpDng7eEMS3gFD3t4BAy3eAUBF3gFDq-8B";
+		var original = "Ff___wAAQEW7PqXys9vuJDI_OVJXUpAjpswzUUY1p3At____9-F2vjJB33qSfoaPprO8Ezw5DkBLCjwAWldvAGlIj1CrKhJwRZrNMEtIzmJFGhKCq5rNAiNnvALNRc0CzXgSAiNFEgJ4Zj9MacxpDng7eEMS3gFD3t4BAy3eAUBF3gFDq-8B";
 
 		// home
 		//var original = "DAAACGneAQk8XCgIPF0SWzdcv183er9rjFy_b4x6v2mMzJ1ZN7ydCDysmgBpXiVAaaxH";
@@ -124,8 +134,8 @@ class ScreenMain extends Screen
 		var passed:Bool = true;
 		if (original!=reencoded) passed = false;
 
-		trace('original data: ' + original);
-		trace('reencoded data: ' + original);
+		trace(' IN ' + original);
+		trace('OUT ' + reencoded);
 		trace('comparison test passed: ' + passed);
 		trace('-----------------------------------');
 
@@ -143,7 +153,6 @@ class ScreenMain extends Screen
 		rendererPreview = new ModelRenderer(Std.int(320),Std.int(480));
 		rendererFinal = new ModelRenderer(Std.int(320),Std.int(480));
 
-		wait = openfl.Assets.getBitmapData('assets/graphics/generic/wait.png',true);
 		testPreviewBitmap = new Bitmap(null);
 		addChild(testPreviewBitmap);
 
@@ -157,12 +166,26 @@ class ScreenMain extends Screen
 		// STATIC INTERFACE ---------------------------------------------
 
 		// model+color toolbar bg
-		graphics.beginFill(0x242424,0.95);
-		graphics.drawRect(0,0,103,rheight);
+		graphics.beginFill(0x242424,0.9);
+		graphics.drawRect(0,0,TOOLBAR_WIDTH,rheight);
 
 		// action toolbar bg
-		graphics.beginFill(0x242424,0.95);
-		graphics.drawRect(0,0,rwidth,50);
+		graphics.beginFill(0x242424,0.9);
+		graphics.drawRect(0,0,rwidth,ACTIONBAR_HEIGHT);
+
+		// shapelist
+		graphics.beginFill(0x242424,0.9);
+		graphics.drawRect(rwidth-SHAPELIST_WIDTH,0,rwidth,rheight);
+
+		// preview
+		graphics.beginFill(0x242424,0.8);
+		graphics.drawRect(rwidth-SHAPELIST_WIDTH-PREVIEW_WIDTH,0,rwidth-SHAPELIST_WIDTH,rheight);
+
+		// status bar
+		graphics.beginFill(0x242424,0.9);
+		graphics.drawRect(0,rheight-STATUSBAR_HEIGHT,rwidth,rheight);
+
+
 
 		// var button = new Button();
 		// button.x = 130;
@@ -194,8 +217,8 @@ class ScreenMain extends Screen
 		toolbar.addButton("sh_corner_ne",null,		APP.atlasSprites.getRegion(APP.ICON_SH_CORNER_NE).toBitmapData());
 		toolbar.addButton("sh_corner_nw",null,		APP.atlasSprites.getRegion(APP.ICON_SH_CORNER_NW).toBitmapData());
 
-		toolbar.x = 20;
-		toolbar.y = 60;
+		toolbar.x = TOOLBAR_WIDTH/2-toolbar.width/2;
+		toolbar.y = ACTIONBAR_HEIGHT+10;
 		addChild(toolbar);
 
 		// COLOR TOOLBAR ---------------------------------------------
@@ -214,9 +237,9 @@ class ScreenMain extends Screen
 
 		//---
 
-		_colorPicker = new BoxColorPicker(colorPickerAction,function() {hideColorPicker();});
-		_colorPicker.x = 120;
-		_colorPicker.y = rheight-20-_colorPicker.height;
+		_colorPicker = new BoxColorPicker(rwidth-TOOLBAR_WIDTH-SHAPELIST_WIDTH-PREVIEW_WIDTH,colorPickerAction,function() {hideColorPicker();});
+		_colorPicker.x = TOOLBAR_WIDTH;
+		_colorPicker.y = rheight-STATUSBAR_HEIGHT-_colorPicker.height;
 
 		//---
 
@@ -244,8 +267,8 @@ class ScreenMain extends Screen
 			colorToolbar.addButton('palette$i',i,APP.makeColorIcon(26,_model.getColor(i)),colorToolbarAction,colorToolbarActionAlt);
 		}
 		colorToolbar.selectByIndex(1);
-		colorToolbar.x = 20;
-		colorToolbar.y = toolbar.y + toolbar.height + 20;
+		colorToolbar.x = TOOLBAR_WIDTH/2-colorToolbar.width/2;
+		colorToolbar.y = toolbar.y + toolbar.height + BASE_SPAN;
 		addChild(colorToolbar);
 
 
@@ -254,8 +277,61 @@ class ScreenMain extends Screen
 		var actionToolbarAction = function(button:Button) { trace("NOT IMPLEMENTED"); }
 		var actionToolbar = new Toolbar(0,false,Style.toolbar(),Style.toolbarButton());
 		actionToolbar.addButton("new",null,			APP.atlasSprites.getRegion(APP.ICON_NEW).toBitmapData(),		actionToolbarAction);
-		actionToolbar.addButton("open",null,		APP.atlasSprites.getRegion(APP.ICON_OPEN).toBitmapData(),		actionToolbarAction);
-		actionToolbar.addButton("save",null,		APP.atlasSprites.getRegion(APP.ICON_SAVE).toBitmapData(),		actionToolbarAction);
+		actionToolbar.addButton("open",null,		APP.atlasSprites.getRegion(APP.ICON_OPEN).toBitmapData(),		function(_) {
+
+			var cbtext: String = systools.Clipboard.getText();
+		trace("Current text on clipboard: "+ cbtext);
+
+		systools.Clipboard.clear();
+		trace("Cleared clipboard");
+
+		cbtext = systools.Clipboard.getText();
+		trace("Current text on clipboard: "+ cbtext);
+
+		trace("Setting clipboard text to: Hello World");
+		systools.Clipboard.setText("Hello World");
+
+		cbtext = systools.Clipboard.getText();
+		trace("Current text on clipboard: "+ cbtext);
+
+		systools.Clipboard.clear();
+		trace("Cleared clipboard (again)");
+
+		cbtext = systools.Clipboard.getText();
+		trace("Current text on clipboard: "+ cbtext);
+
+		});
+		actionToolbar.addButton("save",null,		APP.atlasSprites.getRegion(APP.ICON_SAVE).toBitmapData(),		function(_) {
+
+		Dialogs.message("neko-systools","Hello World!",false);
+		trace("confirm: "+Dialogs.confirm("neko-systools","Please confirm?",false));
+		Dialogs.message("neko-systools","Message error test", true);
+		trace("confirm error: "+Dialogs.confirm("neko-systools","Confirm error test", true));
+		var result = Dialogs.folder
+			( "Select a folder"
+			, "This additional message will only be shown on OSX"
+			);
+		trace(result);	var filters: FILEFILTERS =
+			{ count: 2
+			, descriptions: ["Text files", "JPEG files"]
+			, extensions: ["*.txt","*.jpg;*.jpeg"]
+			};
+		var result = Dialogs.openFile
+			( "Select a file please!"
+			, "Please select one or more files, so we can see if this method works"
+			, filters
+			);
+		trace(result);
+
+		var result = Dialogs.saveFile
+			( "Select a file please!"
+			, "Please select one or more files, so we can see if this method works"
+			, Sys.getCwd()
+			, filters
+			);
+		trace(result);
+
+		});
 		actionToolbar.addButton("-");
 		actionToolbar.addButton("render",null,	APP.atlasSprites.getRegion(APP.ICON_RENDER).toBitmapData(),	function(_) {renderTest();});
 		actionToolbar.addButton("-");
@@ -263,16 +339,34 @@ class ScreenMain extends Screen
 		actionToolbar.addButton("paste",null,	APP.atlasSprites.getRegion(APP.ICON_PASTE).toBitmapData(),	actionToolbarAction);
 		actionToolbar.addButton("-");
 		actionToolbar.addButton("quit",null,		APP.atlasSprites.getRegion(APP.ICON_QUIT).toBitmapData(),		actionToolbarAction);
-		actionToolbar.x = 120;
-		actionToolbar.y = 10;
+		actionToolbar.x = TOOLBAR_WIDTH+BASE_SPAN;
+		actionToolbar.y = ACTIONBAR_HEIGHT/2-actionToolbar.height/2;
 		addChild(actionToolbar);
+
+
+		// PREVIEW TOOLBAR ---------------------------------------------
+
+		var previewColorToolbar = new Toolbar(0,true,Style.toolbar(),Style.toolbarMiniButtonFull());
+		previewColorToolbar.addButton('preview0',0,APP.makeColorIcon(18,-1),colorToolbarAction);
+		previewColorToolbar.addButton('preview1',0,APP.makeColorIcon(18,0),colorToolbarAction);
+		previewColorToolbar.addButton('preview2',0,APP.makeColorIcon(18,0xFFFFFF),colorToolbarAction);
+		previewColorToolbar.x = rwidth-SHAPELIST_WIDTH-PREVIEW_WIDTH+BASE_SPAN/2;
+		previewColorToolbar.y = rheight-STATUSBAR_HEIGHT/2-previewColorToolbar.height/2;
+		addChild(previewColorToolbar);
+
+		var previewActionToolbar = new Toolbar(0,false,Style.toolbar(),Style.toolbarMiniButton());
+		previewActionToolbar.addButton('resize',0,APP.atlasSprites.getRegion(APP.ICON_RESIZE).toBitmapData());
+		previewActionToolbar.addButton('save',0,APP.atlasSprites.getRegion(APP.ICON_SAVE).toBitmapData());
+		previewActionToolbar.x = rwidth-SHAPELIST_WIDTH-BASE_SPAN/2-previewActionToolbar.width;
+		previewActionToolbar.y = rheight-STATUSBAR_HEIGHT/2-previewActionToolbar.height/2;
+		addChild(previewActionToolbar);
 
 		// APP TITLE ---------------------------------------------
 
-		var text = new Text("TILE\nCRAFT",18,APP.COLOR_ORANGE,openfl.text.TextFormatAlign.CENTER,APP.FONT_SQUARE);
+		var text = new Text("TILECRAFT",16,APP.COLOR_ORANGE,openfl.text.TextFormatAlign.CENTER,APP.FONT_SQUARE);
 		text.t.setAnchoredPivot(Transformation.ANCHOR_MIDDLE_CENTER);
-		text.t.x = 50;
-		text.t.y = 25;
+		text.t.x = TOOLBAR_WIDTH/2;
+		text.t.y = ACTIONBAR_HEIGHT/2;
 		addChild(text);
 
 		// ---------------------------------------------

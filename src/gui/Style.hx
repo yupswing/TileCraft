@@ -152,10 +152,32 @@ class Style {
       });
     }
 
+    public static function toolbarMiniButton():Style {
+      return toolbarButton().set({
+        'padding' : 1,
+        'rounded':12,
+        'background_color':0xddddddFF,
+        'outline_size' : 5,
+        'outline_color':0,
+        'over_background_color':0xddddddFF,
+        'over_outline_color':0xffd97dFF
+      });
+    }
+
     public static function toolbarButtonFull():Style {
       return toolbarButton().set({
         'padding' : 0,
-        'background_color' : 6,
+        'background_color' : 0,
+        'over_background_color':0,
+        'over_outline_color':0xffd97dFF,
+        'selected_background_color':0xffb500FF
+      });
+    }
+
+    public static function toolbarMiniButtonFull():Style {
+      return toolbarButtonFull().set({
+        'outline_size' : 2,
+        'background_color' : 0,
         'over_background_color':0,
         'over_outline_color':0xffd97dFF,
         'selected_background_color':0xffb500FF
@@ -187,18 +209,18 @@ class Style {
       return new Style({
           'margin':0,
           'padding':10,
-          'rounded':8,
+          'rounded':0,
           'offset':10,
-          'outline_size':5,
-          'background_color':0x242424CC,
-          'outline_color':0xffb400CC
+          'outline_size':0,
+          'background_color':0x242424BB
+          //'outline_color':0xffb400CC
         });
     }
 
-    public static function drawBackground(target:openfl.display.DisplayObject,targetStyle:Style,?isSelected:Bool=false,?isOver:Bool=false) {
+    public static function drawBackground(target:openfl.display.DisplayObject,targetStyle:Style,?isSelected:Bool=false,?isOver:Bool=false,?width:Float=0,?height:Float=0) {
 
-      var w = target.width+targetStyle.padding*2;
-      var h = target.height+targetStyle.padding*2;
+      var w = Math.max(target.width+targetStyle.padding*2,width);
+      var h = Math.max(target.height+targetStyle.padding*2,height);
       var graphics = target.graphics;
 
       // draw background
@@ -230,8 +252,13 @@ class Style {
       }
 
 			graphics.beginFill(background_color,background_alpha);
-			graphics.drawRoundRect(targetStyle.bevel,targetStyle.bevel,w-targetStyle.bevel*2,h-targetStyle.bevel*2,targetStyle.rounded,targetStyle.rounded);
-			graphics.endFill();
+      if (targetStyle.rounded>0)
+			   graphics.drawRoundRect(targetStyle.bevel,targetStyle.bevel,w-targetStyle.bevel*2,h-targetStyle.bevel*2,targetStyle.rounded,targetStyle.rounded);
+			else
+			   graphics.drawRect(targetStyle.bevel,targetStyle.bevel,w-targetStyle.bevel*2,h-targetStyle.bevel*2);
+
+
+      graphics.endFill();
     }
 
 }

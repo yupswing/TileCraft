@@ -39,9 +39,9 @@ class Box extends SpriteContainer implements IStyle {
       super.destroy();
     }
 
-    public function draw() {
+    public function draw(width:Float=0,height:Float=0) {
 		  graphics.clear();
-      Style.drawBackground(this,_style);
+      Style.drawBackground(this,_style,false,false,width,height);
     }
 
 }
