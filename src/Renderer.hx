@@ -52,9 +52,9 @@ class Renderer {
 	public function render(m:Model, selected:Int, preview:Bool):BitmapData {
 		var palette:Array<Int> = m.getPalette();
 
-
-		trace('>>> START RENDERING'); var startRender = haxe.Timer.stamp();
-    trace('> BASE FILL'); var start = haxe.Timer.stamp();
+		var start:Float=0;
+		TileCraft.logger('-- > RENDERING < -------------------------------------------------');
+    TileCraft.logger('> BASE FILL'); var startRender = start = haxe.Timer.stamp();
     arrayIntFill(color, 0x00000000);
     arrayIntFill(yDepth, 0);
     arrayIntFill(heightMap, 0);
@@ -69,8 +69,9 @@ class Renderer {
         arrayIntFill(yDepth, Std.int(y - h/2), y*w, (y+1)*w);
 			}
 		}
-    trace('< BASE FILL END ' + Std.int((haxe.Timer.stamp()-start)*100)/100);
-    trace('> SLICE ELAB START'); var start = haxe.Timer.stamp();
+
+    TileCraft.logger('< BASE FILL END ' + Std.int((haxe.Timer.stamp()-start)*100)/100);
+    TileCraft.logger('> SLICE ELAB START'); start = haxe.Timer.stamp();
 
 		var size:Int = m.getSize();
 		var gh:Int = Std.int(h/(size*2));
@@ -148,29 +149,29 @@ class Renderer {
 		}
 
 
-		trace('< SLICE ELAB END ' + Std.int((haxe.Timer.stamp()-start)*100)/100);
-    trace('> APPLY LIGHT START'); var start = haxe.Timer.stamp();
+		TileCraft.logger('< SLICE ELAB END ' + Std.int((haxe.Timer.stamp()-start)*100)/100);
+    TileCraft.logger('> APPLY LIGHT START'); start = haxe.Timer.stamp();
 		if(preview){
 			previewLight();
 		} else {
 			light();
 		}
-    trace('< APPLY LIGHT END ' + Std.int((haxe.Timer.stamp()-start)*100)/100);
+    TileCraft.logger('< APPLY LIGHT END ' + Std.int((haxe.Timer.stamp()-start)*100)/100);
 
-    // trace('BA START');
+    // TileCraft.logger('BA START');
     // var ba = new openfl.utils.ByteArray();
     // for (i in 0...color.length) {
     //   ba.writeUnsignedInt(color[i]);
     // }
-    // trace('BA END');
+    // TileCraft.logger('BA END');
     //
     // buffer.lock();
     // buffer.setPixels(new openfl.geom.Rectangle(0,0,w,h),ba);
     // buffer.unlock();
     // ba = null;
-    // trace('BP END');
+    // TileCraft.logger('BP END');
 
-		trace('> DRAW BITMAP START'); var start = haxe.Timer.stamp();
+		TileCraft.logger('> DRAW BITMAP START'); start = haxe.Timer.stamp();
     buffer.lock();
     //write to buffer
     for(y in 0...h){
@@ -179,8 +180,9 @@ class Renderer {
       }
     }
     buffer.unlock();
-    trace('< DRAW BITMAP END ' + Std.int((haxe.Timer.stamp()-start)*100)/100);
-    trace('<<< TOTAL RENDERING TIME ' + Std.int((haxe.Timer.stamp()-startRender)*100)/100);
+    TileCraft.logger('< DRAW BITMAP END ' + Std.int((haxe.Timer.stamp()-start)*100)/100);
+    TileCraft.logger('<<< TOTAL RENDERING TIME ' + Std.int((haxe.Timer.stamp()-startRender)*100)/100);
+		TileCraft.logger('-- > END RENDERING < ------------------------------------------------');
 
     return buffer;
 	}
@@ -227,7 +229,6 @@ class Renderer {
 	}
 
 	private function previewLight(){
-		trace('preview light');
     var y:Int = 0;
     while(y < h){
       var x:Int = 0;
@@ -244,7 +245,6 @@ class Renderer {
 	private static inline var LIGHT_Y_RADIUS:Int = 10;
 
 	private function light(){
-		trace('full light');
 		var h2:Int = Std.int(h/2);
     var y:Int = 0;
 		while(y < h){

@@ -202,30 +202,47 @@ class Model {
 	//============================================================================
 	// STRING I/O
 
-	// var passed:Bool = true;
-	// if (modelData!=saveModelToString()) passed = false;
-	//
-	// trace(' IN ' + modelData);
-	// trace('OUT ' + saveModelToString());
-	// trace('comparison test passed: ' + passed);
-	// trace('-----------------------------------');
-	// return true;
+	public static var BASE64_URLFRIENDLY_REPLACE = [['=','.'],['+','-'],['/','_']];
 
-	public static function fromString(string:String):Model {
-		string = string.replace('.','=');
-		string = string.replace('-','+');
-		string = string.replace('_','/');
-		return Model.fromBytes(haxe.crypto.Base64.decode(string));
+	public static function fromString(base64model:String):Model {
+
+		// (Possibles) URL-friendly chars replaced with standard ones
+		for (el in BASE64_URLFRIENDLY_REPLACE) base64model = base64model.replace(el[1],el[0]);
+
+		var model:Model=null;
+		try {
+			// decode the base64 string to bytes and feed fromBytes
+			// to fetch the Model instance
+			model = Model.fromBytes(haxe.crypto.Base64.decode(base64model));
+		} catch (e:Dynamic){
+			// malformed string or other input errors
+			TileCraft.error('ERROR Decoding Base64: $e');
+		}
+
+		//#if debug //TODO debug only
+		var reencoded = model.toString();
+		TileCraft.logger('-- > LOAD MODEL < ------------------------------------------------');
+		TileCraft.logger('Base64 Model IN:  ' + base64model);
+		TileCraft.logger('Base64 Model OUT: ' + reencoded);
+		TileCraft.logger((base64model==reencoded?"> TEST PASSED":"> TEST FAILED   *!*!*!* WARNING *!*!*!*"));
+		TileCraft.logger('------------------------------------------------------------------');
+		//#end
+
+		return model;
 	}
 
 	public function toString(?urlEncode=false):String {
-		var string = haxe.crypto.Base64.encode(this.toBytes());
+
+		// get the Model instance in bytes representation
+		// and encode those bytes in Base64
+		var base64model = haxe.crypto.Base64.encode(this.toBytes());
+
 		if (urlEncode) {
-			string = string.replace('=','.');
-			string = string.replace('+','-');
-			string = string.replace('/','_');
+			// Replace standard Base64 chars with URL-friendly ones
+			// The fromString(string) supports boths inputs (URL-friendly + standard)
+			for (el in BASE64_URLFRIENDLY_REPLACE) base64model = base64model.replace(el[0],el[1]);
 		}
-		return string;
+		return base64model;
 	}
 
 	public function toPNGString(bitmapData:openfl.display.BitmapData):String {
@@ -240,7 +257,7 @@ class Model {
 	// PNG I/O
 	// Image file (final output) & model data included in a private chunk
 
-	private static inline var PNG_CHUNK = "tcMa";
+	private static inline var PNG_TILECRAFT_CHUNK = "tcMa";
 
 	public static function fromPNG(input:Input):Model {
 		var isValid:Bool = false;
@@ -248,11 +265,14 @@ class Model {
 		try {
 			// Read the file
 			var data = new format.png.Reader(input).read();
+
+			// cycle the chunks to find the TileCraft chunk 'tcMa'
 			for (chunk in data) {
 				switch(chunk) {
 				case CUnknown(id,data):
-					if (id==PNG_CHUNK) {
-						// Get the MODEL chunk
+					if (id==PNG_TILECRAFT_CHUNK) {
+						// Found the chunk:
+						// Get the Model data from the chunk data
 						bytes = data;
 						isValid = true;
 					}
@@ -260,33 +280,45 @@ class Model {
 				}
 			}
 		}catch(e:Dynamic) {
-			trace('ERROR $e');
+			// read error
+			TileCraft.error('ERROR $e');
 			input.close();
 			input = null;
 		}
+
+		// Chunk not found: there was no private TileCraft chunk
 		if (!isValid) return null;
+
+		// create a model from model bytes data
 		return Model.fromBytes(bytes);
 
 	}
 
 	public function toPNG(output:Output,bitmapData:openfl.display.BitmapData):Output {
+
+		// encode the bitmapData to PNG format
 		var pngBytes = Bytes.ofString(bitmapData.encode("png", 1).toString()); //TODO support openfl3 new encode function
+
+		/* Add a chunk before the end
+		   CHUNK ID is "tcMa" ('tc' TileCraft (Ancillary, Private) + 'M' Model + 'a' Model Version (Safe to copy)
+		   CHUNK DATA is the model data ( got from model.toBytes() ) */
+		var pngData = new format.png.Reader(new BytesInput(pngBytes)).read();
+		var end = pngData.last();
+		//remove the IEND chunk (last chunk)
+		pngData.remove(end);
+		// insert the private chunk 'tcMa' with the model data (at the end)
+		pngData.add(format.png.Data.Chunk.CUnknown(PNG_TILECRAFT_CHUNK,this.toBytes()));
+		// add the IEND chunk (at the end)
+		pngData.add(end);
+		end = null;
+
 		try {
-
-			// Add a chunk before the end
-			// The chunk is the model
-			// CHUNK ID "tcMa" ('tc' TileCraft (Ancillary, Private) + 'M' Model + 'a' Model Version (Safe to copy)
-			var pngData = new format.png.Reader(new BytesInput(pngBytes)).read();
-			var end = pngData.last();
-			pngData.remove(end);
-			pngData.add(format.png.Data.Chunk.CUnknown('tcMa',this.toBytes()));
-			pngData.add(end);
-			end = null;
-
+			// write the png to a haxe.io.Output
 			new format.png.Writer(output).write(pngData);
 
-		}catch(e:Dynamic) {
-			trace("ERROR $e");
+		} catch (e:Dynamic) {
+			// write error
+			TileCraft.error("ERROR $e");
 			output.close();
 			output = null;
 		}

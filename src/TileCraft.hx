@@ -39,6 +39,14 @@ using hxColorToolkit.ColorToolkit;
 class TileCraft extends Screen
 {
 
+	public static inline function logger(string:String) {
+		trace('>>> $string');
+	}
+
+	public static inline function error(string:String) {
+		trace('!!! $string');
+	}
+
 	var currentModel:Model = Model.makeNew();
 
 	var modelView:ModelView = new ModelView();
@@ -163,7 +171,7 @@ class TileCraft extends Screen
 	private function changeModel(model:Model) {
 		if (model==null) {
 			//TODO report the problem to the user (CHECK ALL PROJECT FOR THIS KIND OF MISSING FEEDBACKS)
-			trace('invalid change model');
+			TileCraft.error('invalid change model');
 			return;
 		}
 		if (currentModel!=null) currentModel.destroy();
@@ -171,7 +179,7 @@ class TileCraft extends Screen
 		updatePalette();
 		renderModel(false);
 		renderOutput();
-		//trace(currentModel.toPNGString(_outputBitmap.bitmapData)); //TODO should be a TextField to output this on request
+		//TileCraft.logger(currentModel.toPNGString(_outputBitmap.bitmapData)); //TODO should be a TextField to output this on request
 	}
 
 	public function updatePalette(){
@@ -190,12 +198,13 @@ class TileCraft extends Screen
 		renderOutput();
 		var filename:String = saveDialog("TileCraft PNG image","*.png");
 		if (filename==null) {
-			trace('cancel');
+			TileCraft.logger('User canceled the dialog');
 			return false;
 		}
 		var fo:haxe.io.Output = sys.io.File.write(filename,true);
 		fo = currentModel.toPNG(fo,_outputBitmap.bitmapData); //TODO change testFinalRender (maybe include in Model)
 		if (fo==null) {
+			TileCraft.error('Unable to load model');
 			return false;
 		} else {
 			fo.close();
@@ -206,7 +215,7 @@ class TileCraft extends Screen
 	public function openFile():Bool {
 		var filename:String = openDialog("TileCraft PNG image","*.png");
 		if (filename==null) {
-			trace('cancel');
+			TileCraft.logger('User canceled the dialog');
 			return false;
 		}
 		var fr = sys.io.File.read(filename,true);
@@ -215,6 +224,7 @@ class TileCraft extends Screen
 
 		// error
 		if (model==null) {
+			TileCraft.error('Unable to load model');
 			return false;
 		} else {
 			// prepare context
@@ -234,7 +244,7 @@ class TileCraft extends Screen
 		// 						 , extensions: [extension]
 		// 						}
 		// 						);
-		// trace(file);
+		// TileCraft.logger('SAVE DIALOG RESPONSE: '+file);
 		// if (file!=null) return file;
 		// return "";
 	}
@@ -249,29 +259,16 @@ class TileCraft extends Screen
 		// 						 , extensions: [extension]
 		// 					  }
 		// 						);
-		// trace(files);
+		// TileCraft.logger('OPENDIALOG RESPONSE: '+files);
 		// if (files==null) return null;
 		// return files[0];
 	}
 
 	public override function initialize():Void {
-    //trace(rwidth);
-    // trace(rheight);
-    // trace(PLIK.adjust(rwidth));
-		// trace(ModelIO.DEFAULT_PALETTE);
 		addChild(backgroundRender);
 
-		// saveDialog("TileCraft PNG image","*.png");
-		// super.initialize();
-		// return;
 
-
-
-		// CLASS TEST
-		// String -> Array<Int> -> Model (Shapes) -> Array<Int> -> String
-
-		// testPreviewBitmap = new Bitmap(null);
-		//addChild(testPreviewBitmap);
+		// VIEWS -------------------------------------------------------------------
 
 		_modelBitmap = new Bitmap(null);
 		addChild(_modelBitmap);
@@ -280,7 +277,7 @@ class TileCraft extends Screen
 		addChild(_outputBitmap);
 
 
-		// STATIC INTERFACE ---------------------------------------------
+		// STATIC INTERFACE --------------------------------------------------------
 
 		// currentModel+color toolbar bg
 		graphics.beginFill(0x242424,0.9);
@@ -308,13 +305,13 @@ class TileCraft extends Screen
 		// button.style = Style.button();
 		// button.selectable = true;
 		// button.listen = true;
-		// button.actionF = function(button:Button) { trace(button); };
+		// button.actionF = function(button:Button) { TileCraft.logger(button); };
 		// button.text = new Text("Button test",18,TileCraft.COLOR_DARK,openfl.text.TextFormatAlign.CENTER);
 		// button.icon = TileCraft.atlasSprites.getRegion(TileCraft.ICON_CHECKBOX).toBitmapData();
 		// button.iconSelected = TileCraft.atlasSprites.getRegion(TileCraft.ICON_CHECKBOX_CHECKED).toBitmapData();
 		// addChild(button);
 
-		// MODEL TOOLBAR ---------------------------------------------
+		// MODEL TOOLBAR --------------------------------------------------------
 
 		var toolbar = new Toolbar(2,true,Style.toolbar(),Style.toolbarButton());
 		toolbar.addButton("pointer",null,					TileCraft.atlasSprites.getRegion(TileCraft.ICON_POINTER).toBitmapData());
@@ -337,7 +334,8 @@ class TileCraft extends Screen
 		addChild(toolbar);
 
 
-		// COLOR TOOLBAR ---------------------------------------------
+		// COLOR TOOLBAR --------------------------------------------------------
+
 		colorToolbar = new Toolbar(2,true,Style.toolbar(),Style.toolbarButtonFull());
 
 		//---
@@ -388,9 +386,9 @@ class TileCraft extends Screen
 		addChild(colorToolbar);
 
 
-		// ACTION TOOLBAR ---------------------------------------------
+		// ACTION TOOLBAR ----------------------------------------------------------
 
-		var actionToolbarAction = function(button:Button) { trace("NOT IMPLEMENTED"); }
+		var actionToolbarAction = function(button:Button) { TileCraft.logger("NOT IMPLEMENTED"); }
 		var actionToolbar = new Toolbar(0,false,Style.toolbar(),Style.toolbarButton());
 		actionToolbar.addButton("new",null,			TileCraft.atlasSprites.getRegion(TileCraft.ICON_NEW).toBitmapData(),
 																						function(_) {
@@ -418,7 +416,7 @@ class TileCraft extends Screen
 		addChild(actionToolbar);
 
 
-		// PREVIEW TOOLBAR ---------------------------------------------
+		// PREVIEW TOOLBAR ---------------------------------------------------------
 
 		var previewColorToolbarAction = function(button:Button) {
 			backgroundRenderColor = cast(button.value,Int);
@@ -441,7 +439,7 @@ class TileCraft extends Screen
 		previewActionToolbar.y = rheight-STATUSBAR_HEIGHT/2-previewActionToolbar.height/2;
 		addChild(previewActionToolbar);
 
-		// APP TITLE ---------------------------------------------
+		// APP TITLE ---------------------------------------------------------------
 
 		var text = new Text(TileCraft.APP_NAME.toUpperCase(),18,TileCraft.COLOR_ORANGE,openfl.text.TextFormatAlign.CENTER,TileCraft.FONT_SQUARE);
 		text.t.setAnchoredPivot(Transformation.ANCHOR_MIDDLE_CENTER);
@@ -455,7 +453,7 @@ class TileCraft extends Screen
 		text.t.y = ACTIONBAR_HEIGHT/2+12;
 		addChild(text);
 
-		// ---------------------------------------------
+		// -------------------------------------------------------------------------
 
 		// EXAMPLE MODELS
 
@@ -463,9 +461,8 @@ class TileCraft extends Screen
 		//var original = "EgQCAJn_Zv8zETxKKyZGRp4mm0aeRFaaeUSamnlEVokBRJqJAUNmmnhDqpp4FzxZvCxVV90sqmfdRGaaREYBRVVG70VVCh5FVRxVRO8cqkTv";
 
 		// complex shape
-		var original = "FQQA____Ezw5DkBLCjwAWldvAGlIj1CrKhJwRZrNMEtIzmJFGhKCq5rNAiNnvALNRc0CzXgSAiNFEgJ4Zj9MacxpDng7eEMS3gFD3t4BAy3eAUBF3gFDq-8B";
-		//var original = "Ff___wAAQEW7PqXys9vuJDI_OVJXUpAjpswzUUY1p3At____9-F2vjJB33qSfoaPprO8Ezw5DkBLCjwAWldvAGlIj1CrKhJwRZrNMEtIzmJFGhKCq5rNAiNnvALNRc0CzXgSAiNFEgJ4Zj9MacxpDng7eEMS3gFD3t4BAy3eAUBF3gFDq-8B";
-		//var original = "FQQGOTt7PqXy____Ezw5DkBLCjwAWldvAGlIj1CrKhJwRZrNMEtIzmJFGhKCq5rNAiNnvALNRc0CzXgSAiNFEgJ4Zg9MacxpDng7eEMS3gFD3t4BAy3eAUBF3gFDq-8B";
+		var original = "Ff//1fb/QEW7PqXys9vuJDI/OVJXUpAjpswzUUY1p3At////9+F2vjJB33qSfoaPprO8Ezw5DkBLCjwAWldvAGlIj1CrKhJwRZrNMEtIzmJFGhKCq5rNAiNnvALNRc0CzXgSAiNFEgJ4Zj9MacxpDng7eEMS3gFD3t4BAy3eAUBF3gFDq+8B";
+
 		// home
 		//var original = "DAAACGneAQk8XCgIPF0SWzdcv183er9rjFy_b4x6v2mMzJ1ZN7ydCDysmgBpXiVAaaxH";
 
@@ -477,8 +474,9 @@ class TileCraft extends Screen
 		// farm
 		//var original = "E____wAA____PqXys9vuJDI_OVJXUpAjpswzUUY1p3At6pA-9-F2vjJB33qSfoaPprO8OxK8AUo0qwFLq5oBO828ATgjNBg5IlUDOd1VAwgeVSIBigESMXoBIjGIAQExqgEBUYgAMzYRiAE2FCWbNiM0vBYFFpo27ncCNt40BA..";
 
-		// ---------------------------------------------
+		// -------------------------------------------------------------------------
 
+		// set the example test model
 		changeModel(Model.fromString(original));
 
 		//init background image
@@ -508,6 +506,16 @@ class TileCraft extends Screen
 
 	}
 
+	private override function update(delta:Float):Void {
+
+	}
+
+	public override function resize() {
+
+	}
+
+	//############################################################################
+
 	var _colorPicker:ColorPickerView;
 	var _colorPickerOnStage:Bool = false;
 
@@ -532,16 +540,10 @@ class TileCraft extends Screen
 		}
 	}
 
-	private override function update(delta:Float):Void {
+	//############################################################################
+	//############################################################################
 
-	}
-
-	public override function resize() {
-
-	}
-
-	//########################################################################################
-	//########################################################################################
+	// TODO implement this CLIPBOARD systools example
 
 	// 	var cbtext: String = systools.Clipboard.getText();
 	// trace("Current text on clipboard: "+ cbtext);
@@ -563,8 +565,6 @@ class TileCraft extends Screen
 	//
 	// cbtext = systools.Clipboard.getText();
 	// trace("Current text on clipboard: "+ cbtext);
-
-
 
 	///////////////////////////////////////////////////////////////////////////
 	// APP Resources and properties
@@ -588,19 +588,18 @@ class TileCraft extends Screen
   #end;
 	public static inline var APP_BGCOLOR = 0xEEEEEE ;
 
-
-	///////////////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////////
 	// Atlases (faster retrive than asking to cache system)
 
 	public static var atlasSprites:TextureAtlas=null;
 
-	///////////////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////////
 	// URLs and FILEs
 
   public static inline var LINK_UPDATE = "http://akifox.com/tilecraft/get/";
 	public static inline var LINK_WWW = "http://akifox.com/tilecraft/";
 
-	///////////////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////////
 	// COLORS
 
 	public static inline var FONT_SQUARE:String = "assets/fonts/Square.ttf";
@@ -616,7 +615,7 @@ class TileCraft extends Screen
 	public static inline var COLOR_RED:Int = 	0xcf2d00;
 	public static inline var COLOR_GREEN:Int = 	0x98ca00;
 
-	///////////////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////////
 	// atlasIcon REGIONS
 
 	public static inline var ICON_POINTER = 'pointer.png';
@@ -674,6 +673,7 @@ class TileCraft extends Screen
 	public static inline var ICON_SHT_CORNER_NE = 'sht_corner_ne.png';
 	public static inline var ICON_SHT_CORNER_NW = 'sht_corner_nw.png';
 
+	//############################################################################
 
 	public static function makeChessboard(graphics:openfl.display.Graphics,size:Int,offset_x:Int,offset_y:Int,width:Float,height:Float,color0:Int,color1:Int) {
 			var gridX = Math.ceil(width/size);

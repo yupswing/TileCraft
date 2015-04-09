@@ -254,18 +254,7 @@ class ColorPicker extends SpriteContainer implements IStyle {
 
     private function onMouseOut(event:MouseEvent) {
       if (!_isChoosing) return;
-      //trace('out');
       onMouseUp(event);
-      // var x = Std.int(event.localX);
-      // var y = Std.int(event.localY);
-      // trace(x,y);
-      // if (x<_style.padding) x = _style.padding;
-      // if (x>_style.padding+_frameSpectrum+_style.offset+_frameSlider) x = _style.padding+_frameSpectrum+_style.offset+_frameSlider;
-      // if (y<_style.padding) y = _style.padding;
-      // if (y>_style.padding+_frameHeight) y = _style.padding+_frameHeight;
-      // event.localX = x;
-      // event.localY = y;
-      // trace(x,y,event.localX,event.localY);
       onMouseMove(event);
     }
 
