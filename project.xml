@@ -24,6 +24,7 @@
 	<!-- ################################ CODE ################################## -->
 
 	<source path="src" />
+  <haxelib name="format" />
 	<!-- Openfl Libraries -->
   <haxelib name="openfl" />
 	<haxelib name="actuate" />

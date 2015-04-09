@@ -21,7 +21,6 @@ class BoxColorPicker extends Box {
       _colorPicker.x = _width/2-_colorPicker.width/2;
 
       _buttonClose.style = Style.toolbarMiniButton();
-      trace(_buttonClose.style.over_background_color);
       _buttonClose.listen = true;
       _buttonClose.actionF = function(button:Button) { actionClose(); };
       //_buttonClose.text = new Text("Close",14,APP.COLOR_DARK,openfl.text.TextFormatAlign.CENTER);

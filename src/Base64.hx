@@ -1,5 +1,8 @@
 package;
 using StringTools;
+import haxe.io.Bytes;
+import haxe.io.BytesBuffer;
+
 
 class Base64 {
 
@@ -9,7 +12,7 @@ class Base64 {
 	private static inline var ALPHABET_REG = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 	private static inline var PAD_CHAR_REG = '=';
 
-	public static function encodeBase64(bytes:Array<Int>, ?urlSafe:Bool=false):String{
+	public static function encodeBase64(bytes:Bytes, ?urlSafe:Bool=false):String{
 		// used 4 base64 chars (24 bits) to encode 3 bytes (24 bits)
 		var alpha:String = (urlSafe?ALPHABET_URL:ALPHABET_REG);
 		var pad:String = (urlSafe?PAD_CHAR_URL:PAD_CHAR_REG);
@@ -20,11 +23,11 @@ class Base64 {
 		do {
 			var size:Int = Std.int(Math.min(bytes.length - s, 3));
 			if(size == 3){
-				encodeBlockA(bytes[s]&0xFF, bytes[s+1]&0xFF, bytes[s+2]&0xFF, dest, d, alpha);
+				encodeBlockA(bytes.get(s)&0xFF, bytes.get(s+1)&0xFF, bytes.get(s+2)&0xFF, dest, d, alpha);
 			} else if (size == 2){
-				encodeBlockB(bytes[s]&0xFF, bytes[s+1]&0xFF, dest, d, alpha, pad);
+				encodeBlockB(bytes.get(s)&0xFF, bytes.get(s+1)&0xFF, dest, d, alpha, pad);
 			} else {
-				encodeBlockC(bytes[s]&0xFF, dest, d, alpha, pad);
+				encodeBlockC(bytes.get(s)&0xFF, dest, d, alpha, pad);
 			}
       s+=3;
       d+=4;
@@ -32,7 +35,7 @@ class Base64 {
 		return dest.toString();
 	}
 
-	public static function decodeBase64(src:String):Array<Int>{
+	public static function decodeBase64(src:String):Bytes{
 		if(src == "" || src.length%4 != 0){
 			return null;
 		}
@@ -43,7 +46,7 @@ class Base64 {
 			last--;
 			len--;
 		}
-		var dest:Array<Int> = new Array<Int>();
+		var dest:BytesBuffer = new BytesBuffer();
     var s:Int = 0;
     var d:Int = 0;
 		do{
@@ -60,7 +63,7 @@ class Base64 {
       s+=4;
       d+=3;
 		} while (s<src.length);
-		return dest;
+		return dest.getBytes();
 	}
 
 
@@ -101,19 +104,19 @@ class Base64 {
 		dest.addChar(pad.charCodeAt(0));
 	}
 
-	private static function decodeBlockA(a:Int, b:Int, c:Int, d:Int, dest:Array<Int>, offset:Int){
-		dest.push(((a<<2) | (b>>4)));
-		dest.push((((b&0xF)<<4) | (c>>2)));
-		dest.push((((c&0x3)<<6) | d));
+	private static function decodeBlockA(a:Int, b:Int, c:Int, d:Int, dest:BytesBuffer, offset:Int){
+		dest.addByte(((a<<2) | (b>>4)));
+		dest.addByte((((b&0xF)<<4) | (c>>2)));
+		dest.addByte((((c&0x3)<<6) | d));
 	}
 
-	private static function decodeBlockB(a:Int, b:Int, c:Int, dest:Array<Int>, offset:Int){
-		dest.push(((a<<2) | (b>>4)));
-		dest.push((((b&0xF)<<4) | (c>>2)));
+	private static function decodeBlockB(a:Int, b:Int, c:Int, dest:BytesBuffer, offset:Int){
+		dest.addByte(((a<<2) | (b>>4)));
+		dest.addByte((((b&0xF)<<4) | (c>>2)));
 	}
 
-	private static function decodeBlockC(a:Int, b:Int, dest:Array<Int>, offset:Int){
-		dest.push(((a<<2) | (b>>4)));
+	private static function decodeBlockC(a:Int, b:Int, dest:BytesBuffer, offset:Int){
+		dest.addByte(((a<<2) | (b>>4)));
 	}
 
 }
