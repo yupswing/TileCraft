@@ -24,21 +24,22 @@ The beta status will be reached on a full prototype.
 
  - [ ] Conversion of Java code to Haxe code
    - [x] Internal Model
-   - [x] I/O + Base64 encoder/decoder
+   - [x] I/O + Base64 encoder/decoder *(improved in alpha4)*
    - [x] Renderer (Fast+Lights)
    - [ ] GUInterface **<-- in progress**
    - [ ] Model wysiwyg editor **<-- in progress**
- - Interface mprovements
+ - General improvements
+   - [x] save model to PNG (the output image include the model data)
+   - [x] shaders (apply FXAA to have smooth output image)
+   - [x] output different size
+   - [ ] batch renderer and save to file
+   - [ ] online repository (?)
+ - Interface improvements
    - [ ] Copy, Paste, ALT (center transformation), SHIFT (keep it square), Rotation (single element, whole context)
-   - [ ] Minimap (Fast top and Side view)
+   - [ ] Minimap (Orthogonal Top and Side view)
    - [ ] Trick NORM to have N/E Ramps and rounded N/S edges
    - [ ] Add more primitives (Prism, Arc)
    - [ ] 90deg rotations (xyz) changing positions and primitive type
- - Future improvements
-   - [ ] shaders (apply FXAA to have smooth image)
-   - [ ] output different size
-   - [ ] batch renderer and save to file
-   - [ ] online repository
 
 ## Current interface (alpha4)
 ![Comparison](https://dl.dropboxusercontent.com/u/683344/akifox/tilecraft/git/interface.png)
