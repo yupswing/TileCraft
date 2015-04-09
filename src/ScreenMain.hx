@@ -11,16 +11,9 @@ import openfl.ui.Keyboard;
 import motion.Actuate;
 import motion.easing.*;
 
-import com.akifox.plik.PLIK;
-import com.akifox.plik.Utils;
-import com.akifox.plik.Gfx;
-import com.akifox.plik.Text;
-import com.akifox.plik.SpriteContainer;
-import com.akifox.plik.ShapeContainer;
-import com.akifox.plik.Screen;
-import com.akifox.transform.Transformation;
-import com.akifox.plik.atlas.TextureAtlas;
+import com.akifox.plik.*;
 import com.akifox.plik.atlas.*;
+import com.akifox.transform.Transformation;
 
 import format.png.*;
 
@@ -39,6 +32,8 @@ import haxe.io.BytesBuffer;
 import haxe.io.BytesInput;
 import sys.io.FileInput;
 import sys.io.FileOutput;
+
+using StringTools;
 
 
 class ScreenMain extends Screen
@@ -65,7 +60,7 @@ class ScreenMain extends Screen
 
 	var colorToolbar:Toolbar;
 
-	var currentRenderer = new ModelRenderer(Std.int(320),Std.int(480));
+	var currentRenderer = new Renderer(Std.int(320),Std.int(480));
 
 	var backgroundRenderColor = -1;
 
@@ -167,7 +162,7 @@ class ScreenMain extends Screen
 		updatePalette();
 		renderModel(false);
 		renderOutput();
-		trace(currentModel.toPNGString(_outputBitmap.bitmapData));
+		//trace(currentModel.toPNGString(_outputBitmap.bitmapData));
 	}
 
 	public function updatePalette(){
@@ -439,16 +434,16 @@ class ScreenMain extends Screen
 
 		// APP TITLE ---------------------------------------------
 
-		var text = new Text("TILECRAFT",18,APP.COLOR_ORANGE,openfl.text.TextFormatAlign.CENTER,APP.FONT_SQUARE);
+		var text = new Text(APP.APP_NAME.toUpperCase(),18,APP.COLOR_ORANGE,openfl.text.TextFormatAlign.CENTER,APP.FONT_SQUARE);
 		text.t.setAnchoredPivot(Transformation.ANCHOR_MIDDLE_CENTER);
 		text.t.x = TOOLBAR_WIDTH/2;
 		text.t.y = ACTIONBAR_HEIGHT/2;
 		addChild(text);
 
-		var text = new Text("alpha4",8,APP.COLOR_ORANGE,openfl.text.TextFormatAlign.CENTER,APP.FONT_LATO_BOLD);
+		var text = new Text(APP.APP_STAGE.toUpperCase(),9,APP.COLOR_WHITE,openfl.text.TextFormatAlign.CENTER,APP.FONT_LATO_BOLD);
 		text.t.setAnchoredPivot(Transformation.ANCHOR_MIDDLE_CENTER);
 		text.t.x = TOOLBAR_WIDTH/2;
-		text.t.y = ACTIONBAR_HEIGHT/2+11;
+		text.t.y = ACTIONBAR_HEIGHT/2+12;
 		addChild(text);
 
 		// ---------------------------------------------
@@ -553,5 +548,57 @@ class ScreenMain extends Screen
 	//
 	// cbtext = systools.Clipboard.getText();
 	// trace("Current text on clipboard: "+ cbtext);
+
+}
+
+
+class BoxColorPicker extends Box {
+
+    var _colorPicker:ColorPicker;
+    var _buttonClose:Button;
+
+    var _width:Float = 0;
+
+  	public function new (width:Float,action:Int->Void,actionClose:Void->Void) {
+      var style = Style.box();
+  		super(style);
+
+      _width = width;
+
+      _buttonClose = new Button();
+      _colorPicker = new ColorPicker(action);
+      _colorPicker.x = _width/2-_colorPicker.width/2;
+
+      _buttonClose.style = Style.toolbarMiniButton();
+      _buttonClose.listen = true;
+      _buttonClose.actionF = function(button:Button) { actionClose(); };
+      //_buttonClose.text = new Text("Close",14,APP.COLOR_DARK,openfl.text.TextFormatAlign.CENTER);
+      _buttonClose.icon = APP.atlasSprites.getRegion(APP.ICON_CLOSE).toBitmapData();
+      _buttonClose.x = _colorPicker.width+_colorPicker.x-_buttonClose.width;
+      _buttonClose.y = style.padding;
+      addChild(_buttonClose);
+
+      _colorPicker.y = style.padding+_buttonClose.height;//+style.offset;
+      addChild(_colorPicker);
+
+
+      draw(width);
+  	}
+
+    public function show() {
+      _colorPicker.listen = true;
+    }
+
+    public function hide() {
+      _colorPicker.listen = false;
+    }
+
+    public function selector(color:Int) {
+      _colorPicker.selector(color);
+    }
+
+    public override function destroy() {
+      super.destroy();
+    }
 
 }

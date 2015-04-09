@@ -7,6 +7,8 @@ import haxe.io.BytesInput;
 import haxe.io.BytesOutput;
 import haxe.io.BytesBuffer;
 
+using StringTools;
+
 import Shape;
 
 class Model {
@@ -145,7 +147,7 @@ class Model {
 
 		for(i in 0...shapeCount){
 			var typeCol:Int = bytes.get(pos++)&0xFF;
-			var s:Shape = new Shape(Type.createEnumIndex(Kind,typeCol>>4));
+			var s:Shape = new Shape(Type.createEnumIndex(ShapeType,typeCol>>4));
 			s.setColor(typeCol&0xF);
 			var x:Int = bytes.get(pos++)&0xFF;
 			var y:Int = bytes.get(pos++)&0xFF;
@@ -188,7 +190,7 @@ class Model {
 		}
 		for(i in 0...shapeCount){
 			var s:Shape = this.getShape(i);
-			bytesBuffer.addByte((Type.enumIndex(s.getKind())<<4) | s.getColor());
+			bytesBuffer.addByte((Type.enumIndex(s.getShapeType())<<4) | s.getColor());
 			bytesBuffer.addByte((s.getX1()<<4) | (s.getX2()-1));
 			bytesBuffer.addByte((s.getY1()<<4) | (s.getY2()-1));
 			bytesBuffer.addByte((s.getZ1()<<4) | (s.getZ2()-1));
@@ -210,11 +212,20 @@ class Model {
 	// return true;
 
 	public static function fromString(string:String):Model {
-		return Model.fromBytes(Base64.decodeBase64(string));
+		string = string.replace('.','=');
+		string = string.replace('-','+');
+		string = string.replace('_','/');
+		return Model.fromBytes(haxe.crypto.Base64.decode(string));
 	}
 
-	public function toString():String {
-		return Base64.encodeBase64(this.toBytes(),true);
+	public function toString(?urlEncode=false):String {
+		var string = haxe.crypto.Base64.encode(this.toBytes());
+		if (urlEncode) {
+			string = string.replace('=','.');
+			string = string.replace('+','-');
+			string = string.replace('/','_');
+		}
+		return string;
 	}
 
 	public function toPNGString(bitmapData:openfl.display.BitmapData):String {

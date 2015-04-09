@@ -1,18 +1,22 @@
-[![TileCraft](https://img.shields.io/badge/app-TileCraft%201.0.0%20alpha4-brightgreen.svg)]()
+[![TileCraft](https://img.shields.io/badge/app-TileCraft%201.0.0%20alpha5-brightgreen.svg)]()
 [![MIT License](https://img.shields.io/badge/license-GNU%20GPL%203-blue.svg)](LICENSE)
-[![Status](https://img.shields.io/badge/status-Alpha-orange.svg)](#)
+[![Status](https://img.shields.io/badge/status-alpha-orange.svg)](#)
 
 [![Haxe 3](https://img.shields.io/badge/language-Haxe%203-orange.svg)](http://www.haxe.org)
 [![OpenFL 2](https://img.shields.io/badge/require-OpenFL 2-red.svg)](http://www.openfl.org)
 [![Cross platform](https://img.shields.io/badge/platform-cross%20platform-lightgrey.svg)](http://www.openfl.org)
 
 # TileCraft (alpha)
+2.5D multi-platform modeler to make tiles
 
-Conversion (and improvements) on LGMODELER (Java App) to Haxe
+This project is a conversion to Haxe of Java LGMODELER
+(There are actually a lot of improvements!)
 
 Original project https://github.com/angryoctopus/lgmodeler
 
 Original idea http://www.lostgarden.com/2013/10/prototyping-challenge-3d-modeling-tool.html
+
+![alpha4](https://dl.dropboxusercontent.com/u/683344/akifox/tilecraft/git/interface.png)
 
 ## Alpha status
 
@@ -34,17 +38,24 @@ The beta status will be reached on a full prototype.
    - [x] output different size
    - [ ] batch renderer and save to file
    - [ ] online repository (?)
+   - [ ] history (basic keep last 5 models as steps)
  - Interface improvements
    - [ ] Copy, Paste, ALT (center transformation), SHIFT (keep it square), Rotation (single element, whole context)
    - [ ] Minimap (Orthogonal Top and Side view)
    - [ ] Trick NORM to have N/E Ramps and rounded N/S edges
    - [ ] Add more primitives (Prism, Arc)
-   - [ ] 90deg rotations (xyz) changing positions and primitive type
-
-## Current interface (alpha4)
-![Comparison](https://dl.dropboxusercontent.com/u/683344/akifox/tilecraft/git/interface.png)
+   - [ ] 90deg rotations (xyz) (changing positions and primitive type to simulate rotation)
 
 ## Progress
+
+ - **alpha:  Shape and model (load and save to Base64)**
+ - **alpha2: Model renderer**
+ - **alpha3: Lights renderer + postfx (Antialias+outline)**
+ - **alpha4: Basic interface**
+ - **alpha5: Save to PNG (image+model) and big housekeeping**
+ - alpha6: Shape list **<-- in progress**
+ - alpha7: Model editing
+ - beta stage
 
 The model, renderer and i/o is fully functional ( [Same model in LGModeler](http://www.angryoctopus.co.nz/lgmodler/index.php?model=FQQA____Ezw5DkBLCjwAWldvAGlIj1CrKhJwRZrNMEtIzmJFGhKCq5rNAiNnvALNRc0CzXgSAiNFEgJ4Zg9MacxpDng7eEMS3gFD3t4BAy3eAUBF3gFDq-8B) )
 

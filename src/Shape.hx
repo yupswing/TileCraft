@@ -1,6 +1,6 @@
 package;
 
-enum Kind {
+enum ShapeType {
 	CUBE;
 	ROUND_UP;
 	ROUND_SIDE;
@@ -18,7 +18,7 @@ enum Kind {
 
 class Shape {
 
-  public var kind:Kind;
+  public var shapeType:ShapeType;
   public var x1:Int;
   public var y1:Int;
   public var x2:Int;
@@ -29,8 +29,8 @@ class Shape {
 	public var enabled:Bool;
 	public var locked:Bool;
 
-	public function new(kind:Kind){
-		this.kind = kind;
+	public function new(shapeType:ShapeType){
+		this.shapeType = shapeType;
 		x1 = 0;
 		y1 = 0;
 		z1 = 0;
@@ -49,8 +49,8 @@ class Shape {
 	public function getZ1():Int { return this.z1; }
 	public function getZ2():Int { return this.z2; }
 
-	public function getKind():Kind {
-		return this.kind;
+	public function getShapeType():ShapeType {
+		return this.shapeType;
 	}
 
 	public function getNormal():Float {
@@ -80,9 +80,7 @@ class Shape {
 		this.z2 = z2;
 	}
 
-
-
-	public function getSlice(x:Int, gw:Int, gh:Int, dest:Slice, palette:Array<Int>, model:Model){
+	public function getSlice(x:Int, gw:Int, gh:Int, dest:Renderer.Slice, palette:Array<Int>, model:Model){
 		var dt:Float = (x - x1*gw)/((x2 - x1)*gw);
 		dest.index = model.indexOf(this);
 		dest.normal = 1.0;
@@ -91,7 +89,7 @@ class Shape {
 		dest.y2 = y2*gh;
 		dest.z1 = z1*gh;
 		dest.z2 = z2*gh;
-		switch(kind){
+		switch(shapeType){
 		case CUBE:
 			//none
 		case CYLINDER_UP:

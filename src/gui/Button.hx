@@ -215,8 +215,8 @@ class Button extends SpriteContainer implements IStyle {
 
       var h:Float = Math.max(th,ih) + _style.margin*2 + _style.padding*2;
       var w:Float = tw+iw + _style.margin*2 + _style.padding*spans;
-      h = Math.max(h,_style.getHeight());
-      w = Math.max(w,_style.getWidth());
+      h = Math.max(h,_style.getMinHeight());
+      w = Math.max(w,_style.getMinWidth());
 
       var object_x = _style.margin + _style.padding;
       var object_y = _style.margin + _style.padding;

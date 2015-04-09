@@ -1,26 +1,8 @@
 package gui;
 using hxColorToolkit.ColorToolkit;
 
-typedef Property = {
-  var kind : Kind;
-  var value : Dynamic;
-
-}
-enum Kind {
-	Int;
-	Float;
-  String;
-}
-
 
 class Style {
-
-    public function getWidth():Int {
-      return height + padding*2 + margin*2;
-    }
-    public function getHeight():Int {
-      return width + padding*2 + margin*2;
-    }
 
     public var margin:Int = 0;
     public var padding:Int = 0;
@@ -40,34 +22,41 @@ class Style {
     public var over_outline_color:Int = 0;
     public var selected_outline_color:Int = 0;
 
-    public function get(key:String):Dynamic {
-      return Reflect.getProperty(this, key);
+    public function getMinWidth():Int {
+      return height + padding*2 + margin*2;
+    }
+    public function getMinHeight():Int {
+      return width + padding*2 + margin*2;
     }
 
-    public function getInt(key:String):Int {
-      var value:Dynamic = get(key);
-      if (value==null) return -1;
-      return Std.int(value);
-    }
-
-    public function getFloat(key:String):Float {
-      var value:Dynamic = get(key);
-      if (value==null) return -1;
-      return cast(value,Float);
-    }
-
-    public function getColor(key:String):Int {
-      var value:Dynamic = get(key);
-      if (value==null) return 0;
-      return toColor(Std.int(value));
-    }
-
-    public function getAlpha(key:String):Float {
-      var value:Dynamic = get(key);
-      if (value==null) return 0;
-      return toAlpha(Std.int(value));
-    }
-
+    // public function get(key:String):Dynamic {
+    //   return Reflect.getProperty(this, key);
+    // }
+    //
+    // public function getInt(key:String):Int {
+    //   var value:Dynamic = get(key);
+    //   if (value==null) return -1;
+    //   return Std.int(value);
+    // }
+    //
+    // public function getFloat(key:String):Float {
+    //   var value:Dynamic = get(key);
+    //   if (value==null) return -1;
+    //   return cast(value,Float);
+    // }
+    //
+    // public function getColor(key:String):Int {
+    //   var value:Dynamic = get(key);
+    //   if (value==null) return 0;
+    //   return toColor(Std.int(value));
+    // }
+    //
+    // public function getAlpha(key:String):Float {
+    //   var value:Dynamic = get(key);
+    //   if (value==null) return 0;
+    //   return toAlpha(Std.int(value));
+    // }
+    //
     public static function toColor(color:Int):Int {
       return color>>8;
     }
@@ -75,12 +64,12 @@ class Style {
     public static function toAlpha(color:Int):Float {
       return (color&0xFF)/256;
     }
-
-    public function getString(key:String):String {
-      var value:Dynamic = get(key);
-      if (value==null) return "";
-      return Std.string(value);
-    }
+    //
+    // public function getString(key:String):String {
+    //   var value:Dynamic = get(key);
+    //   if (value==null) return "";
+    //   return Std.string(value);
+    // }
 
     public function copy(style:Style) {
       this.width = style.width;
