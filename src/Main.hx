@@ -7,14 +7,9 @@ import openfl.events.Event;
 import openfl.events.MouseEvent;
 
 import motion.Actuate;
+import motion.easing.*;
 
-import com.akifox.plik.PLIK;
-import com.akifox.plik.Gfx;
-import com.akifox.plik.Utils;
-import com.akifox.plik.Data;
-import com.akifox.plik.Text;
-
-import motion.Actuate;
+import com.akifox.plik.*;
 
 class Main {
 	var _loadingBitmap:Bitmap;
@@ -29,7 +24,7 @@ class Main {
 		// ------------------------------
 		// "PRINT" LOADING SPLASH
 
-    Lib.current.stage.color = APP.COLOR_WHITE;
+    Lib.current.stage.color = TileCraft.COLOR_WHITE;
 		_loadingBitmap = new Bitmap(openfl.Assets.getBitmapData('assets/graphics/generic/loading.png',false));
 		_loadingBitmap.scaleX = _loadingBitmap.scaleY = Lib.current.stage.stageWidth/_loadingBitmap.width;
 		_loadingBitmap.smoothing = true;
@@ -52,12 +47,12 @@ class Main {
 		var _container = Lib.current.stage;
 		#end
 
-		PLIK.initialize(_container,APP.APP_PACKAGE);
+		PLIK.initialize(_container,TileCraft.APP_PACKAGE);
 
 		// PREFERENCES
 		PLIK.initPref();
 
-		PLIK.setDefaultFont(APP.FONT_SQUARE);
+		PLIK.setDefaultFont(TileCraft.FONT_SQUARE);
 
 		// INITIALIZE GFX
 		Gfx.setBasePath("assets/graphics/generic/"); // no multiresolution
@@ -70,13 +65,13 @@ class Main {
 
 		// ------------------------------
 		// ASSETS
-    APP.preloadAssets();
+    TileCraft.preloadAssets();
 
 		// ------------------------------
     // DEBUG
    	#if debug
     var performance = new com.akifox.plik.debug.Performance(
-    						PLIK.getFont(APP.FONT_SQUARE),
+    						PLIK.getFont(TileCraft.FONT_SQUARE),
     						openfl.Assets.getBitmapData('assets/debug/akifox_logo_small.png',false),
     						true,
     						true);
@@ -89,15 +84,14 @@ class Main {
 		Lib.current.stage.removeChild(_loadingBitmap);
 		_loadingBitmap.bitmapData.dispose();
 		_loadingBitmap=null;
-    Lib.current.stage.color = APP.APP_BGCOLOR;
+    Lib.current.stage.color = TileCraft.APP_BGCOLOR;
 
 		// ------------------------------
     // FIRST SCREEN
 
-		PLIK.changeScreen(new ScreenMain(),PLIK.TRANSITION_ALPHA);
+		PLIK.changeScreen(new TileCraft(),PLIK.TRANSITION_ALPHA);
 
 		Lib.current.stage.addEventListener (Event.RESIZE, onResize);
-		//trace('END STARTUP');
 	}
 
 	private function onResize (event:Event):Void {
