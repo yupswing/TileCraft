@@ -87,6 +87,9 @@ class TileCraft extends Screen
 	//============================================================================
 
 	public function renderModel(preview:Bool=true) {
+		#if !v2
+		preview=true;//TODO POSTFX need support for OpenFL3
+		#end
 		//TODO this should be part of ModelView
 
 		// avoid too many calls at once
@@ -94,7 +97,7 @@ class TileCraft extends Screen
 
 		// _modelBitmap.bitmapData = null; //TODO show some kind of modal while rendering
 
-		var bpd:BitmapData = currentRenderer.render(currentModel,-1,preview);
+		var bpd:BitmapData = currentRenderer.render(currentModel,-1,true);
 		_modelBitmap.bitmapData = bpd;
 		_modelBitmap.x = TOOLBAR_WIDTH+(rwidth-TOOLBAR_WIDTH-SHAPELIST_WIDTH-PREVIEW_WIDTH)/2-_modelBitmap.width/2;
 		_modelBitmap.y = (rheight-ACTIONBAR_HEIGHT-STATUSBAR_HEIGHT)/2-_modelBitmap.height/2+ACTIONBAR_HEIGHT;
@@ -104,6 +107,10 @@ class TileCraft extends Screen
 	}
 
 	public function renderOutput() {
+		#if !v2
+		return; //TODO POSTFX need support for OpenFL3
+		#end
+
 		//TODO this should be part of a PreviewView
 
 		// _outputBitmap.bitmapData = null; //TODO show some kind of modal while rendering
@@ -117,43 +124,47 @@ class TileCraft extends Screen
 	var backgroundRender = new ShapeContainer();
 
 	public function renderBackground() {
-			backgroundRender.graphics.clear();
-			var color = backgroundRenderColor;
-			var alpha = 0.9;
-			var span = 0; //BASE_SPAN
-			if (backgroundRenderColor==-1) {
-				//transparent
+		#if !v2
+		return; //POSTFX need support for OpenFL3
+		#end
 
-				TileCraft.makeChessboard(backgroundRender.graphics,Std.int(20*renderModes[renderMode]),0,0,PREVIEW_WIDTH,_outputBitmap.height+span,0xBBBBBB,0xEEEEEE);
+		backgroundRender.graphics.clear();
+		var color = backgroundRenderColor;
+		var alpha = 0.9;
+		var span = 0; //BASE_SPAN
+		if (backgroundRenderColor==-1) {
+					//transparent
 
-			} else {
-				backgroundRender.graphics.beginFill(backgroundRenderColor);
-				backgroundRender.graphics.drawRect(0,0,
-																					PREVIEW_WIDTH,_outputBitmap.height+span);
+					TileCraft.makeChessboard(backgroundRender.graphics,Std.int(20*renderModes[renderMode]),0,0,PREVIEW_WIDTH,_outputBitmap.height+span,0xBBBBBB,0xEEEEEE);
 
-				var shiftColor:Int=0;
-				if (color<0x888888) {
-					shiftColor = ColorToolkit.shiftBrighteness(color,30);
-				}	else {
-					shiftColor = ColorToolkit.shiftBrighteness(color,-30);
-				}
-				backgroundRender.graphics.beginFill(shiftColor,alpha);
-				backgroundRender.graphics.drawRect(PREVIEW_WIDTH/2-_outputBitmap.width/2,span,
-							_outputBitmap.width,_outputBitmap.height/2);
+				} else {
+					backgroundRender.graphics.beginFill(backgroundRenderColor);
+					backgroundRender.graphics.drawRect(0,0,
+																						PREVIEW_WIDTH,_outputBitmap.height+span);
 
-				if (color<0x888888) {
-					shiftColor = ColorToolkit.shiftBrighteness(color,15);
-				}	else {
-					shiftColor = ColorToolkit.shiftBrighteness(color,-15);
-				}
-				backgroundRender.graphics.beginFill(shiftColor,alpha);
-				backgroundRender.graphics.drawRect(PREVIEW_WIDTH/2-_outputBitmap.width/2,span+_outputBitmap.height/2,
-				_outputBitmap.width,_outputBitmap.height/2);
-	}
-			backgroundRender.graphics.endFill();
+					var shiftColor:Int=0;
+					if (color<0x888888) {
+						shiftColor = ColorToolkit.shiftBrighteness(color,30);
+					}	else {
+						shiftColor = ColorToolkit.shiftBrighteness(color,-30);
+					}
+					backgroundRender.graphics.beginFill(shiftColor,alpha);
+					backgroundRender.graphics.drawRect(PREVIEW_WIDTH/2-_outputBitmap.width/2,span,
+								_outputBitmap.width,_outputBitmap.height/2);
 
-			backgroundRender.x = rwidth-SHAPELIST_WIDTH-PREVIEW_WIDTH;
-			backgroundRender.y = rheight-STATUSBAR_HEIGHT-backgroundRender.height;
+					if (color<0x888888) {
+						shiftColor = ColorToolkit.shiftBrighteness(color,15);
+					}	else {
+						shiftColor = ColorToolkit.shiftBrighteness(color,-15);
+					}
+					backgroundRender.graphics.beginFill(shiftColor,alpha);
+					backgroundRender.graphics.drawRect(PREVIEW_WIDTH/2-_outputBitmap.width/2,span+_outputBitmap.height/2,
+					_outputBitmap.width,_outputBitmap.height/2);
+		}
+		backgroundRender.graphics.endFill();
+
+		backgroundRender.x = rwidth-SHAPELIST_WIDTH-PREVIEW_WIDTH;
+		backgroundRender.y = rheight-STATUSBAR_HEIGHT-backgroundRender.height;
 	}
 
 	//============================================================================

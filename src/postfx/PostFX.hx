@@ -627,10 +627,9 @@ class LayerGroup {
 
 		var matrix_3d = Matrix3D.createOrtho (0, width, height, 0, -1000, 1000);
 		#if v2
-		//TODO maybe not working on NEXT
 		matrix = Float32Array.fromMatrix (matrix_3d);
 		#else
-		matrix = Float32Array.fromMatrix(matrix_3d);
+		matrix = new Float32Array (matrix_3d.rawData);
 		#end
 
 	}

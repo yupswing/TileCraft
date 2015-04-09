@@ -297,7 +297,14 @@ class Model {
 	public function toPNG(output:Output,bitmapData:openfl.display.BitmapData):Output {
 
 		// encode the bitmapData to PNG format
-		var pngBytes = Bytes.ofString(bitmapData.encode("png", 1).toString()); //TODO support openfl3 new encode function
+		#if v2
+									 // openfl.utils.ByteArray to Bytes (thru String)
+		var pngBytes = Bytes.ofString(bitmapData.encode("png", 1).toString());
+		#else
+		var pngBytes = Bytes.ofString(bitmapData.encode(new openfl.geom.Rectangle(0,0,bitmapData.width,bitmapData.height),
+																										new openfl.display.PNGEncoderOptions(),
+																										new openfl.utils.ByteArray()).toString());
+		#end
 
 		/* Add a chunk before the end
 		   CHUNK ID is "tcMa" ('tc' TileCraft (Ancillary, Private) + 'M' Model + 'a' Model Version (Safe to copy)

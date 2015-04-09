@@ -210,7 +210,11 @@ class Style {
 
       var w = Math.max(target.width+targetStyle.padding*2,width);
       var h = Math.max(target.height+targetStyle.padding*2,height);
+      #if v2
       var graphics = target.graphics;
+      #else
+      var graphics:openfl.display.Graphics = Reflect.getProperty(target, 'graphics');
+      #end
 
       // draw background
       if (targetStyle.outline_size>0) {
@@ -222,7 +226,11 @@ class Style {
 
         graphics.lineStyle(targetStyle.outline_size,outline_color,outline_alpha);
         graphics.drawRoundRect(0,0,w,h,targetStyle.rounded,targetStyle.rounded);
+        #if v2
         graphics.lineStyle(null);
+        #else
+        graphics.lineStyle(null,null);
+        #end
       }
 
       var background = targetStyle.background_color;
@@ -236,7 +244,7 @@ class Style {
   			var matrix = new openfl.geom.Matrix();
   			matrix.createGradientBox(w,h,90*Math.PI/180);
   			graphics.beginGradientFill(openfl.display.GradientType.LINEAR,[ColorToolkit.shiftBrighteness(background_color,15),ColorToolkit.shiftBrighteness(background_color,-15)],[background_alpha,background_alpha],[0,255],matrix);
-  			graphics.drawRoundRect(0,0,w,h,targetStyle.rounded);
+  			graphics.drawRoundRect(0,0,w,h,targetStyle.rounded,targetStyle.rounded);
   			graphics.endFill();
       }
 
