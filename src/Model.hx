@@ -233,7 +233,7 @@ class Model {
 
 	public static function fromPNG(input:Input):Model {
 		var isValid:Bool = false;
-		var string:String = "";
+		var bytes:Bytes = null;
 		try {
 			// Read the file
 			var data = new format.png.Reader(input).read();
@@ -242,7 +242,7 @@ class Model {
 				case CUnknown(id,data):
 					if (id==PNG_CHUNK) {
 						// Get the MODEL chunk
-						string = data.toString();
+						bytes = data;
 						isValid = true;
 					}
 				default:
@@ -250,11 +250,11 @@ class Model {
 			}
 		}catch(e:Dynamic) {
 			trace('ERROR $e');
-			input.close(); //TODO check if good to close it on error
+			input.close();
 			input = null;
 		}
 		if (!isValid) return null;
-		return Model.fromString(string);
+		return Model.fromBytes(bytes);
 
 	}
 
@@ -268,7 +268,7 @@ class Model {
 			var pngData = new format.png.Reader(new BytesInput(pngBytes)).read();
 			var end = pngData.last();
 			pngData.remove(end);
-			pngData.add(format.png.Data.Chunk.CUnknown('tcMa',Bytes.ofString(this.toString())));
+			pngData.add(format.png.Data.Chunk.CUnknown('tcMa',this.toBytes()));
 			pngData.add(end);
 			end = null;
 
@@ -276,7 +276,7 @@ class Model {
 
 		}catch(e:Dynamic) {
 			trace("ERROR $e");
-			output.close(); //TODO check if good to close it on error
+			output.close();
 			output = null;
 		}
 		return output;
