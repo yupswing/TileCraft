@@ -34,8 +34,7 @@
 	<!-- Other Libraries -->
 	<haxelib name="compiletime" />
 	<haxelib name="hxColorToolkit" />
-	<haxelib name="systools" if="desktop" />
-
+	<!-- <haxelib name="systools" if="desktop" /> -->
 
 	<!-- ############################# CUSTOM BUILDS ############################ -->
 

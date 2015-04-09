@@ -30,7 +30,7 @@ import openfl.display.BitmapData;
 import Shape;
 import gui.*;
 
-import systools.Dialogs;
+//import systools.Dialogs;
 
 using hxColorToolkit.ColorToolkit;
 
@@ -55,8 +55,9 @@ class ScreenMain extends Screen
 	}
 
 	//var testPreviewBitmap:Bitmap = null;
-	var testFinalBitmap:Bitmap = null;
-	var testRenderBitmap:Bitmap = null;
+	var _outputBitmap:Bitmap = null;
+	var _modelBitmap:Bitmap = null;
+	var _modelBitmapIsPreview:Bool=true;
 
 	var fxaaModes = [[8,8],[8,8],[8,8]]; //passes + outline
 	var renderModes = [0.5,0.25,0.125];
@@ -77,29 +78,29 @@ class ScreenMain extends Screen
 
 	//============================================================================
 
-	public function renderTest() {
+	public function renderModel(preview:Bool=true) {
 
 		// testPreviewBitmap.bitmapData = null;
-		// testRenderBitmap.bitmapData = null;
-		// testFinalBitmap.bitmapData = null;
+		// _modelBitmap.bitmapData = null;
+		// _outputBitmap.bitmapData = null;
 
 		//Actuate.timer(0.01).onComplete( function() {
 
-			// testPreviewBitmap.bitmapData = rendererPreview.render(currentModel,-1,true);
-			// testPreviewBitmap.x = rwidth/2-testPreviewBitmap.width/2+PLIK.adjust(650);
-			// testPreviewBitmap.y = rheight/2-testPreviewBitmap.height/2;
+			var bpd:BitmapData = currentRenderer.render(currentModel,-1,preview);
+			_modelBitmap.bitmapData = bpd;
+			_modelBitmap.x = TOOLBAR_WIDTH+(rwidth-TOOLBAR_WIDTH-SHAPELIST_WIDTH-PREVIEW_WIDTH)/2-_modelBitmap.width/2;
+			_modelBitmap.y = (rheight-ACTIONBAR_HEIGHT-STATUSBAR_HEIGHT)/2-_modelBitmap.height/2+ACTIONBAR_HEIGHT;
+			_modelBitmapIsPreview = preview;
 
-			var bpd:BitmapData = currentRenderer.render(currentModel,-1,false);
-			testRenderBitmap.bitmapData = bpd;
-			testRenderBitmap.x = TOOLBAR_WIDTH+(rwidth-TOOLBAR_WIDTH-SHAPELIST_WIDTH-PREVIEW_WIDTH)/2-testRenderBitmap.width/2;
-			testRenderBitmap.y = (rheight-ACTIONBAR_HEIGHT-STATUSBAR_HEIGHT)/2-testRenderBitmap.height/2+ACTIONBAR_HEIGHT;
-
-			testFinalBitmap.bitmapData = PostFX.scale(PostFX.fxaaOutline(bpd,fxaaModes[renderMode][0],fxaaModes[renderMode][0]),renderModes[renderMode]);
-			testFinalBitmap.x = rwidth-PREVIEW_WIDTH-SHAPELIST_WIDTH+(PREVIEW_WIDTH/2-testFinalBitmap.width/2);
-			testFinalBitmap.y = rheight-STATUSBAR_HEIGHT-testFinalBitmap.height;
 		//});
 	}
 
+	public function renderOutput() {
+		if (_modelBitmapIsPreview) renderModel(false);
+		_outputBitmap.bitmapData = PostFX.scale(PostFX.fxaaOutline(_modelBitmap.bitmapData,fxaaModes[renderMode][0],fxaaModes[renderMode][0]),renderModes[renderMode]);
+		_outputBitmap.x = rwidth-PREVIEW_WIDTH-SHAPELIST_WIDTH+(PREVIEW_WIDTH/2-_outputBitmap.width/2);
+		_outputBitmap.y = rheight-STATUSBAR_HEIGHT-_outputBitmap.height;
+	}
 	//============================================================================
 
 	var backgroundRender = new ShapeContainer();
@@ -112,12 +113,12 @@ class ScreenMain extends Screen
 			if (backgroundRenderColor==-1) {
 				//transparent
 
-				APP.makeChessboard(backgroundRender.graphics,Std.int(20*renderModes[renderMode]),0,0,PREVIEW_WIDTH,testFinalBitmap.height+span,0xBBBBBB,0xEEEEEE);
+				APP.makeChessboard(backgroundRender.graphics,Std.int(20*renderModes[renderMode]),0,0,PREVIEW_WIDTH,_outputBitmap.height+span,0xBBBBBB,0xEEEEEE);
 
 			} else {
 				backgroundRender.graphics.beginFill(backgroundRenderColor);
 				backgroundRender.graphics.drawRect(0,0,
-																					PREVIEW_WIDTH,testFinalBitmap.height+span);
+																					PREVIEW_WIDTH,_outputBitmap.height+span);
 
 				var shiftColor:Int=0;
 				if (color<0x888888) {
@@ -126,8 +127,8 @@ class ScreenMain extends Screen
 					shiftColor = ColorToolkit.shiftBrighteness(color,-30);
 				}
 				backgroundRender.graphics.beginFill(shiftColor,alpha);
-				backgroundRender.graphics.drawRect(PREVIEW_WIDTH/2-testFinalBitmap.width/2,span,
-							testFinalBitmap.width,testFinalBitmap.height/2);
+				backgroundRender.graphics.drawRect(PREVIEW_WIDTH/2-_outputBitmap.width/2,span,
+							_outputBitmap.width,_outputBitmap.height/2);
 
 				if (color<0x888888) {
 					shiftColor = ColorToolkit.shiftBrighteness(color,15);
@@ -135,8 +136,8 @@ class ScreenMain extends Screen
 					shiftColor = ColorToolkit.shiftBrighteness(color,-15);
 				}
 				backgroundRender.graphics.beginFill(shiftColor,alpha);
-				backgroundRender.graphics.drawRect(PREVIEW_WIDTH/2-testFinalBitmap.width/2,span+testFinalBitmap.height/2,
-				testFinalBitmap.width,testFinalBitmap.height/2);
+				backgroundRender.graphics.drawRect(PREVIEW_WIDTH/2-_outputBitmap.width/2,span+_outputBitmap.height/2,
+				_outputBitmap.width,_outputBitmap.height/2);
 	}
 			backgroundRender.graphics.endFill();
 
@@ -149,7 +150,7 @@ class ScreenMain extends Screen
 	public function renderModeLoop(_) {
 		renderMode++;
 		if (renderMode>=renderModes.length) renderMode = 0;
-		renderTest();
+		renderOutput();
 		renderBackground();
 	}
 
@@ -164,7 +165,8 @@ class ScreenMain extends Screen
 		if (currentModel!=null) currentModel.destroy();
 		currentModel = model;
 		updatePalette();
-		renderTest();
+		renderModel(false);
+		renderOutput();
 	}
 
 	public function updatePalette(){
@@ -180,13 +182,14 @@ class ScreenMain extends Screen
 	}
 
 	public function saveFile():Bool {
+		renderOutput();
 		var filename:String = saveDialog("TileCraft PNG image","*.png");
 		if (filename==null) {
 			trace('cancel');
 			return false;
 		}
 		var fo:haxe.io.Output = sys.io.File.write(filename,true);
-		fo = currentModel.toPNG(fo,testFinalBitmap.bitmapData); //TODO change testFinalRender (maybe include in Model)
+		fo = currentModel.toPNG(fo,_outputBitmap.bitmapData); //TODO change testFinalRender (maybe include in Model)
 		if (fo==null) {
 			return false;
 		} else {
@@ -265,11 +268,11 @@ class ScreenMain extends Screen
 		// testPreviewBitmap = new Bitmap(null);
 		//addChild(testPreviewBitmap);
 
-		testRenderBitmap = new Bitmap(null);
-		addChild(testRenderBitmap);
+		_modelBitmap = new Bitmap(null);
+		addChild(_modelBitmap);
 
-		testFinalBitmap = new Bitmap(null);
-		addChild(testFinalBitmap);
+		_outputBitmap = new Bitmap(null);
+		addChild(_outputBitmap);
 
 
 		// STATIC INTERFACE ---------------------------------------------
@@ -340,7 +343,7 @@ class ScreenMain extends Screen
 			if (index==0) return; //hole
 			button.icon = APP.makeColorIcon(26,color);
 			currentModel.setColor(index,color);
-			renderTest();
+			renderModel(true);
 		}
 
 		//---
@@ -394,7 +397,7 @@ class ScreenMain extends Screen
 																						function(_) { saveFile(); });
 		actionToolbar.addButton("-");
 		actionToolbar.addButton("render",null,	APP.atlasSprites.getRegion(APP.ICON_RENDER).toBitmapData(),
-																						function(_) { renderTest(); });
+																						function(_) { renderModel(false); renderOutput(); });
 		actionToolbar.addButton("-");
 		actionToolbar.addButton("copy",null,		APP.atlasSprites.getRegion(APP.ICON_COPY).toBitmapData(),		actionToolbarAction);
 		actionToolbar.addButton("paste",null,	APP.atlasSprites.getRegion(APP.ICON_PASTE).toBitmapData(),	actionToolbarAction);
@@ -402,7 +405,7 @@ class ScreenMain extends Screen
 		actionToolbar.addButton("quit",null,		APP.atlasSprites.getRegion(APP.ICON_QUIT).toBitmapData(),
 																						function(_) {
 																							// BOOL isError
-																							if (Dialogs.confirm(APP.APP_NAME,"Do you really want to quit?",false))
+																							//if (Dialogs.confirm(APP.APP_NAME,"Do you really want to quit?",false))
 																								PLIK.quit();
 																						});
 		actionToolbar.x = TOOLBAR_WIDTH+BASE_SPAN;
@@ -455,7 +458,7 @@ class ScreenMain extends Screen
 		//var original = "EgQCAJn_Zv8zETxKKyZGRp4mm0aeRFaaeUSamnlEVokBRJqJAUNmmnhDqpp4FzxZvCxVV90sqmfdRGaaREYBRVVG70VVCh5FVRxVRO8cqkTv";
 
 		// complex shape
-		var original = "FQQA____Ezw5DkBLCjwAWldvAGlIj1CrKhJwRZrNMEtIzmJFGhKCq5rNAiNnvALNRc0CzXgSAiNFEgJ4Zj9MacxpDng7eEMS3gFD3t4BAy3eAUBF3gFDq-8B";
+		var original = "";//"FQQA____Ezw5DkBLCjwAWldvAGlIj1CrKhJwRZrNMEtIzmJFGhKCq5rNAiNnvALNRc0CzXgSAiNFEgJ4Zj9MacxpDng7eEMS3gFD3t4BAy3eAUBF3gFDq-8B";
 		//var original = "Ff___wAAQEW7PqXys9vuJDI_OVJXUpAjpswzUUY1p3At____9-F2vjJB33qSfoaPprO8Ezw5DkBLCjwAWldvAGlIj1CrKhJwRZrNMEtIzmJFGhKCq5rNAiNnvALNRc0CzXgSAiNFEgJ4Zj9MacxpDng7eEMS3gFD3t4BAy3eAUBF3gFDq-8B";
 		//var original = "FQQGOTt7PqXy____Ezw5DkBLCjwAWldvAGlIj1CrKhJwRZrNMEtIzmJFGhKCq5rNAiNnvALNRc0CzXgSAiNFEgJ4Zg9MacxpDng7eEMS3gFD3t4BAy3eAUBF3gFDq-8B";
 		// home
@@ -472,6 +475,8 @@ class ScreenMain extends Screen
 		// ---------------------------------------------
 
 		changeModel(Model.fromString(original));
+
+		//init background image
 		renderBackground();
 
 		super.initialize(); // init_super at the end

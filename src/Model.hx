@@ -11,8 +11,33 @@ import Shape;
 
 class Model {
 
+	//============================================================================
+
 	private static inline var MAX_SHAPES = 32;
 	public static inline var MODEL_SIZE = 16;
+
+	private static inline var COLOR_COUNT = 16;
+	public static var DEFAULT_PALETTE:Array<Int> = [
+		0xFFd5f6ff, // original hole color
+		//0xFFFF0000, // new hole color
+		0xFF4045BB,
+		0xFF3EA5F2,
+		0xFFB3DBEE,
+		0xFF24323F,
+		0xFF395257,
+		0xFF529023,
+		0xFFA6CC33,
+		0xFF514635,
+		0xFFA7702D,
+		0xFFEA903E,
+		0xFFF7E176,
+		0xFFBE3241,
+		0xFFDF7A92,
+		0xFF7e868f,
+		0xFFa6b3bc,
+	];
+
+	//============================================================================
 
 	private var shapes:Array<Shape>;
 	private var colors:Array<Int>;
@@ -80,27 +105,6 @@ class Model {
 	}
 
 	//============================================================================
-
-	private static inline var COLOR_COUNT = 16;
-	public static var DEFAULT_PALETTE:Array<Int> = [
-		0xFFd5f6ff, // original hole color
-		//0xFFFF0000, // new hole color
-		0xFF4045BB,
-		0xFF3EA5F2,
-		0xFFB3DBEE,
-		0xFF24323F,
-		0xFF395257,
-		0xFF529023,
-		0xFFA6CC33,
-		0xFF514635,
-		0xFFA7702D,
-		0xFFEA903E,
-		0xFFF7E176,
-		0xFFBE3241,
-		0xFFDF7A92,
-		0xFF7e868f,
-		0xFFa6b3bc,
-	];
 
 	public static function makeNew():Model {
 		return new Model(DEFAULT_PALETTE);
