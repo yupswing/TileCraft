@@ -494,7 +494,7 @@ class ShaderCompositing {
 
     GL.blendEquationSeparate(GL.FUNC_ADD,GL.FUNC_ADD);
 		GL.blendFuncSeparate(GL.SRC_ALPHA, GL.ONE_MINUS_SRC_ALPHA, GL.ONE, GL.ZERO);
-		//GL.blendFuncSeparate(GL.SRC_ALPHA, GL.ZERO, GL.SRC_ALPHA, GL.ZERO);
+		//GL.blendFunc(GL.ONE_MINUS_DST_ALPHA,GL.DST_ALPHA); //TODO this blending is better but still need to change FXAA to support ALPHA channel
 		GL.enable (GL.BLEND);
 
 		GL.uniformMatrix4fv (matrixUniform, false, group.matrix);
