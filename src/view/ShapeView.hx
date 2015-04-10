@@ -29,15 +29,17 @@ class ShapeView extends Box {
     addChild(_icon);
 
     var button:Button;
+
     button = new Button();
     button.x = _style.padding+_icon.width+_style.offset;
     button.y = _style.padding;
     button.style = buttonStyle;
     button.selectable = true;
     button.listen = true;
-    button.actionF = function(button:Button) { trace('lock'); };
-    button.icon = TileCraft.atlasSprites.getRegion(TileCraft.ICON_LOCK_OPEN).toBitmapData();
-    button.iconSelected = TileCraft.atlasSprites.getRegion(TileCraft.ICON_LOCK_CLOSED).toBitmapData();
+    button.actionF = function(button:Button) { _list.toggleEnabledShape(_shape); };
+    button.icon = TileCraft.atlasSprites.getRegion(TileCraft.ICON_EYE_CLOSED).toBitmapData();
+    button.iconSelected = TileCraft.atlasSprites.getRegion(TileCraft.ICON_EYE_OPEN).toBitmapData();
+    button.isSelected = true;
     addChild(button);
 
     button = new Button();
@@ -46,10 +48,9 @@ class ShapeView extends Box {
     button.style = buttonStyle;
     button.selectable = true;
     button.listen = true;
-    button.actionF = function(button:Button) { trace('show'); };
-    button.icon = TileCraft.atlasSprites.getRegion(TileCraft.ICON_EYE_CLOSED).toBitmapData();
-    button.iconSelected = TileCraft.atlasSprites.getRegion(TileCraft.ICON_EYE_OPEN).toBitmapData();
-    button.isSelected = true;
+    button.actionF = function(button:Button) { _list.toggleLockedShape(_shape); };
+    button.icon = TileCraft.atlasSprites.getRegion(TileCraft.ICON_LOCK_OPEN).toBitmapData();
+    button.iconSelected = TileCraft.atlasSprites.getRegion(TileCraft.ICON_LOCK_CLOSED).toBitmapData();
     addChild(button);
 
     button = new Button();

@@ -47,7 +47,7 @@ class TileCraft extends Screen
 		trace('!!! $string');
 	}
 
-	var currentModel:Model = Model.makeNew();
+	public var currentModel:Model = Model.makeNew();
 	var currentShapeViewList:ShapeViewList;
 
 	var modelView:ModelView = new ModelView();
@@ -193,6 +193,10 @@ class TileCraft extends Screen
 		renderModel(false);
 		renderOutput();
 		//TileCraft.logger(currentModel.toPNGString(_outputBitmap.bitmapData)); //TODO should be a TextField to output this on request
+	}
+
+	public function updateModel() {
+		renderModel(false);
 	}
 
 	public function getColor(index:Int):Int {

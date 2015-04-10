@@ -32,16 +32,31 @@ class ShapeViewList extends Box {
     }
   }
 
+  public function updateModel() {
+    _base.updateModel();
+  }
+
   public function removeShape(shape:Shape) {
-    trace(shape);
     for (i in 0..._shapesView.length) {
       if (_shapesView[i].getShape()==shape) {
-        removeChild(_shapesView[i]);
-        _shapesView.remove(_shapesView[i]);
+        removeChild(_shapesView[i]); //remove from view
+        _base.currentModel.removeShape(_base.currentModel.indexOf(_shapesView[i].getShape())); //remove from model
+        _shapesView.remove(_shapesView[i]); //remove from array list
         updatePositions();
+        updateModel();
         break;
       }
     }
+  }
+
+  public function toggleEnabledShape(shape:Shape) {
+    shape.enabled = !shape.enabled;
+    updateModel();
+  }
+
+  public function toggleLockedShape(shape:Shape) {
+    shape.locked = !shape.locked;
+    updateModel();
   }
 
   private function updatePositions() {
