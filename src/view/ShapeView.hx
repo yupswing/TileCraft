@@ -100,10 +100,10 @@ class ShapeView extends Box {
       for (x in 0...final.width) {
         for (y in 0...final.height) {
           dot = final.getPixel(x,y).toHSB();
-          // different hue, different saturation, same brightness as original
+          // different hue, different saturation, average brightness with original
           dot.hue = shapecolor.hue;
           dot.saturation = shapecolor.saturation;
-          //dot.brightness = shapecolor.brightness;
+          dot.brightness = (dot.brightness+shapecolor.brightness)*0.5;
           final.setPixel(x,y,dot.getColor());
 
         }

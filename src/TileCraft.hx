@@ -221,36 +221,60 @@ class TileCraft extends Screen
 	}
 
 	public function saveFile():Bool {
+		// Render the _outputBitmap (TODO need to be better, maybe this system in ModelView)
 		renderOutput();
+
+		// Determine the file path
 		var filename:String = saveDialog("TileCraft PNG image","*.png");
 		if (filename==null) {
 			TileCraft.logger('User canceled the dialog');
 			return false;
 		}
-		var fo:haxe.io.Output = sys.io.File.write(filename,true);
-		fo = currentModel.toPNG(fo,_outputBitmap.bitmapData); //TODO change testFinalRender (maybe include in Model)
+
+		// Get FileOutput
+		var fo:haxe.io.Output = null;
+		try { fo = sys.io.File.write(filename,true); }
+		catch (e:Dynamic){
+			TileCraft.error('File write error $e');
+			fo = null;
+		}
+
+		// Export the model
+		fo = currentModel.toPNG(fo,_outputBitmap.bitmapData); //TODO change _outputBitmap (maybe in ModelView)
+
+		// Check if everything is ok
 		if (fo==null) {
-			TileCraft.error('Unable to load model');
+			TileCraft.error('Unable to save the Model to "$filename"');
 			return false;
 		} else {
-			fo.close();
+			try { fo.close(); } catch(e:Dynamic) {}
 			return true;
 		}
 	}
 
 	public function openFile():Bool {
+
+		// Determine the file path
 		var filename:String = openDialog("TileCraft PNG image","*.png");
 		if (filename==null) {
 			TileCraft.logger('User canceled the dialog');
 			return false;
 		}
-		var fr = sys.io.File.read(filename,true);
-		var model:Model = Model.fromPNG(fr);
-		if (fr!=null) fr.close();
 
-		// error
+		// Get FileInput
+		var fr:FileInput = null;
+		try { fr = sys.io.File.read(filename,true); }
+		catch (e:Dynamic){ TileCraft.error('File read error $e'); fr = null; }
+
+		// Import the model
+		var model:Model = Model.fromPNG(fr);
+
+		// Close the FileInput
+		if (fr!=null) try { fr.close(); } catch(e:Dynamic) {}
+
+		// Check if everything is ok
 		if (model==null) {
-			TileCraft.error('Unable to load model');
+			TileCraft.error('Unable to load the model "$filename"');
 			return false;
 		} else {
 			// prepare context

@@ -17,7 +17,6 @@ class ShapeViewList extends Box {
   }
 
   public function addShape(shape:Shape) {
-    trace(shape);
     _shapesView.unshift(new ShapeView(this,shape,_width-_style.padding*2));
     addChild(_shapesView[0]);
     updatePositions();
@@ -37,7 +36,6 @@ class ShapeViewList extends Box {
     trace(shape);
     for (i in 0..._shapesView.length) {
       if (_shapesView[i].getShape()==shape) {
-        trace('!!! $i');
         removeChild(_shapesView[i]);
         _shapesView.remove(_shapesView[i]);
         updatePositions();
@@ -53,7 +51,6 @@ class ShapeViewList extends Box {
     for (i in 0..._shapesView.length) {
       _shapesView[i].x = _style.padding;
       _shapesView[i].y = _style.padding + i*(SHAPE_HEIGHT+_style.offset);
-      trace(i*(SHAPE_HEIGHT+_style.offset));
     }
     draw(_width);
   }

@@ -260,6 +260,7 @@ class Model {
 	private static inline var PNG_TILECRAFT_CHUNK = "tcMa";
 
 	public static function fromPNG(input:Input):Model {
+		if (input==null) return null;
 		var isValid:Bool = false;
 		var bytes:Bytes = null;
 		try {
@@ -281,13 +282,17 @@ class Model {
 			}
 		}catch(e:Dynamic) {
 			// read error
-			TileCraft.error('ERROR $e');
-			input.close();
+			TileCraft.error('Unable to import model from PNG: $e');
+			if (input!=null) input.close();
 			input = null;
+			return null;
 		}
 
 		// Chunk not found: there was no private TileCraft chunk
-		if (!isValid) return null;
+		if (!isValid) {
+			TileCraft.error('Unable to import model from PNG: No TileCraft chunk in PNG');
+			return null;
+		}
 
 		// create a model from model bytes data
 		return Model.fromBytes(bytes);
@@ -295,6 +300,7 @@ class Model {
 	}
 
 	public function toPNG(output:Output,bitmapData:openfl.display.BitmapData):Output {
+		if (output==null || bitmapData==null) return null;
 
 		// encode the bitmapData to PNG format
 		#if v2
@@ -325,8 +331,8 @@ class Model {
 
 		} catch (e:Dynamic) {
 			// write error
-			TileCraft.error("ERROR $e");
-			output.close();
+			TileCraft.error("Unable to export model to PNG: $e");
+			if (output!=null) output.close();
 			output = null;
 		}
 		return output;
