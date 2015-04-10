@@ -16,7 +16,7 @@ class ShapeViewList extends Box {
     draw(_width);
   }
 
-  public function addShape(shape:Shape) {
+  public function add(shape:Shape) {
     _shapesView.unshift(new ShapeView(this,shape,_width-_style.padding*2));
     addChild(_shapesView[0]);
     updatePositions();
@@ -26,7 +26,7 @@ class ShapeViewList extends Box {
     return _base.getColor(index);
   }
 
-  public function removeAllShape() {
+  public function removeAll() {
     for (i in 0..._shapesView.length) {
       removeChild(_shapesView.shift());
     }
@@ -37,10 +37,11 @@ class ShapeViewList extends Box {
   }
 
   public function removeShape(shape:Shape) {
+    // TODO this is not right (mixing model + shapeviewlist removals)
     for (i in 0..._shapesView.length) {
       if (_shapesView[i].getShape()==shape) {
         removeChild(_shapesView[i]); //remove from view
-        _base.currentModel.removeShape(_base.currentModel.indexOf(_shapesView[i].getShape())); //remove from model
+        _base.currentModel.removeShape(shape); //remove from model
         _shapesView.remove(_shapesView[i]); //remove from array list
         updatePositions();
         updateModel();

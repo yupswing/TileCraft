@@ -82,7 +82,7 @@ class Shape {
 
 	public function getSlice(x:Int, gw:Int, gh:Int, dest:Renderer.Slice, palette:Array<Int>, model:Model){
 		var dt:Float = (x - x1*gw)/((x2 - x1)*gw);
-		dest.index = model.indexOf(this);
+		dest.index = model.getIndexOfShape(this);
 		dest.normal = 1.0;
 		dest.color = palette[color];
 		dest.y1 = y1*gh;

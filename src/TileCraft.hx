@@ -120,6 +120,7 @@ class TileCraft extends Screen
 		_outputBitmap.x = rwidth-PREVIEW_WIDTH-SHAPELIST_WIDTH+(PREVIEW_WIDTH/2-_outputBitmap.width/2);
 		_outputBitmap.y = rheight-STATUSBAR_HEIGHT-_outputBitmap.height;
 	}
+
 	//============================================================================
 
 	var backgroundRender = new ShapeContainer();
@@ -195,6 +196,21 @@ class TileCraft extends Screen
 		//TileCraft.logger(currentModel.toPNGString(_outputBitmap.bitmapData)); //TODO should be a TextField to output this on request
 	}
 
+	//============================================================================
+
+	// Listeners
+	// TODO here should be all common calls to dispatch
+	// TODO "events" between   Model/Shape <--> ModelView/ShapeView/ColorPickerView
+
+	// public function addShape(shape:Shape) {
+	//
+	// }
+	//
+	// public function removeShape(shape:Shape) {
+	//
+	// }
+
+	// CALL WHEN SOMETHING CHANGE THE MODEL
 	public function updateModel() {
 		renderModel(false);
 	}
@@ -210,11 +226,10 @@ class TileCraft extends Screen
 		}
 	}
 
-
 	public function updateShapeList(){
-		currentShapeViewList.removeAllShape();
+		currentShapeViewList.removeAll();
 		for (i in 0...currentModel.getShapeCount()) {
-			currentShapeViewList.addShape(currentModel.getShape(i));
+			currentShapeViewList.add(currentModel.getShapeByIndex(i));
 		}
 	}
 

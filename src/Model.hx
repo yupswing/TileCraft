@@ -49,16 +49,16 @@ class Model {
 		this.shapes = new Array<Shape>();
 	}
 
-	public function indexOf(shape:Shape):Int{
-		return shapes.indexOf(shape);
-	}
-
 	public function getSize():Int {
 		return MODEL_SIZE;
 	}
 
 	public function getShapeCount():Int{
 		return shapes.length;
+	}
+
+	public function getIndexOfShape(shape:Shape):Int{
+		return shapes.indexOf(shape);
 	}
 
 	public function addShape(shape:Shape){
@@ -71,15 +71,16 @@ class Model {
 		shapes.insert(index, shape);
 	}
 
-	// public function getShape(shape:Shape):Shape {
-	// 	return shapes[shapes.indexOf(shape)];
-	// }
-
-	public function getShape(index:Int):Shape {
+	public function getShapeByIndex(index:Int):Shape {
 		return shapes[index];
 	}
 
-	public function removeShape(index:Int):Shape {
+	public function removeShape(shape:Shape):Shape {
+    return removeShapeByIndex(getIndexOfShape(shape));
+	}
+
+	public function removeShapeByIndex(index:Int):Shape {
+		if (index<-1) return null;
     var shape = shapes[index];
 		shapes.remove(shape);
     return shape;
@@ -88,6 +89,8 @@ class Model {
 	public function getLastShape():Shape {
 		return shapes[shapes.length-1];
 	}
+
+	//============================================================================
 
 	public function getColor(index:Int):Int {
 		return colors[index]&0xFFFFFF;
@@ -189,7 +192,7 @@ class Model {
 			}
 		}
 		for(i in 0...shapeCount){
-			var s:Shape = this.getShape(i);
+			var s:Shape = this.getShapeByIndex(i);
 			bytesBuffer.addByte((Type.enumIndex(s.getShapeType())<<4) | s.getColor());
 			bytesBuffer.addByte((s.getX1()<<4) | (s.getX2()-1));
 			bytesBuffer.addByte((s.getY1()<<4) | (s.getY2()-1));

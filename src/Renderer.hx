@@ -90,7 +90,7 @@ class Renderer {
 				// first get all the shapes that occur in the slice
         var index:Int = 0;
         while(index < m.getShapeCount()) {
-					var shape:Shape = m.getShape(index);
+					var shape:Shape = m.getShapeByIndex(index);
 					if(shape.enabled && shape.getX1() <= g && shape.getX2() > g){
 						if(shape.getColor() == 0 && index != selected){
 							shape.getSlice(x, gw, gh, subSlice, palette, m);
