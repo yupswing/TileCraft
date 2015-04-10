@@ -48,9 +48,10 @@ class TileCraft extends Screen
 	}
 
 	var currentModel:Model = Model.makeNew();
+	var currentShapeViewList:ShapeViewList;
 
 	var modelView:ModelView = new ModelView();
-	var shapeViewList:ShapeViewList = new ShapeViewList();
+	var shapeViewList:ShapeViewList = null;
 
 	public function new () {
 		super();
@@ -87,7 +88,7 @@ class TileCraft extends Screen
 	//============================================================================
 
 	public function renderModel(preview:Bool=true) {
-		#if !v2
+		#if !v2 || neko
 		preview=true;//TODO POSTFX need support for OpenFL3
 		#end
 		//TODO this should be part of ModelView
@@ -97,7 +98,7 @@ class TileCraft extends Screen
 
 		// _modelBitmap.bitmapData = null; //TODO show some kind of modal while rendering
 
-		var bpd:BitmapData = currentRenderer.render(currentModel,-1,true);
+		var bpd:BitmapData = currentRenderer.render(currentModel,-1,preview);
 		_modelBitmap.bitmapData = bpd;
 		_modelBitmap.x = TOOLBAR_WIDTH+(rwidth-TOOLBAR_WIDTH-SHAPELIST_WIDTH-PREVIEW_WIDTH)/2-_modelBitmap.width/2;
 		_modelBitmap.y = (rheight-ACTIONBAR_HEIGHT-STATUSBAR_HEIGHT)/2-_modelBitmap.height/2+ACTIONBAR_HEIGHT;
@@ -188,14 +189,28 @@ class TileCraft extends Screen
 		if (currentModel!=null) currentModel.destroy();
 		currentModel = model;
 		updatePalette();
+		updateShapeList();
 		renderModel(false);
 		renderOutput();
 		//TileCraft.logger(currentModel.toPNGString(_outputBitmap.bitmapData)); //TODO should be a TextField to output this on request
 	}
 
+	public function getColor(index:Int):Int {
+		if (currentModel==null) return -1;
+		return currentModel.getColor(index);
+	}
+
 	public function updatePalette(){
 		for (i in 1...16) {
 			colorToolbar.getButtonByIndex(i).icon = TileCraft.makeColorIcon(26,currentModel.getColor(i));
+		}
+	}
+
+
+	public function updateShapeList(){
+		currentShapeViewList.removeAllShape();
+		for (i in 0...currentModel.getShapeCount()) {
+			currentShapeViewList.addShape(currentModel.getShape(i));
 		}
 	}
 
@@ -463,6 +478,12 @@ class TileCraft extends Screen
 		text.t.x = TOOLBAR_WIDTH/2;
 		text.t.y = ACTIONBAR_HEIGHT/2+12;
 		addChild(text);
+				// -------------------------------------------------------------------------
+
+		currentShapeViewList = new ShapeViewList(this,SHAPELIST_WIDTH);
+		currentShapeViewList.x = rwidth-SHAPELIST_WIDTH;
+		currentShapeViewList.y = ACTIONBAR_HEIGHT;
+		addChild(currentShapeViewList);
 
 		// -------------------------------------------------------------------------
 
@@ -584,8 +605,8 @@ class TileCraft extends Screen
 	public static inline var APP_PACKAGE = "com.akifox.tilecraft" ;
 	public static inline var APP_BUILD = CompileTime.readFile("Export/.build");
 	public static inline var APP_BUILD_DATE = CompileTime.buildDateString();
-	public static inline var APP_VERSION = "1.0.0-alpha5"; //TODEPLOY
-	public static inline var APP_STAGE = "alpha5"; //TODEPLOY
+	public static inline var APP_VERSION = "1.0.0-alpha6dev"; //TODEPLOY
+	public static inline var APP_STAGE = "alpha6 dev"; //TODEPLOY
 	public static inline var APP_PLATFORM =
 	#if debug "dev"
   #elseif flash "swf"

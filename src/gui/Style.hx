@@ -123,11 +123,19 @@ class Style {
         'selected_outline_color':0xaaaaaaFF
       });
     }
+
     public static function miniButton():Style {
       return button().set({
         'padding' : 2,
+        'bevel' : 0,
+        'rounded':24,
         'outline_size' : 2,
-        'bevel' : 1
+        'background_color':0,
+        'over_background_color':0,
+        'selected_background_color':0,
+        'outline_color':0,
+        'over_outline_color':0xffb50088,
+        'selected_outline_color':0
       });
     }
 
@@ -136,7 +144,7 @@ class Style {
         'padding' : 3,
         'outline_size' : 6,
         'outline_color':0,
-        'over_outline_color':0xffd97dFF,
+        'over_outline_color':0xffb50088,
         'selected_outline_color':0xffb500FF
       });
     }
@@ -149,7 +157,7 @@ class Style {
         'outline_size' : 5,
         'outline_color':0,
         'over_background_color':0xddddddFF,
-        'over_outline_color':0xffd97dFF
+        'over_outline_color':0xffb50088
       });
     }
 
@@ -203,6 +211,22 @@ class Style {
           'outline_size':0,
           'background_color':0x242424BB
           //'outline_color':0xffb400CC
+        });
+    }
+
+    public static function shapeview():Style {
+      return box().set({
+          'rounded':8,
+          'padding':-1,
+          'background_color':0x000000BB
+        });
+    }
+
+    public static function shapeviewlist():Style {
+      return box().set({
+          'padding':5,
+          'offset':2,
+          'background_color':0
         });
     }
 
