@@ -21,18 +21,23 @@ class ShapeView extends Box {
     _shape = shape;
     super(Style.shapeview());
 
+    var offset_x:Float = _style.padding;
+    var offset_y:Float = _style.padding;
+
     var buttonStyle = Style.miniButton();
 
     _icon = new Bitmap(makeIcon());
-    _icon.x = _style.padding+buttonStyle.padding;
-    _icon.y = _style.padding+buttonStyle.padding;
+    _icon.x = offset_x+buttonStyle.padding+_style.offset;
+    _icon.y = offset_y+buttonStyle.padding;
     addChild(_icon);
+
+    offset_x += (_icon.width+buttonStyle.padding*2+_style.offset)+_style.offset;
 
     var button:Button;
 
     button = new Button();
-    button.x = _style.padding+_icon.width+_style.offset;
-    button.y = _style.padding;
+    button.x = offset_x;
+    button.y = offset_y;
     button.style = buttonStyle;
     button.selectable = true;
     button.listen = true;
@@ -42,9 +47,11 @@ class ShapeView extends Box {
     button.isSelected = true;
     addChild(button);
 
+    offset_x += button.getGrossWidth()+_style.offset;
+
     button = new Button();
-    button.x = _style.padding+(_style.offset+buttonStyle.width)*2;
-    button.y = _style.padding;
+    button.x = offset_x;
+    button.y = offset_y;
     button.style = buttonStyle;
     button.selectable = true;
     button.listen = true;
@@ -53,15 +60,19 @@ class ShapeView extends Box {
     button.iconSelected = TileCraft.atlasSprites.getRegion(TileCraft.ICON_LOCK_CLOSED).toBitmapData();
     addChild(button);
 
+    offset_x += button.getGrossWidth()+_style.offset;
+
     button = new Button();
-    button.x = _style.padding+(_style.offset+buttonStyle.width)*3;
-    button.y = _style.padding;
+    button.x = offset_x;
+    button.y = offset_y;
     button.style = buttonStyle;
     button.selectable = false;
     button.listen = true;
     button.actionF = function(button:Button) { _list.removeShape(_shape); };
     button.icon = TileCraft.atlasSprites.getRegion(TileCraft.ICON_DELETE).toBitmapData();
     addChild(button);
+
+    offset_x += button.getGrossWidth()+_style.offset;
 
     //draw();
     draw(_width);

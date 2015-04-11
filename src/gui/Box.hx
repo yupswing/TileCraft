@@ -39,6 +39,23 @@ class Box extends SpriteContainer implements IStyle {
       super.destroy();
     }
 
+    public function getNetWidth():Float {
+      return this.width;
+    }
+
+    public function getNetHeight():Float {
+      return this.height;
+    }
+
+    public function getGrossWidth():Float {
+      return getNetWidth()+_style.padding*2;//+_style.outline_size/2;
+    }
+
+    public function getGrossHeight():Float {
+      return getNetHeight()+_style.padding*2;//+_style.outline_size/2;
+    }
+
+
     public function draw(width:Float=0,height:Float=0) {
 		  graphics.clear();
       Style.drawBackground(this,_style,false,false,width,height);

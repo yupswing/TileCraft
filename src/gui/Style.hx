@@ -4,29 +4,30 @@ using hxColorToolkit.ColorToolkit;
 
 class Style {
 
-    public var margin:Int = 0;
     public var padding:Int = 0;
     public var offset:Int = 0; //offset between internal elements
     public var rounded:Int = 0;
-    public var width:Int = 0;
-    public var height:Int = 0;
+    public var minWidth:Int = 0;
+    public var minHeight:Int = 0;
     public var outline_size:Int = 0;
     public var bevel:Int = 0;
-    public var color:Int = 0;
+    public var color:UInt = 0;
     public var font_name:String = "";
     public var font_size:Int = 16;
-    public var background_color:Int = 0;
-    public var over_background_color:Int = 0;
-    public var selected_background_color:Int = 0;
-    public var outline_color:Int = 0;
-    public var over_outline_color:Int = 0;
-    public var selected_outline_color:Int = 0;
+    public var font_offset_x:Int = 0;
+    public var font_offset_y:Int = 0;
+    public var background_color:UInt = 0;
+    public var over_background_color:UInt = 0;
+    public var selected_background_color:UInt = 0;
+    public var outline_color:UInt = 0;
+    public var over_outline_color:UInt = 0;
+    public var selected_outline_color:UInt = 0;
 
-    public function getMinWidth():Int {
-      return height + padding*2 + margin*2;
+    public function getFullWidth():Int {
+      return minHeight + padding*2;
     }
-    public function getMinHeight():Int {
-      return width + padding*2 + margin*2;
+    public function getFullHeight():Int {
+      return minWidth + padding*2;
     }
 
     // public function get(key:String):Dynamic {
@@ -57,11 +58,13 @@ class Style {
     //   return toAlpha(Std.int(value));
     // }
     //
-    public static function toColor(color:Int):Int {
+    public static function toColor(color:UInt):UInt {
+      if (color<0) return -1;
       return color>>8;
     }
 
-    public static function toAlpha(color:Int):Float {
+    public static function toAlpha(color:UInt):Float {
+      if (color<0) return -1;
       return (color&0xFF)/256;
     }
     //
@@ -72,15 +75,16 @@ class Style {
     // }
 
     public function copy(style:Style) {
-      this.width = style.width;
-      this.height = style.height;
-      this.margin = style.margin;
+      this.minWidth = style.minWidth;
+      this.minHeight = style.minHeight;
       this.padding = style.padding;
       this.offset = style.offset;
       this.rounded = style.rounded;
       this.color = style.color;
       this.font_name = style.font_name;
       this.font_size = style.font_size;
+      this.font_offset_x = style.font_offset_x;
+      this.font_offset_y = style.font_offset_y;
       this.outline_size = style.outline_size;
       this.background_color = style.background_color;
       this.over_background_color = style.over_background_color;
@@ -108,18 +112,27 @@ class Style {
 
     public static function button():Style {
       return new Style({
-        'margin':0,
-        'padding':8,
+        'padding':10,
+        'offset':5,
         'rounded':8,
-        'width':20,
-        'height':20,
+        'minWidth':5,
+        'minHeight':5,
+
+        // 'font_name':com.akifox.plik.PLIK.getFont(TileCraft.FONT_SQUARE).fontName,
+        // 'font_offset_x':1,
+        // 'font_offset_y':1,
+        'font_name':com.akifox.plik.PLIK.getFont(TileCraft.FONT_LATO_BOLD).fontName,
+
+        'font_size':18,
+        'color':0xFFFFFFFF,
+
         'outline_size':3,
         'bevel':2,
-        'background_color':0xddddddFF,
-        'over_background_color':0xeeeeeeFF,
-        'selected_background_color':0xddddddFF,
-        'outline_color':0xaaaaaaFF,
-        'over_outline_color':0xffcf00FF,
+        'background_color':0x3d4246ff,
+        'over_background_color':0x575a5eff,
+        'selected_background_color':0x3d4246ff,
+        'outline_color':0,
+        'over_outline_color':0xffb50088,
         'selected_outline_color':0xaaaaaaFF
       });
     }
@@ -129,71 +142,83 @@ class Style {
         'padding' : 2,
         'bevel' : 0,
         'rounded':24,
-        'outline_size' : 2,
+        'font_size':12,
+        'color':0xFFFFFFFF,
+        'outline_size' : 0,
         'background_color':0,
-        'over_background_color':0,
-        'selected_background_color':0,
+        'over_background_color':0x464646FF,
+        'selected_background_color':0x353535FF,
         'outline_color':0,
-        'over_outline_color':0xffb50088,
+        'over_outline_color':0,
         'selected_outline_color':0
+      });
+    }
+
+    public static function miniButtonClose():Style {
+      return miniButton().set({
+        'background_color':0xDADADAFF,
+        'over_background_color':0xF2F2F2FF
       });
     }
 
     public static function toolbarButton():Style {
       return button().set({
-        'padding' : 3,
-        'outline_size' : 6,
+        'padding' : 5,
+        'bevel':1,
+        'outline_size' : 3,
         'outline_color':0,
-        'over_outline_color':0xffb50088,
+        'over_outline_color':0,
         'selected_outline_color':0xffb500FF
       });
     }
 
     public static function toolbarMiniButton():Style {
       return toolbarButton().set({
-        'padding' : 2,
-        'rounded':12,
-        'background_color':0xddddddFF,
-        'outline_size' : 5,
-        'outline_color':0,
-        'over_background_color':0xddddddFF,
-        'over_outline_color':0xffb50088
+        'padding' : 3,
+        'rounded':12
       });
     }
 
     public static function toolbarButtonFull():Style {
       return toolbarButton().set({
         'padding' : 0,
+        'bevel':2,
+        'outline_size' : 6,
+        'minWidth': 20+toolbarButton().padding*2,
+        'minHeight': 20+toolbarButton().padding*2,
         'background_color' : 0,
         'over_background_color':0,
-        'over_outline_color':0xffd97dFF,
-        'selected_background_color':0xffb500FF
+        'selected_background_color':0,
+        'over_outline_color':0xffb500DD
       });
     }
 
     public static function toolbarMiniButtonFull():Style {
-      return toolbarButtonFull().set({
+      return toolbarMiniButton().set({
+        'padding' : 0,
+        'bevel':2,
         'outline_size' : 4,
+        'minWidth': 20+toolbarMiniButton().padding*2,
+        'minHeight': 20+toolbarMiniButton().padding*2,
         'background_color' : 0,
         'over_background_color':0,
-        'over_outline_color':0xffd97dFF,
-        'selected_background_color':0xffb500FF
+        'selected_background_color':0,
+        'over_outline_color':0xffb500DD
       });
     }
 
     public static function toolbar():Style {
       return new Style({
-          'padding':1,
-          'offset':1,
+          'padding':5,
+          'offset':5,
           'rounded':8,
           'outline_size':0,
-          'background_color':0xddddddFF
+          'background_color':0
         });
     }
 
     public static function colorpicker():Style {
       return new Style({
-          'margin':0,
           'padding':20,
           'rounded':8,
           'offset':10,
@@ -204,7 +229,6 @@ class Style {
 
     public static function box():Style {
       return new Style({
-          'margin':0,
           'padding':10,
           'rounded':0,
           'offset':10,
@@ -218,6 +242,7 @@ class Style {
       return box().set({
           'rounded':8,
           'padding':-1,
+          'offset':5,
           'background_color':0x000000BB
         });
     }
@@ -230,10 +255,12 @@ class Style {
         });
     }
 
-    public static function drawBackground(target:openfl.display.DisplayObject,targetStyle:Style,?isSelected:Bool=false,?isOver:Bool=false,?width:Float=0,?height:Float=0) {
+    public static function drawBackground(target:IStyle,targetStyle:Style,?isSelected:Bool=false,?isOver:Bool=false,?width:Float=0,?height:Float=0) {
 
-      var w = Math.max(target.width+targetStyle.padding*2,width);
-      var h = Math.max(target.height+targetStyle.padding*2,height);
+      var w = Math.max(target.getNetWidth(),targetStyle.minWidth)+targetStyle.padding*2;
+      var h = Math.max(target.getNetHeight(),targetStyle.minHeight)+targetStyle.padding*2;
+      if (width>0) w = width;
+      if (height>0) h = height;
       #if v2
       var graphics = target.graphics;
       #else
@@ -244,7 +271,6 @@ class Style {
       if (targetStyle.outline_size>0) {
         var outline = targetStyle.outline_color;
         if (isSelected) outline = targetStyle.selected_outline_color;
-        if (isOver) outline = targetStyle.over_outline_color;
         var outline_color = toColor(outline);
         var outline_alpha = toAlpha(outline);
 
@@ -255,6 +281,23 @@ class Style {
         #else
         graphics.lineStyle(null,null);
         #end
+
+
+        if (isOver) {
+          outline_color = toColor(targetStyle.over_outline_color);
+          outline_alpha = toAlpha(targetStyle.over_outline_color);
+
+          if (outline_alpha>0) {
+            graphics.lineStyle(targetStyle.outline_size,outline_color,outline_alpha);
+            graphics.drawRoundRect(0,0,w,h,targetStyle.rounded,targetStyle.rounded);
+            #if v2
+            graphics.lineStyle(null);
+            #else
+            graphics.lineStyle(null,null);
+            #end
+          }
+        }
+
       }
 
       var background = targetStyle.background_color;
@@ -277,8 +320,6 @@ class Style {
 			   graphics.drawRoundRect(targetStyle.bevel,targetStyle.bevel,w-targetStyle.bevel*2,h-targetStyle.bevel*2,targetStyle.rounded,targetStyle.rounded);
 			else
 			   graphics.drawRect(targetStyle.bevel,targetStyle.bevel,w-targetStyle.bevel*2,h-targetStyle.bevel*2);
-
-
       graphics.endFill();
     }
 

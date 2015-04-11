@@ -116,7 +116,10 @@ class TileCraft extends Screen
 
 		// _outputBitmap.bitmapData = null; //TODO show some kind of modal while rendering
 		if (_modelIsPreviewMode) renderModel(false);
-		_outputBitmap.bitmapData = PostFX.scale(PostFX.fxaaOutline(_modelBitmap.bitmapData,fxaaModes[renderMode][0],fxaaModes[renderMode][1]),renderModes[renderMode]);
+		_outputBitmap.bitmapData = PostFX.scale(PostFX.fxaaOutline(_modelBitmap.bitmapData,
+																														   fxaaModes[renderMode][0],
+																															 fxaaModes[renderMode][1]),
+																						renderModes[renderMode]);
 		_outputBitmap.x = rwidth-PREVIEW_WIDTH-SHAPELIST_WIDTH+(PREVIEW_WIDTH/2-_outputBitmap.width/2);
 		_outputBitmap.y = rheight-STATUSBAR_HEIGHT-_outputBitmap.height;
 	}
@@ -222,7 +225,8 @@ class TileCraft extends Screen
 
 	public function updatePalette(){
 		for (i in 1...16) {
-			colorToolbar.getButtonByIndex(i).icon = TileCraft.makeColorIcon(26,currentModel.getColor(i));
+			colorToolbar.getButtonByIndex(i).icon = TileCraft.makeColorIcon(colorToolbar.styleButton,
+																																			currentModel.getColor(i));
 		}
 	}
 
@@ -366,18 +370,44 @@ class TileCraft extends Screen
 
 		// status bar
 		graphics.beginFill(0x242424,0.9);
-		graphics.drawRect(0,rheight-STATUSBAR_HEIGHT,rwidth,rheight);
+		graphics.drawRect(TOOLBAR_WIDTH,rheight-STATUSBAR_HEIGHT,rwidth,rheight);
 
-		// var button = new Button();
+
+		// BUTTON TEST CASES -------------------------------------------------------
+
+		// var button = new Button("TEST");
 		// button.x = 130;
 		// button.y = 100;
 		// button.style = Style.button();
 		// button.selectable = true;
 		// button.listen = true;
-		// button.actionF = function(button:Button) { TileCraft.logger(button); };
-		// button.text = new Text("Button test",18,TileCraft.COLOR_DARK,openfl.text.TextFormatAlign.CENTER);
+		// button.actionF = function(button:Button) { TileCraft.logger(button.toString()); };
+		// button.makeText("Button test");
 		// button.icon = TileCraft.atlasSprites.getRegion(TileCraft.ICON_CHECKBOX).toBitmapData();
 		// button.iconSelected = TileCraft.atlasSprites.getRegion(TileCraft.ICON_CHECKBOX_CHECKED).toBitmapData();
+		// addChild(button);
+		//
+		// var button = new Button("TEST2");
+		// button.x = 130;
+		// button.y = 150;
+		// button.style = Style.button();
+		// button.listen = true;
+		// button.makeText("Button test");
+		// addChild(button);
+		//
+		// var button = new Button("TEST3");
+		// button.x = 130;
+		// button.y = 200;
+		// button.style = Style.button();
+		// button.listen = true;
+		// button.icon = TileCraft.atlasSprites.getRegion(TileCraft.ICON_CHECKBOX).toBitmapData();
+		// addChild(button);
+		//
+		// var button = new Button("TEST4");
+		// button.x = 130;
+		// button.y = 250;
+		// button.style = Style.button();
+		// button.listen = true;
 		// addChild(button);
 
 		// MODEL TOOLBAR --------------------------------------------------------
@@ -398,7 +428,7 @@ class TileCraft extends Screen
 		toolbar.addButton("sh_corner_ne",null,		TileCraft.atlasSprites.getRegion(TileCraft.ICON_SH_CORNER_NE).toBitmapData());
 		toolbar.addButton("sh_corner_nw",null,		TileCraft.atlasSprites.getRegion(TileCraft.ICON_SH_CORNER_NW).toBitmapData());
 
-		toolbar.x = TOOLBAR_WIDTH/2-toolbar.width/2;
+		toolbar.x = TOOLBAR_WIDTH/2-toolbar.getGrossWidth()/2;
 		toolbar.y = ACTIONBAR_HEIGHT+10;
 		addChild(toolbar);
 
@@ -413,7 +443,8 @@ class TileCraft extends Screen
 			var button:Button = colorToolbar.getSelected();
 			var index:Int = cast(button.value,Int);
 			if (index==0) return; //hole
-			button.icon = TileCraft.makeColorIcon(26,color);
+			button.icon = TileCraft.makeColorIcon(colorToolbar.styleButton,
+																						color);
 			currentModel.setColor(index,color);
 			renderModel(true);
 		}
@@ -422,7 +453,7 @@ class TileCraft extends Screen
 
 		_colorPicker = new ColorPickerView(rwidth-TOOLBAR_WIDTH-SHAPELIST_WIDTH-PREVIEW_WIDTH,colorPickerAction,function() {hideColorPicker();});
 		_colorPicker.x = TOOLBAR_WIDTH;
-		_colorPicker.y = rheight-STATUSBAR_HEIGHT-_colorPicker.height;
+		_colorPicker.y = rheight-_colorPicker.getGrossHeight();
 
 		//---
 
@@ -445,12 +476,18 @@ class TileCraft extends Screen
 		//---
 
 		//colorToolbar.setPalette(currentModel.getPalette());
-		colorToolbar.addButton('palette0',0,TileCraft.makeColorIcon(26,-1),colorToolbarAction);
+		colorToolbar.addButton('palette0',0,
+													 TileCraft.makeColorIcon(colorToolbar.styleButton,
+																									 -1),
+													 colorToolbarAction);
 		for (i in 1...16) {
-			colorToolbar.addButton('palette$i',i,TileCraft.makeColorIcon(26,currentModel.getColor(i)),colorToolbarAction,colorToolbarActionAlt);
+			colorToolbar.addButton('palette$i',i,
+														 TileCraft.makeColorIcon(colorToolbar.styleButton,
+																										 currentModel.getColor(i)),
+														 colorToolbarAction,colorToolbarActionAlt);
 		}
 		colorToolbar.selectByIndex(1);
-		colorToolbar.x = TOOLBAR_WIDTH/2-colorToolbar.width/2;
+		colorToolbar.x = TOOLBAR_WIDTH/2-colorToolbar.getGrossWidth()/2;
 		colorToolbar.y = toolbar.y + toolbar.height + BASE_SPAN;
 		addChild(colorToolbar);
 
@@ -481,7 +518,7 @@ class TileCraft extends Screen
 																								PLIK.quit();
 																						});
 		actionToolbar.x = TOOLBAR_WIDTH+BASE_SPAN;
-		actionToolbar.y = ACTIONBAR_HEIGHT/2-actionToolbar.height/2;
+		actionToolbar.y = ACTIONBAR_HEIGHT/2-actionToolbar.getGrossHeight()/2;
 		addChild(actionToolbar);
 
 
@@ -493,19 +530,28 @@ class TileCraft extends Screen
 		};
 
 		var previewColorToolbar = new Toolbar(0,true,Style.toolbar(),Style.toolbarMiniButtonFull());
-		previewColorToolbar.addButton('preview0',-1,TileCraft.makeColorIcon(24,-1),previewColorToolbarAction);
-		previewColorToolbar.addButton('preview1',0,TileCraft.makeColorIcon(24,0),previewColorToolbarAction);
-		previewColorToolbar.addButton('preview2',0xFFFFFF,TileCraft.makeColorIcon(24,0xFFFFFF),previewColorToolbarAction);
+		previewColorToolbar.addButton('preview0',-1,
+																  TileCraft.makeColorIcon(previewColorToolbar.styleButton,
+																													-1),
+																	previewColorToolbarAction);
+		previewColorToolbar.addButton('preview1',0,
+															    TileCraft.makeColorIcon(previewColorToolbar.styleButton,
+																													0),
+																	previewColorToolbarAction);
+		previewColorToolbar.addButton('preview2',0xFFFFFF,
+																	TileCraft.makeColorIcon(previewColorToolbar.styleButton,
+																													0xFFFFFF),
+																	previewColorToolbarAction);
 		previewColorToolbar.x = rwidth-SHAPELIST_WIDTH-PREVIEW_WIDTH+BASE_SPAN/2;
-		previewColorToolbar.y = rheight-STATUSBAR_HEIGHT/2-previewColorToolbar.height/2;
+		previewColorToolbar.y = rheight-STATUSBAR_HEIGHT/2-previewColorToolbar.getGrossHeight()/2;
 		addChild(previewColorToolbar);
 
 		var previewActionToolbar = new Toolbar(0,false,Style.toolbar(),Style.toolbarMiniButton());
 		previewActionToolbar.addButton('resize',0,TileCraft.atlasSprites.getRegion(TileCraft.ICON_RESIZE).toBitmapData(),renderModeLoop);
 		previewActionToolbar.addButton('save',0,TileCraft.atlasSprites.getRegion(TileCraft.ICON_SAVE).toBitmapData());
 																						//function(_){ saveFile(); });
-		previewActionToolbar.x = rwidth-SHAPELIST_WIDTH-BASE_SPAN/2-previewActionToolbar.width;
-		previewActionToolbar.y = rheight-STATUSBAR_HEIGHT/2-previewActionToolbar.height/2;
+		previewActionToolbar.x = rwidth-SHAPELIST_WIDTH-BASE_SPAN/2-previewActionToolbar.getGrossWidth();
+		previewActionToolbar.y = rheight-STATUSBAR_HEIGHT/2-previewActionToolbar.getGrossHeight()/2;
 		addChild(previewActionToolbar);
 
 		// APP TITLE ---------------------------------------------------------------
@@ -762,14 +808,15 @@ class TileCraft extends Screen
 			}
 	}
 
-	public static function makeColorIcon(size:Int,color:Int):BitmapData {
-		var span = Std.int(size/10);
-		var round = 8;
+	public static function makeColorIcon(style:Style,color:Int):BitmapData {
+		var span = style.bevel;
+		var size = style.minWidth;
+		var round = style.rounded;
 		var hole = false;
 		if (color==-1) {
 			hole = true;
 			span += 1;
-			color = 0x2a8299;
+			color = 0xBBBBBB;
 		}
 
 		var shape = new openfl.display.Shape();

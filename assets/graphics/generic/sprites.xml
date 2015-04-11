@@ -6,7 +6,7 @@
 	<SubTexture name="delete.png" x="118" y="72" width="16" height="16" frame_x="2" frame_y="2" frame_width="20" frame_height="20" />
 	<SubTexture name="eye_closed.png" x="0" y="0" width="20" height="13" frame_x="0" frame_y="5" frame_width="20" frame_height="20" />
 	<SubTexture name="eye_open.png" x="0" y="37" width="20" height="13" frame_x="0" frame_y="2" frame_width="20" frame_height="20" />
-	<SubTexture name="lock_closed.png" x="119" y="22" width="14" height="17" frame_x="3" frame_y="1" frame_width="20" frame_height="20" />
+	<SubTexture name="lock_closed.png" x="119" y="22" width="14" height="18" frame_x="3" frame_y="1" frame_width="20" frame_height="20" />
 	<SubTexture name="lock_open.png" x="119" y="0" width="14" height="20" frame_x="3" frame_y="0" frame_width="20" frame_height="20" />
 	<SubTexture name="new.png" x="101" y="18" width="16" height="16" frame_x="2" frame_y="2" frame_width="20" frame_height="20" />
 	<SubTexture name="ok.png" x="100" y="107" width="16" height="13" frame_x="2" frame_y="4" frame_width="20" frame_height="20" />

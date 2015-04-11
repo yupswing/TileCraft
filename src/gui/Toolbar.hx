@@ -25,12 +25,20 @@ class Toolbar extends SpriteContainer implements IStyle
   var _selectable:Bool = false;
 
   var _styleButton:Style;
+  public var styleButton(get,set):Style;
+  private function get_styleButton():Style { return _styleButton; }
+  private function set_styleButton(value:Style):Style {
+    _styleButton = value;
+    for (el in _buttons) el.style = value;
+    return value;
+  }
 
   var _style:Style = new Style();
   public var style(get,set):Style;
-  private function get_style():Style {return _style;}
+  private function get_style():Style { return _style; }
   private function set_style(value:Style):Style {
     _style = value;
+    this.draw();
     return value;
   }
 
@@ -41,7 +49,38 @@ class Toolbar extends SpriteContainer implements IStyle
     _selectable = selectable;
     _style = style;
     _styleButton = styleButton;
+    this.draw();
 	}
+
+  public function draw() {
+    graphics.clear();
+    Style.drawBackground(this,_style);
+  }
+
+  public function getRows():Int {
+    return Math.ceil(_buttons.length/_buttonsPerRow);
+  }
+
+  public function getColumns():Int {
+    return Std.int(Math.min(_buttonsPerRow,_buttons.length));
+  }
+
+  public function getNetWidth():Float {
+    return getColumns()*(_buttonsWidth+_style.offset)-_style.offset;
+  }
+
+  public function getNetHeight():Float {
+    return getRows()*(_buttonsHeight+_style.offset)-_style.offset;
+  }
+
+  public function getGrossWidth():Float {
+    return getNetWidth()+_style.padding*2;//+_style.outline_size/2;
+  }
+
+  public function getGrossHeight():Float {
+    return getNetHeight()+_style.padding*2;//+_style.outline_size/2;
+  }
+
 
   public function getSelected():Button {
     return _selected;
@@ -83,8 +122,8 @@ class Toolbar extends SpriteContainer implements IStyle
       button.icon = icon;
       if (_buttons.length==0) {
         //set width & height same as first button
-        _buttonsWidth = Std.int(button.width);
-        _buttonsHeight = Std.int(button.height);
+        _buttonsWidth = Std.int(button.getGrossWidth());
+        _buttonsHeight = Std.int(button.getGrossHeight());
       }
       if (_selectable) {
         button.selectable = true;
@@ -92,11 +131,12 @@ class Toolbar extends SpriteContainer implements IStyle
           select(button);
         }
       }
-      button.x = Std.int((_buttons.length)%_buttonsPerRow)*(_buttonsWidth+_style.offset)+_style.offset;
-      button.y = Std.int((_buttons.length)/_buttonsPerRow)*(_buttonsHeight+_style.offset)+_style.offset;
+      button.x = Std.int((_buttons.length)%_buttonsPerRow)*(_buttonsWidth+_style.offset)+_style.padding;
+      button.y = Std.int((_buttons.length)/_buttonsPerRow)*(_buttonsHeight+_style.offset)+_style.padding;
       addChild(button);
     }
     _buttons.push(button);
+    this.draw();
   }
 
 

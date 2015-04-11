@@ -21,13 +21,30 @@ class ColorPicker extends SpriteContainer implements IStyle {
       return value;
     }
 
+    public function getNetWidth():Float {
+      return _bitmapSpectrum.width + _style.offset + _bitmapSlider.width;
+    }
+
+    public function getNetHeight():Float {
+      return _bitmapSpectrum.height;
+    }
+
+    public function getGrossWidth():Float {
+      return getNetWidth()+_style.padding*2;//+_style.outline_size/2;
+    }
+
+    public function getGrossHeight():Float {
+      return getNetHeight()+_style.padding*2;//+_style.outline_size/2;
+    }
+
+
     var _frameSpectrum:Int;
     var _frameHeight:Int;
     var _frameSlider:Int;
     var _action:Int->Void=null;
 
-    var selectorSpectrum:ShapeContainer;
-    var selectorSpectrumSize:Int = 20;
+    var _selectorSpectrum:ShapeContainer;
+    var _selectorSpectrumSize:Int = 20;
 
     var _selectorSlider:ShapeContainer;
     var _selectorSliderSize:Int = 7;
@@ -81,9 +98,9 @@ class ColorPicker extends SpriteContainer implements IStyle {
       _bitmapSlider.y = _style.padding;
       addChild(_bitmapSlider);
 
-      selectorSpectrum = new ShapeContainer();
+      _selectorSpectrum = new ShapeContainer();
       drawSelectorColorPicker();
-      addChild(selectorSpectrum);
+      addChild(_selectorSpectrum);
 
       _selectorSlider = new ShapeContainer();
       _selectorSlider.x = _frameSpectrum+_style.offset+_style.padding;
@@ -106,10 +123,10 @@ class ColorPicker extends SpriteContainer implements IStyle {
     public function selector(color:Int) {
       var hsb = color.toHSB();
       _colorHSB = hsb;
-      drawSpectrum();
-      drawSlider();
-      selectorSpectrum.x = Std.int(hsb.hue*_frameSpectrum/360-selectorSpectrumSize*0.5)+_style.padding;
-      selectorSpectrum.y = Std.int((hsb.saturation*_frameHeight/100)-selectorSpectrumSize*0.5)+_style.padding;
+      drawSpectrum(true);
+      drawSlider(true);
+      _selectorSpectrum.x = Std.int(hsb.hue*_frameSpectrum/360-_selectorSpectrumSize*0.5)+_style.padding;
+      _selectorSpectrum.y = Std.int((hsb.saturation*_frameHeight/100)-_selectorSpectrumSize*0.5)+_style.padding;
       _selectorSlider.y = Std.int(_frameHeight-(hsb.brightness*_frameHeight/100)-_selectorSliderSize/2)+_style.padding;
     }
 
@@ -119,8 +136,8 @@ class ColorPicker extends SpriteContainer implements IStyle {
         _selectorSlider.y = y-_selectorSliderSize/2;
         drawSpectrum();
       } else {
-        selectorSpectrum.x = x-selectorSpectrumSize*0.5;
-        selectorSpectrum.y = y-selectorSpectrumSize*0.5;
+        _selectorSpectrum.x = x-_selectorSpectrumSize*0.5;
+        _selectorSpectrum.y = y-_selectorSpectrumSize*0.5;
         drawSlider();
       }
     }
@@ -128,9 +145,9 @@ class ColorPicker extends SpriteContainer implements IStyle {
     //*****************************************************************
     // Main render
 
-    public function drawSpectrum() {
+    public function drawSpectrum(?forceDraw=false) {
       // avoid too many draw spectrum calls
-      if (haxe.Timer.stamp()-_lastdraw<0.05) return;
+      if (haxe.Timer.stamp()-_lastdraw<0.05 && !forceDraw) return;
 
       var hsbcolor = new hxColorToolkit.spaces.HSB(0, 0, Std.int(_colorHSB.brightness));
 
@@ -191,9 +208,9 @@ class ColorPicker extends SpriteContainer implements IStyle {
 
     }
 
-    public function drawSlider() {
+    public function drawSlider(?forceDraw=false) {
       // avoid too many draw side calls
-      if (haxe.Timer.stamp()-_lastdraw<0.05) return;
+      if (haxe.Timer.stamp()-_lastdraw<0.05 && !forceDraw) return;
 
       var color:Int=0;
       var hsbcolor = new hxColorToolkit.spaces.HSB(Std.int(_colorHSB.hue), Std.int(_colorHSB.saturation), 0);
@@ -263,32 +280,32 @@ class ColorPicker extends SpriteContainer implements IStyle {
     // Drawers
 
     private function drawSelectorColorPicker() {
-      selectorSpectrum.graphics.clear();
-      selectorSpectrum.graphics.lineStyle(3,0x000000);
-      selectorSpectrum.graphics.drawCircle(10,10,5);
+      _selectorSpectrum.graphics.clear();
+      _selectorSpectrum.graphics.lineStyle(3,0x000000);
+      _selectorSpectrum.graphics.drawCircle(10,10,5);
 
-      selectorSpectrum.graphics.moveTo(selectorSpectrumSize*0.5,0);
-      selectorSpectrum.graphics.lineTo(selectorSpectrumSize*0.5,selectorSpectrumSize*0.25+selectorSpectrumSize/20);
-      selectorSpectrum.graphics.moveTo(selectorSpectrumSize*0.5,selectorSpectrumSize*0.75-selectorSpectrumSize/20);
-      selectorSpectrum.graphics.lineTo(selectorSpectrumSize*0.5,selectorSpectrumSize);
+      _selectorSpectrum.graphics.moveTo(_selectorSpectrumSize*0.5,0);
+      _selectorSpectrum.graphics.lineTo(_selectorSpectrumSize*0.5,_selectorSpectrumSize*0.25+_selectorSpectrumSize/20);
+      _selectorSpectrum.graphics.moveTo(_selectorSpectrumSize*0.5,_selectorSpectrumSize*0.75-_selectorSpectrumSize/20);
+      _selectorSpectrum.graphics.lineTo(_selectorSpectrumSize*0.5,_selectorSpectrumSize);
 
-      selectorSpectrum.graphics.moveTo(0,selectorSpectrumSize*0.5);
-      selectorSpectrum.graphics.lineTo(selectorSpectrumSize*0.25+selectorSpectrumSize/20,selectorSpectrumSize*0.5);
-      selectorSpectrum.graphics.moveTo(selectorSpectrumSize*0.75-selectorSpectrumSize/20,selectorSpectrumSize*0.5);
-      selectorSpectrum.graphics.lineTo(selectorSpectrumSize,selectorSpectrumSize*0.5);
+      _selectorSpectrum.graphics.moveTo(0,_selectorSpectrumSize*0.5);
+      _selectorSpectrum.graphics.lineTo(_selectorSpectrumSize*0.25+_selectorSpectrumSize/20,_selectorSpectrumSize*0.5);
+      _selectorSpectrum.graphics.moveTo(_selectorSpectrumSize*0.75-_selectorSpectrumSize/20,_selectorSpectrumSize*0.5);
+      _selectorSpectrum.graphics.lineTo(_selectorSpectrumSize,_selectorSpectrumSize*0.5);
 
-      selectorSpectrum.graphics.lineStyle(1,0xFFFFFF);
-      selectorSpectrum.graphics.drawCircle(selectorSpectrumSize*0.5,selectorSpectrumSize*0.5,5);
+      _selectorSpectrum.graphics.lineStyle(1,0xFFFFFF);
+      _selectorSpectrum.graphics.drawCircle(_selectorSpectrumSize*0.5,_selectorSpectrumSize*0.5,5);
 
-      selectorSpectrum.graphics.moveTo(selectorSpectrumSize*0.5,0);
-      selectorSpectrum.graphics.lineTo(selectorSpectrumSize*0.5,selectorSpectrumSize*0.25+selectorSpectrumSize/20);
-      selectorSpectrum.graphics.moveTo(selectorSpectrumSize*0.5,selectorSpectrumSize*0.75-selectorSpectrumSize/20);
-      selectorSpectrum.graphics.lineTo(selectorSpectrumSize*0.5,selectorSpectrumSize);
+      _selectorSpectrum.graphics.moveTo(_selectorSpectrumSize*0.5,0);
+      _selectorSpectrum.graphics.lineTo(_selectorSpectrumSize*0.5,_selectorSpectrumSize*0.25+_selectorSpectrumSize/20);
+      _selectorSpectrum.graphics.moveTo(_selectorSpectrumSize*0.5,_selectorSpectrumSize*0.75-_selectorSpectrumSize/20);
+      _selectorSpectrum.graphics.lineTo(_selectorSpectrumSize*0.5,_selectorSpectrumSize);
 
-      selectorSpectrum.graphics.moveTo(0,selectorSpectrumSize*0.5);
-      selectorSpectrum.graphics.lineTo(selectorSpectrumSize*0.25+selectorSpectrumSize/20,selectorSpectrumSize*0.5);
-      selectorSpectrum.graphics.moveTo(selectorSpectrumSize*0.75-selectorSpectrumSize/20,selectorSpectrumSize*0.5);
-      selectorSpectrum.graphics.lineTo(selectorSpectrumSize,selectorSpectrumSize*0.5);
+      _selectorSpectrum.graphics.moveTo(0,_selectorSpectrumSize*0.5);
+      _selectorSpectrum.graphics.lineTo(_selectorSpectrumSize*0.25+_selectorSpectrumSize/20,_selectorSpectrumSize*0.5);
+      _selectorSpectrum.graphics.moveTo(_selectorSpectrumSize*0.75-_selectorSpectrumSize/20,_selectorSpectrumSize*0.5);
+      _selectorSpectrum.graphics.lineTo(_selectorSpectrumSize,_selectorSpectrumSize*0.5);
     }
 
     private function drawSelectorSlider() {

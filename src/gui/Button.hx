@@ -100,7 +100,7 @@ class Button extends SpriteContainer implements IStyle {
     private function set_iconOver(value:BitmapData):BitmapData {
       if (_iconOver!=null) _iconOver.dispose(); //TODO double check if ok to dispose
       _iconOver = value;
-      if (_isOver) this.draw();
+      if (_isSelected) this.draw();
       return value;
     }
 
@@ -112,7 +112,7 @@ class Button extends SpriteContainer implements IStyle {
     private function set_iconSelected(value:BitmapData):BitmapData {
       if (_iconSelected!=null) _iconSelected.dispose(); //TODO double check if ok to dispose
       _iconSelected = value;
-      if (_isSelected) this.draw();
+      if (_isOver) this.draw();
       return value;
     }
 
@@ -132,6 +132,7 @@ class Button extends SpriteContainer implements IStyle {
     public var isOver(get,set):Bool;
     private function get_isOver():Bool {return _isOver;}
     private function set_isOver(value:Bool):Bool {
+      if (_isOver==value) return value;
       _isOver = value;
       this.draw();
       return value;
@@ -143,6 +144,7 @@ class Button extends SpriteContainer implements IStyle {
     public var isSelected(get,set):Bool;
     private function get_isSelected():Bool {return _isSelected;}
     private function set_isSelected(value:Bool):Bool {
+      if (_isSelected==value) return value;
       if (!_selectable) return false;
       _isSelected = value;
       this.draw();
@@ -174,11 +176,35 @@ class Button extends SpriteContainer implements IStyle {
 
     //*****************************************************************
 
-  	public function new () {
+  	public function new (?id:String="generic_button") {
   		super();
       addChild(_iconBitmap);
-      _id = "generic_button";
+      _id = id;
   	}
+
+    public function getNetWidth():Float {
+      var w:Float = 0;
+      if (_icon!=null) w+=_icon.width;
+      if (_text!=null) w+=_text.width+_style.font_offset_x;
+      if (_icon!=null && _text!=null) w+=_style.offset;
+      w = Math.max(w,_style.minWidth);
+      return w;
+    }
+
+    public function getNetHeight():Float {
+      var h:Float = _style.minHeight;
+      if (_icon!=null) h=Math.max(_icon.height,h);
+      if (_text!=null) h=Math.max(_text.height-_style.font_offset_y,h);
+      return h;
+    }
+
+    public function getGrossWidth():Float {
+      return getNetWidth()+_style.padding*2;//+_style.outline_size/2;
+    }
+
+    public function getGrossHeight():Float {
+      return getNetHeight()+_style.padding*2;//+_style.outline_size/2;
+    }
 
     public override function destroy() {
       _lastIconBitmap = null;
@@ -213,13 +239,13 @@ class Button extends SpriteContainer implements IStyle {
         ty_offset = Std.int((ih-th)/2);
       }
 
-      var h:Float = Math.max(th,ih) + _style.margin*2 + _style.padding*2;
-      var w:Float = tw+iw + _style.margin*2 + _style.padding*spans;
-      h = Math.max(h,_style.getMinHeight());
-      w = Math.max(w,_style.getMinWidth());
+      var h:Float = Math.max(th,ih) + _style.padding*2;
+      var w:Float = tw+iw + _style.padding*spans;
+      h = Math.max(h,_style.getFullHeight());
+      w = Math.max(w,_style.getFullWidth());
 
-      var object_x = _style.margin + _style.padding;
-      var object_y = _style.margin + _style.padding;
+      var object_x = _style.padding;
+      var object_y = _style.padding;
 
       // draw icon
       if (_icon!=null) {
@@ -232,13 +258,13 @@ class Button extends SpriteContainer implements IStyle {
         }
         _iconBitmap.x = object_x;
         _iconBitmap.y = object_y + iy_offset;
+        object_x += iw + _style.offset;
       }
 
       // position text
       if (_text!=null) {
-        object_x += iw + _style.padding;
-        _text.x = object_x;
-        _text.y = object_y + ty_offset;
+        _text.x = object_x + _style.font_offset_y;
+        _text.y = object_y + ty_offset + _style.font_offset_y;
       }
 
       Style.drawBackground(this,_style,_isSelected,_isOver);

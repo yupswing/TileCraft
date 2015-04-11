@@ -19,17 +19,17 @@ class ColorPickerView extends Box {
     _colorPicker = new ColorPicker(action);
     _colorPicker.x = _width/2-_colorPicker.width/2;
 
-    _buttonClose.style = Style.toolbarMiniButton();
+    _colorPicker.y = style.padding+style.offset; // special to keep the button on the spectrum
+    addChild(_colorPicker);
+
+    _buttonClose.style = Style.miniButtonClose();
     _buttonClose.listen = true;
     _buttonClose.actionF = function(button:Button) { actionClose(); };
     //_buttonClose.text = new Text("Close",14,TileCraft.COLOR_DARK,openfl.text.TextFormatAlign.CENTER);
     _buttonClose.icon = TileCraft.atlasSprites.getRegion(TileCraft.ICON_CLOSE).toBitmapData();
-    _buttonClose.x = _colorPicker.width+_colorPicker.x-_buttonClose.width;
+    _buttonClose.x = _colorPicker.width+_colorPicker.x-_buttonClose.width+10;
     _buttonClose.y = style.padding;
     addChild(_buttonClose);
-
-    _colorPicker.y = style.padding+_buttonClose.height;//+style.offset;
-    addChild(_colorPicker);
 
 
     draw(width);
@@ -49,6 +49,14 @@ class ColorPickerView extends Box {
 
   public override function destroy() {
     super.destroy();
+  }
+
+  public override function getNetWidth():Float {
+    return _colorPicker.getGrossWidth();
+  }
+
+  public override function getNetHeight():Float {
+    return _colorPicker.getGrossHeight();
   }
 
 }
