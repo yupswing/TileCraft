@@ -62,7 +62,7 @@ class TileCraft extends Screen
 	}
 
 	//var testPreviewBitmap:Bitmap = null;
-	var _outputBitmap:Bitmap = null;
+	var _outputView:OutputView = null;
 	var _modelBitmap:Bitmap = null;
 	var _modelIsPreviewMode:Bool=true;
 
@@ -73,8 +73,6 @@ class TileCraft extends Screen
 	var colorToolbar:Toolbar;
 
 	var currentRenderer = new Renderer(Std.int(320),Std.int(480));
-
-	var backgroundRenderColor = -1;
 
 	public static inline var ACTIONBAR_HEIGHT = 40;
 	public static inline var STATUSBAR_HEIGHT = 40;
@@ -107,78 +105,41 @@ class TileCraft extends Screen
 		_lastRenderModelTime = haxe.Timer.stamp();
 	}
 
-	public function renderOutput() {
+	public function renderOutput(?changeScale=false) {
 		#if !v2
 		return; //TODO POSTFX need support for OpenFL3
 		#end
 
-		//TODO this should be part of a PreviewView
-
-		// _outputBitmap.bitmapData = null; //TODO show some kind of modal while rendering
+		//TODO show some kind of modal while rendering
 		if (_modelIsPreviewMode) renderModel(false);
-		_outputBitmap.bitmapData = PostFX.scale(PostFX.fxaaOutline(_modelBitmap.bitmapData,
-																														   fxaaModes[renderMode][0],
-																															 fxaaModes[renderMode][1]),
-																						renderModes[renderMode]);
-		_outputBitmap.x = rwidth-PREVIEW_WIDTH-SHAPELIST_WIDTH+(PREVIEW_WIDTH/2-_outputBitmap.width/2);
-		_outputBitmap.y = rheight-STATUSBAR_HEIGHT-_outputBitmap.height;
+		_outputView.setBitmapData(PostFX.scale(PostFX.fxaaOutline(_modelBitmap.bitmapData,
+																															getRenderFxaaPasses(),
+																															getRenderFxaaOutline()),
+																					 getOutputScale()));
+		if (changeScale) _outputView.drawBackground();
 	}
 
 	//============================================================================
-
-	var backgroundRender = new ShapeContainer();
-
-	public function renderBackground() {
-		#if !v2
-		return; //POSTFX need support for OpenFL3
-		#end
-
-		backgroundRender.graphics.clear();
-		var color = backgroundRenderColor;
-		var alpha = 0.9;
-		var span = 0; //BASE_SPAN
-		if (backgroundRenderColor==-1) {
-					//transparent
-
-					TileCraft.makeChessboard(backgroundRender.graphics,Std.int(20*renderModes[renderMode]),0,0,PREVIEW_WIDTH,_outputBitmap.height+span,0xBBBBBB,0xEEEEEE);
-
-				} else {
-					backgroundRender.graphics.beginFill(backgroundRenderColor);
-					backgroundRender.graphics.drawRect(0,0,
-																						PREVIEW_WIDTH,_outputBitmap.height+span);
-
-					var shiftColor:Int=0;
-					if (color<0x888888) {
-						shiftColor = ColorToolkit.shiftBrighteness(color,30);
-					}	else {
-						shiftColor = ColorToolkit.shiftBrighteness(color,-30);
-					}
-					backgroundRender.graphics.beginFill(shiftColor,alpha);
-					backgroundRender.graphics.drawRect(PREVIEW_WIDTH/2-_outputBitmap.width/2,span,
-								_outputBitmap.width,_outputBitmap.height/2);
-
-					if (color<0x888888) {
-						shiftColor = ColorToolkit.shiftBrighteness(color,15);
-					}	else {
-						shiftColor = ColorToolkit.shiftBrighteness(color,-15);
-					}
-					backgroundRender.graphics.beginFill(shiftColor,alpha);
-					backgroundRender.graphics.drawRect(PREVIEW_WIDTH/2-_outputBitmap.width/2,span+_outputBitmap.height/2,
-					_outputBitmap.width,_outputBitmap.height/2);
-		}
-		backgroundRender.graphics.endFill();
-
-		backgroundRender.x = rwidth-SHAPELIST_WIDTH-PREVIEW_WIDTH;
-		backgroundRender.y = rheight-STATUSBAR_HEIGHT-backgroundRender.height;
-	}
 
 	//============================================================================
 
 	public function renderModeLoop(_) {
 		renderMode++;
 		if (renderMode>=renderModes.length) renderMode = 0;
-		renderOutput();
-		renderBackground();
+		renderOutput(true);
+	}
+
+	// used by outputview
+	public function getOutputScale():Float {
+		return renderModes[renderMode];
+	}
+
+	public function getRenderFxaaPasses():Int {
+		return fxaaModes[renderMode][0];
+	}
+
+	public function getRenderFxaaOutline():Int {
+		return fxaaModes[renderMode][1];
 	}
 
 	//============================================================================
@@ -263,7 +224,7 @@ class TileCraft extends Screen
 		}
 
 		// Export the model
-		fo = currentModel.toPNG(fo,_outputBitmap.bitmapData); //TODO change _outputBitmap (maybe in ModelView)
+		fo = currentModel.toPNG(fo,_outputView.getBitmapData());
 
 		// Check if everything is ok
 		if (fo==null) {
@@ -338,7 +299,6 @@ class TileCraft extends Screen
 	}
 
 	public override function initialize():Void {
-		addChild(backgroundRender);
 
 
 		// VIEWS -------------------------------------------------------------------
@@ -346,8 +306,11 @@ class TileCraft extends Screen
 		_modelBitmap = new Bitmap(null);
 		addChild(_modelBitmap);
 
-		_outputBitmap = new Bitmap(null);
-		addChild(_outputBitmap);
+		_outputView = new OutputView(this,PREVIEW_WIDTH);
+		_outputView.t.setAnchoredPivot(Transformation.ANCHOR_BOTTOM_LEFT);
+		_outputView.t.x = rwidth-SHAPELIST_WIDTH-PREVIEW_WIDTH;
+		_outputView.t.y = rheight-STATUSBAR_HEIGHT;
+		addChild(_outputView);
 
 
 		// STATIC INTERFACE --------------------------------------------------------
@@ -506,7 +469,7 @@ class TileCraft extends Screen
 																						function(_) { saveFile(); });
 		actionToolbar.addButton("-");
 		actionToolbar.addButton("render",null,	TileCraft.atlasSprites.getRegion(TileCraft.ICON_RENDER).toBitmapData(),
-																						function(_) { renderModel(false); renderOutput(); });
+																						function(_) { renderOutput(); });
 		actionToolbar.addButton("-");
 		actionToolbar.addButton("copy",null,		TileCraft.atlasSprites.getRegion(TileCraft.ICON_COPY).toBitmapData(),		actionToolbarAction);
 		actionToolbar.addButton("paste",null,	TileCraft.atlasSprites.getRegion(TileCraft.ICON_PASTE).toBitmapData(),	actionToolbarAction);
@@ -525,8 +488,7 @@ class TileCraft extends Screen
 		// PREVIEW TOOLBAR ---------------------------------------------------------
 
 		var previewColorToolbarAction = function(button:Button) {
-			backgroundRenderColor = cast(button.value,Int);
-			renderBackground();
+			_outputView.setBackgroundColor(cast(button.value,Int));
 		};
 
 		var previewColorToolbar = new Toolbar(0,true,Style.toolbar(),Style.toolbarMiniButtonFull());
@@ -601,7 +563,7 @@ class TileCraft extends Screen
 		changeModel(Model.fromString(original));
 
 		//init background image
-		renderBackground();
+		_outputView.drawBackground();
 
 		super.initialize(); // init_super at the end
 	}
