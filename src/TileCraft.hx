@@ -832,8 +832,8 @@ class TileCraft extends Screen
 			shape.graphics.endFill();
 		}
 
-		var bd = new BitmapData(size,size,true);
-		//bd.draw(shape);
+		var bd = new BitmapData(size,size,true,0);
+		bd.draw(shape);
 		shape = null;
 		return bd;
 
