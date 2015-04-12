@@ -55,7 +55,6 @@ class TileCraft extends Screen
 	public var currentModel:Model = Model.makeNew();
 	var currentShapeViewList:ShapeViewList;
 
-	var modelView:ModelView = new ModelView();
 
 	public function new () {
 		super();
@@ -65,9 +64,8 @@ class TileCraft extends Screen
 		rheight = 650;
 	}
 
-	//var testPreviewBitmap:Bitmap = null;
 	var _outputView:OutputView = null;
-	var _modelBitmap:Bitmap = null;
+	var _modelView:ModelView = null;
 	var _modelIsPreviewMode:Bool=true;
 
 	public static var fxaaModes = [[8,8],[8,8],[8,1]]; //passes + outline
@@ -77,7 +75,10 @@ class TileCraft extends Screen
 	var colorToolbar:Toolbar;
 	var toolbar:Toolbar;
 
-	var currentRenderer = new Renderer(Std.int(320),Std.int(480));
+	public static inline var RENDER_WIDTH = 320;
+	public static inline var RENDER_HEIGHT = 480;
+
+	var currentRenderer = new Renderer(RENDER_WIDTH,RENDER_HEIGHT);
 
 	public static inline var ACTIONBAR_HEIGHT = 40;
 	public static inline var STATUSBAR_HEIGHT = 40;
@@ -99,12 +100,10 @@ class TileCraft extends Screen
 		// avoid too many calls at once
 		if (preview && haxe.Timer.stamp()-_lastRenderModelTime<0.05) return;
 
-		// _modelBitmap.bitmapData = null; //TODO show some kind of modal while rendering
+		// _modelView.setBitmapData(null); //TODO show some kind of modal while rendering
 
 		var bpd:BitmapData = currentRenderer.render(currentModel,-1,preview);
-		_modelBitmap.bitmapData = bpd;
-		_modelBitmap.x = TOOLBAR_WIDTH+(rwidth-TOOLBAR_WIDTH-SHAPELIST_WIDTH-PREVIEW_WIDTH)/2-_modelBitmap.width/2;
-		_modelBitmap.y = (rheight-ACTIONBAR_HEIGHT-STATUSBAR_HEIGHT)/2-_modelBitmap.height/2+ACTIONBAR_HEIGHT;
+		_modelView.setBitmapData(bpd);
 		_modelIsPreviewMode = preview;
 
 		_lastRenderModelTime = haxe.Timer.stamp();
@@ -115,7 +114,7 @@ class TileCraft extends Screen
 
 		//TODO show some kind of modal while rendering
 		if (_modelIsPreviewMode) renderModel(false);
-		_outputView.setBitmapData(PostFX.scale(PostFX.fxaaOutline(_modelBitmap.bitmapData,
+		_outputView.setBitmapData(PostFX.scale(PostFX.fxaaOutline(_modelView.getBitmapData(),
 																															getRenderFxaaPasses(),
 																															getRenderFxaaOutline()),
 																					 getOutputScale()));
@@ -343,9 +342,6 @@ class TileCraft extends Screen
 
 		// VIEWS -------------------------------------------------------------------
 
-		_modelBitmap = new Bitmap(null);
-		addChild(_modelBitmap);
-
 		_outputView = new OutputView(this,PREVIEW_WIDTH);
 		_outputView.t.setAnchoredPivot(Transformation.ANCHOR_BOTTOM_LEFT);
 		_outputView.t.x = rwidth-SHAPELIST_WIDTH-PREVIEW_WIDTH;
@@ -353,28 +349,45 @@ class TileCraft extends Screen
 		_outputView.addEventListener(MouseEvent.CLICK,function(e:MouseEvent) { renderOutput(); });
 		addChild(_outputView);
 
+		_modelView = new ModelView(this,RENDER_WIDTH,RENDER_HEIGHT);
+		_modelView.x = TOOLBAR_WIDTH+(rwidth-TOOLBAR_WIDTH-SHAPELIST_WIDTH-PREVIEW_WIDTH)/2-RENDER_WIDTH/2;
+		_modelView.y = (rheight-ACTIONBAR_HEIGHT-STATUSBAR_HEIGHT)/2-RENDER_HEIGHT/2+ACTIONBAR_HEIGHT;
+		addChild(_modelView);
+
 
 		// STATIC INTERFACE --------------------------------------------------------
 
 		// currentModel+color toolbar bg
 		graphics.beginFill(0x242424,0.9);
-		graphics.drawRect(0,0,TOOLBAR_WIDTH,rheight);
+		graphics.drawRect(0,0,
+											TOOLBAR_WIDTH,rheight);
 
 		// action toolbar bg
 		graphics.beginFill(0x242424,0.9);
-		graphics.drawRect(0,0,rwidth,ACTIONBAR_HEIGHT);
+		graphics.drawRect(0,0,
+											rwidth,ACTIONBAR_HEIGHT);
 
 		// shapelist
 		graphics.beginFill(0x242424,0.9);
-		graphics.drawRect(rwidth-SHAPELIST_WIDTH,0,rwidth,rheight);
+		graphics.drawRect(rwidth-SHAPELIST_WIDTH,
+											0,rwidth,rheight);
 
 		// preview
 		graphics.beginFill(0x242424,0.8);
-		graphics.drawRect(rwidth-SHAPELIST_WIDTH-PREVIEW_WIDTH,0,rwidth-SHAPELIST_WIDTH,rheight);
+		graphics.drawRect(rwidth-SHAPELIST_WIDTH-PREVIEW_WIDTH,
+											0,rwidth-SHAPELIST_WIDTH,rheight);
 
 		// status bar
 		graphics.beginFill(0x242424,0.9);
-		graphics.drawRect(0,rheight-STATUSBAR_HEIGHT,rwidth,rheight);
+		graphics.drawRect(0,rheight-STATUSBAR_HEIGHT,
+											rwidth,rheight);
+
+		// model
+		graphics.beginFill(0x808080,1);
+		graphics.drawRect(TOOLBAR_WIDTH,ACTIONBAR_HEIGHT,
+										  rwidth-SHAPELIST_WIDTH-PREVIEW_WIDTH-TOOLBAR_WIDTH,rheight-STATUSBAR_HEIGHT-ACTIONBAR_HEIGHT);
+
+
 
 
 		// BUTTON TEST CASES -------------------------------------------------------
@@ -644,6 +657,9 @@ class TileCraft extends Screen
 		// complex shape
 		var original = "Ff//1fb/QEW7PqXys9vuJDI/OVJXUpAjpswzUUY1p3At////9+F2vjJB33qSfoaPprO8Ezw5DkBLCjwAWldvAGlIj1CrKhJwRZrNMEtIzmJFGhKCq5rNAiNnvALNRc0CzXgSAiNFEgJ4Zj9MacxpDng7eEMS3gFD3t4BAy3eAUBF3gFDq+8B";
 
+
+		// question mark
+		var original = "BgAABmdnAUY5Z19ASGd9ADVnCwZnZ1ZgNWfP";
 		// 32 shapes (scroll shapeview test)
 		//var original = "HwAAFjxKKyZGRp4mm0aeRFaaeUSamnlEVokBRJqJAUNmmnhDqpp4FzxZvCxVV90sqmfdRGaaREYBRVVG70VVBh5FVRxVRO8cqkTvwQFWAcHvzQHBVs0BwQEBAVKa3gFSAc0BUu9FAVI0EgFSvO8BQu-aAUpF7wFKI6sBM81nAQ..";
 
