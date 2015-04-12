@@ -7,7 +7,7 @@ import openfl.events.MouseEvent;
 import openfl.geom.Matrix;
 using hxColorToolkit.ColorToolkit;
 
-class Box extends SpriteContainer implements IStyle {
+class BoxInert extends ShapeContainer implements IStyle {
 
 
     //*****************************************************************

@@ -57,7 +57,7 @@ class TileCraft extends Screen
 		super();
 		cycle = false;
 		title = "Main";
-		rwidth = 1024;
+		rwidth = 930;
 		rheight = 620;
 	}
 
@@ -77,7 +77,7 @@ class TileCraft extends Screen
 	public static inline var ACTIONBAR_HEIGHT = 40;
 	public static inline var STATUSBAR_HEIGHT = 40;
 	public static inline var TOOLBAR_WIDTH = 100;
-	public static inline var SHAPELIST_WIDTH = 250;
+	public static inline var SHAPELIST_WIDTH = 150;
 	public static inline var PREVIEW_WIDTH = 200;
 	public static inline var BASE_SPAN = 20;
 
@@ -310,6 +310,7 @@ class TileCraft extends Screen
 		_outputView.t.setAnchoredPivot(Transformation.ANCHOR_BOTTOM_LEFT);
 		_outputView.t.x = rwidth-SHAPELIST_WIDTH-PREVIEW_WIDTH;
 		_outputView.t.y = rheight-STATUSBAR_HEIGHT;
+		_outputView.addEventListener(MouseEvent.CLICK,function(e:MouseEvent) { renderOutput(); });
 		addChild(_outputView);
 
 
@@ -496,13 +497,13 @@ class TileCraft extends Screen
 																  TileCraft.makeColorIcon(previewColorToolbar.styleButton,
 																													-1),
 																	previewColorToolbarAction);
-		previewColorToolbar.addButton('preview1',0,
-															    TileCraft.makeColorIcon(previewColorToolbar.styleButton,
-																													0),
-																	previewColorToolbarAction);
-		previewColorToolbar.addButton('preview2',0xFFFFFF,
+		previewColorToolbar.addButton('preview1',0xFFFFFF,
 																	TileCraft.makeColorIcon(previewColorToolbar.styleButton,
-																													0xFFFFFF),
+																													0xCCCCCC),
+																	previewColorToolbarAction);
+		previewColorToolbar.addButton('preview2',0,
+															    TileCraft.makeColorIcon(previewColorToolbar.styleButton,
+																													0x333333),
 																	previewColorToolbarAction);
 		previewColorToolbar.x = rwidth-SHAPELIST_WIDTH-PREVIEW_WIDTH+BASE_SPAN/2;
 		previewColorToolbar.y = rheight-STATUSBAR_HEIGHT/2-previewColorToolbar.getGrossHeight()/2;
@@ -531,7 +532,7 @@ class TileCraft extends Screen
 		addChild(text);
 				// -------------------------------------------------------------------------
 
-		currentShapeViewList = new ShapeViewList(this,SHAPELIST_WIDTH);
+		currentShapeViewList = new ShapeViewList(this,SHAPELIST_WIDTH,rheight-ACTIONBAR_HEIGHT-STATUSBAR_HEIGHT);
 		currentShapeViewList.x = rwidth-SHAPELIST_WIDTH;
 		currentShapeViewList.y = ACTIONBAR_HEIGHT;
 		addChild(currentShapeViewList);
@@ -546,6 +547,7 @@ class TileCraft extends Screen
 		// complex shape
 		var original = "Ff//1fb/QEW7PqXys9vuJDI/OVJXUpAjpswzUUY1p3At////9+F2vjJB33qSfoaPprO8Ezw5DkBLCjwAWldvAGlIj1CrKhJwRZrNMEtIzmJFGhKCq5rNAiNnvALNRc0CzXgSAiNFEgJ4Zj9MacxpDng7eEMS3gFD3t4BAy3eAUBF3gFDq+8B";
 
+		var original = "HwAAFjxKKyZGRp4mm0aeRFaaeUSamnlEVokBRJqJAUNmmnhDqpp4FzxZvCxVV90sqmfdRGaaREYBRVVG70VVBh5FVRxVRO8cqkTvwQFWAcHvzQHBVs0BwQEBAVKa3gFSAc0BUu9FAVI0EgFSvO8BQu-aAUpF7wFKI6sBM81nAQ..";
 		// home
 		//var original = "DAAACGneAQk8XCgIPF0SWzdcv183er9rjFy_b4x6v2mMzJ1ZN7ydCDysmgBpXiVAaaxH";
 

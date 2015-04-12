@@ -242,7 +242,7 @@ class Style {
       return box().set({
           'rounded':8,
           'padding':-1,
-          'offset':5,
+          'offset':6,
           'background_color':0x000000BB
         });
     }
@@ -252,6 +252,27 @@ class Style {
           'padding':5,
           'offset':2,
           'background_color':0
+        });
+    }
+
+    public static function scroll():Style {
+      return new Style({
+          'padding':5,
+          'rounded':12,
+          'outline_size':0,
+          'background_color':0x46464666
+        });
+    }
+
+    public static function scrollSlider():Style {
+      return new Style({
+          'padding':0,
+          'rounded':12,
+          'minWidth':10,
+          'bevel':1,
+          'background_color':0x242424ff,
+          'outline_size':2,
+          'outline_color':0xdfdfdf66
         });
     }
 
