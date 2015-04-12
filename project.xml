@@ -12,7 +12,7 @@
 
 	<window fps="60" background="0x242424" />
 
-	<window width="930" height="620" resizable="false" unless="mobile" />
+	<window width="950" height="650" resizable="false" unless="mobile" />
 
 	<window fullscreen="true" if="mobile" />
 	<window orientation="landscape" />
@@ -45,6 +45,8 @@
 				CONSOLE -->
 
 	<haxedef name="legacy" if="v2" />
+
+	<set name="SWF_VERSION" value="11.8" />
 
 	<!-- ################################ ASSETS ################################ -->
 

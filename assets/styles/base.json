@@ -112,7 +112,7 @@
 
   "shapeview": {
       "rounded":8,
-      "padding":3,
+      "padding":1,
       "offset":4,
       "background_color":"0x101010FF",
       "selected_background_color":"0x003d70FF"

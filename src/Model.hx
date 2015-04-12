@@ -306,7 +306,7 @@ class Model {
 		if (output==null || bitmapData==null) return null;
 
 		// encode the bitmapData to PNG format
-		#if v2
+		#if (v2 && !flash)
 									 // openfl.utils.ByteArray to Bytes (thru String)
 		var pngBytes = Bytes.ofString(bitmapData.encode("png", 1).toString());
 		#else

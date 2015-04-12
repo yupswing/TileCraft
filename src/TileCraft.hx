@@ -22,15 +22,19 @@ import format.png.*;
 import Shape;
 import com.akifox.plik.gui.*;
 import view.*;
+#if !flash
 import postfx.*;
+#end
 
 //import systools.Dialogs; //TODO temporary disabled because it crashes the app when the dialog close (MAC64)
 
 import haxe.io.Bytes;
 import haxe.io.BytesBuffer;
 import haxe.io.BytesInput;
+#if sys
 import sys.io.FileInput;
 import sys.io.FileOutput;
+#end
 
 using StringTools;
 using hxColorToolkit.ColorToolkit;
@@ -57,8 +61,8 @@ class TileCraft extends Screen
 		super();
 		cycle = false;
 		title = "Main";
-		rwidth = 930;
-		rheight = 620;
+		rwidth = 950;
+		rheight = 650;
 	}
 
 	//var testPreviewBitmap:Bitmap = null;
@@ -86,7 +90,7 @@ class TileCraft extends Screen
 	//============================================================================
 
 	public function renderModel(preview:Bool=true) {
-		#if !v2 || neko
+		#if (!v2 || neko)
 		preview=true;//TODO POSTFX need support for OpenFL3
 		#end
 		//TODO this should be part of ModelView
@@ -106,9 +110,7 @@ class TileCraft extends Screen
 	}
 
 	public function renderOutput(?changeScale=false) {
-		#if !v2
-		return; //TODO POSTFX need support for OpenFL3
-		#end
+		#if (v2 && !flash) //TODO POSTFX need support for OpenFL3
 
 		//TODO show some kind of modal while rendering
 		if (_modelIsPreviewMode) renderModel(false);
@@ -117,6 +119,7 @@ class TileCraft extends Screen
 																															getRenderFxaaOutline()),
 																					 getOutputScale()));
 		if (changeScale) _outputView.drawBackground();
+		#end
 	}
 
 	//============================================================================
@@ -205,6 +208,7 @@ class TileCraft extends Screen
 	}
 
 	public function saveFile():Bool {
+		#if sys
 		// Render the _outputBitmap (TODO need to be better, maybe this system in ModelView)
 		renderOutput();
 
@@ -234,10 +238,13 @@ class TileCraft extends Screen
 			try { fo.close(); } catch(e:Dynamic) {}
 			return true;
 		}
+		#else
+		return false;
+		#end
 	}
 
 	public function openFile():Bool {
-
+		#if sys
 		// Determine the file path
 		var filename:String = openDialog("TileCraft PNG image","*.png");
 		if (filename==null) {
@@ -265,6 +272,9 @@ class TileCraft extends Screen
 			changeModel(model);
 			return true;
 		}
+		#else
+		return false;
+		#end
 	}
 
 	private function saveDialog(filetype:String,extension:String):String {
@@ -334,7 +344,7 @@ class TileCraft extends Screen
 
 		// status bar
 		graphics.beginFill(0x242424,0.9);
-		graphics.drawRect(TOOLBAR_WIDTH,rheight-STATUSBAR_HEIGHT,rwidth,rheight);
+		graphics.drawRect(0,rheight-STATUSBAR_HEIGHT,rwidth,rheight);
 
 
 		// BUTTON TEST CASES -------------------------------------------------------
@@ -790,7 +800,7 @@ class TileCraft extends Screen
 
 	public static function makeColorIcon(style:Style,color:Int):BitmapData {
 		var span = style.bevel;
-		var size = style.minWidth;
+		var size:Int = style.minWidth;
 		var round = style.rounded;
 		var hole = false;
 		if (color==-1) {
@@ -822,8 +832,8 @@ class TileCraft extends Screen
 			shape.graphics.endFill();
 		}
 
-		var bd = new BitmapData(size,size,true,0);
-		bd.draw(shape);
+		var bd = new BitmapData(size,size,true);
+		//bd.draw(shape);
 		shape = null;
 		return bd;
 
