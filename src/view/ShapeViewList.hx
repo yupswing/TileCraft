@@ -82,11 +82,35 @@ class ShapeViewList extends Box {
     return _shapesView[index];
   }
 
+  public function getShapeViewByShape(shape:Shape):ShapeView {
+    for (shapeView in _shapesView) {
+      if (shapeView.getShape() == shape) return shapeView;
+    }
+    return null;
+  }
+
   public function selectByIndex(index:Int):ShapeView {
     var shapeView = getShapeViewByIndex(index);
     if (shapeView==null) return null;
     select(shapeView);
     return shapeView;
+  }
+
+  public function updateShape(shape:Shape) {
+    var shapeView = getShapeViewByShape(shape);
+    if (shapeView==null) return;
+    shapeView.update();
+  }
+
+  public function updateColor(colorIndex:Int) {
+    for (shapeView in _shapesView) {
+      if (shapeView.getShape().color==colorIndex) shapeView.update();
+    }
+  }
+
+  public function deselect() {
+    if (_selected != null) _selected.isSelected = false;
+    _selected = null;
   }
 
   public function select(shapeView:ShapeView):Bool {

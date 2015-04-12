@@ -16,6 +16,9 @@ class ShapeView extends Box {
   private var _height:Float = 0;
   private var _list:ShapeViewList;
 
+  private var _show:Button;
+  private var _lock:Button;
+
   private var _icon:Bitmap;
 
   var _isSelected:Bool = false;
@@ -52,49 +55,47 @@ class ShapeView extends Box {
 
     offset_x += (_icon.width+buttonStyle.padding*2+_style.offset)+_style.offset;
 
-    var button:Button;
+    _show = new Button();
+    _show.x = offset_x;
+    _show.y = offset_y;
+    _show.style = buttonStyle;
+    _show.selectable = true;
+    _show.listen = true;
+    _show.actionF = function(button:Button) { _list.toggleEnabledShape(_shape); };
+    _show.icon = TileCraft.atlasSprites.getRegion(TileCraft.ICON_EYE_CLOSED).toBitmapData();
+    _show.iconSelected = TileCraft.atlasSprites.getRegion(TileCraft.ICON_EYE_OPEN).toBitmapData();
+    _show.isSelected = _shape.enabled;
+    addChild(_show);
 
-    button = new Button();
+    _height = _show.getGrossHeight();
 
-    button.x = offset_x;
-    button.y = offset_y;
-    button.style = buttonStyle;
-    button.selectable = true;
-    button.listen = true;
-    button.actionF = function(button:Button) { _list.toggleEnabledShape(_shape); };
-    button.icon = TileCraft.atlasSprites.getRegion(TileCraft.ICON_EYE_CLOSED).toBitmapData();
-    button.iconSelected = TileCraft.atlasSprites.getRegion(TileCraft.ICON_EYE_OPEN).toBitmapData();
-    button.isSelected = true;
-    addChild(button);
+    offset_x += _show.getGrossWidth()+_style.offset;
 
-    _height = button.getGrossHeight();
+    _lock = new Button();
+    _lock.x = offset_x;
+    _lock.y = offset_y;
+    _lock.style = buttonStyle;
+    _lock.selectable = true;
+    _lock.listen = true;
+    _lock.actionF = function(button:Button) { _list.toggleLockedShape(_shape); };
+    _lock.icon = TileCraft.atlasSprites.getRegion(TileCraft.ICON_LOCK_OPEN).toBitmapData();
+    _lock.iconSelected = TileCraft.atlasSprites.getRegion(TileCraft.ICON_LOCK_CLOSED).toBitmapData();
+    _lock.isSelected = _shape.locked;
+    addChild(_lock);
 
-    offset_x += button.getGrossWidth()+_style.offset;
+    offset_x += _lock.getGrossWidth()+_style.offset;
 
-    button = new Button();
-    button.x = offset_x;
-    button.y = offset_y;
-    button.style = buttonStyle;
-    button.selectable = true;
-    button.listen = true;
-    button.actionF = function(button:Button) { _list.toggleLockedShape(_shape); };
-    button.icon = TileCraft.atlasSprites.getRegion(TileCraft.ICON_LOCK_OPEN).toBitmapData();
-    button.iconSelected = TileCraft.atlasSprites.getRegion(TileCraft.ICON_LOCK_CLOSED).toBitmapData();
-    addChild(button);
+    var _delete = new Button();
+    _delete.x = offset_x;
+    _delete.y = offset_y;
+    _delete.style = buttonStyle;
+    _delete.selectable = false;
+    _delete.listen = true;
+    _delete.actionF = function(button:Button) { _list.removeShape(_shape); };
+    _delete.icon = TileCraft.atlasSprites.getRegion(TileCraft.ICON_DELETE).toBitmapData();
+    addChild(_delete);
 
-    offset_x += button.getGrossWidth()+_style.offset;
-
-    button = new Button();
-    button.x = offset_x;
-    button.y = offset_y;
-    button.style = buttonStyle;
-    button.selectable = false;
-    button.listen = true;
-    button.actionF = function(button:Button) { _list.removeShape(_shape); };
-    button.icon = TileCraft.atlasSprites.getRegion(TileCraft.ICON_DELETE).toBitmapData();
-    addChild(button);
-
-    offset_x += button.getGrossWidth()+_style.offset;
+    //offset_x += _delete.getGrossWidth()+_style.offset;
 
     this.draw(_width,0,_isSelected);
   }
@@ -148,6 +149,14 @@ class ShapeView extends Box {
 
   public function getShape():Shape {
     return _shape;
+  }
+
+  public function update() {
+    // update color, shape and status
+    if (_icon.bitmapData!=null) _icon.bitmapData.dispose();
+    _icon.bitmapData = makeIcon();
+    _show.isSelected = _shape.enabled;
+    _lock.isSelected = _shape.locked;
   }
 
 }

@@ -182,6 +182,19 @@ class TileCraft extends Screen
 		renderModel(false);
 	}
 
+	public function updateShapeType(shapeType:ShapeType) {
+		var shape = currentShapeViewList.getSelectedShape();
+		if (shape==null) return;
+		shape.shapeType = shapeType;
+		updateShape(shape);
+		updateModel();
+	}
+
+	public function deselect() {
+		hideColorPicker();
+		currentShapeViewList.deselect();
+	}
+
 	public function getColor(index:Int):Int {
 		if (currentModel==null) return -1;
 		return currentModel.getColor(index);
@@ -192,6 +205,14 @@ class TileCraft extends Screen
 			colorToolbar.getButtonByIndex(i).icon = TileCraft.makeColorIcon(colorToolbar.styleButton,
 																																			currentModel.getColor(i));
 		}
+	}
+
+	public function updateShape(shape:Shape) {
+		currentShapeViewList.updateShape(shape);
+	}
+
+	public function updateColor(colorIndex:Int) {
+		currentShapeViewList.updateColor(colorIndex);
 	}
 
 	public function updateShapeList(){
@@ -386,21 +407,68 @@ class TileCraft extends Screen
 
 		// MODEL TOOLBAR --------------------------------------------------------
 
+		var shapeTypeSelector = function(button:Button) {
+			var shapeType:ShapeType = cast(button.value,ShapeType);
+			updateShapeType(shapeType);
+		};
+		var pointerSelector = function(button:Button) {
+			deselect();
+		}
 		var toolbar = new Toolbar(2,true,Style.getStyle('.toolbar'),Style.getStyle('.button.toolbarButton'));
-		toolbar.addButton("pointer",null,					TileCraft.atlasSprites.getRegion(TileCraft.ICON_POINTER).toBitmapData());
-		toolbar.addButton("sh_cube",null,					TileCraft.atlasSprites.getRegion(TileCraft.ICON_SH_CUBE).toBitmapData());
-		toolbar.addButton("sh_round_up",null,			TileCraft.atlasSprites.getRegion(TileCraft.ICON_SH_ROUND_UP).toBitmapData());
-		toolbar.addButton("sh_round_side",null,		TileCraft.atlasSprites.getRegion(TileCraft.ICON_SH_ROUND_SIDE).toBitmapData());
-		toolbar.addButton("sh_cylinder_up",null,	TileCraft.atlasSprites.getRegion(TileCraft.ICON_SH_CYLINDER_UP).toBitmapData());
-		toolbar.addButton("sh_cylinder_side",null,TileCraft.atlasSprites.getRegion(TileCraft.ICON_SH_CYLINDER_SIDE).toBitmapData());
-		toolbar.addButton("sh_ramp_up",null,			TileCraft.atlasSprites.getRegion(TileCraft.ICON_SH_RAMP_UP).toBitmapData());
-		toolbar.addButton("sh_ramp_down",null,		TileCraft.atlasSprites.getRegion(TileCraft.ICON_SH_RAMP_DOWN).toBitmapData());
-		toolbar.addButton("sh_arch_up",null,			TileCraft.atlasSprites.getRegion(TileCraft.ICON_SH_ARCH_UP).toBitmapData());
-		toolbar.addButton("sh_arch_down",null,		TileCraft.atlasSprites.getRegion(TileCraft.ICON_SH_ARCH_DOWN).toBitmapData());
-		toolbar.addButton("sh_corner_se",null,		TileCraft.atlasSprites.getRegion(TileCraft.ICON_SH_CORNER_SE).toBitmapData());
-		toolbar.addButton("sh_corner_sw",null,		TileCraft.atlasSprites.getRegion(TileCraft.ICON_SH_CORNER_SW).toBitmapData());
-		toolbar.addButton("sh_corner_ne",null,		TileCraft.atlasSprites.getRegion(TileCraft.ICON_SH_CORNER_NE).toBitmapData());
-		toolbar.addButton("sh_corner_nw",null,		TileCraft.atlasSprites.getRegion(TileCraft.ICON_SH_CORNER_NW).toBitmapData());
+		toolbar.addButton("pointer",null,
+											TileCraft.atlasSprites.getRegion(TileCraft.ICON_POINTER).toBitmapData(),	pointerSelector);
+		toolbar.addButton("cube",
+											ShapeType.CUBE,
+											TileCraft.atlasSprites.getRegion(TileCraft.ICON_SH_CUBE).toBitmapData(),
+											shapeTypeSelector);
+		toolbar.addButton("round_up",
+											ShapeType.ROUND_UP,
+											TileCraft.atlasSprites.getRegion(TileCraft.ICON_SH_ROUND_UP).toBitmapData(),
+											shapeTypeSelector);
+		toolbar.addButton("round_side",
+											ShapeType.ROUND_SIDE,
+											TileCraft.atlasSprites.getRegion(TileCraft.ICON_SH_ROUND_SIDE).toBitmapData(),
+											shapeTypeSelector);
+		toolbar.addButton("cylinder_up",
+											ShapeType.CYLINDER_UP,
+											TileCraft.atlasSprites.getRegion(TileCraft.ICON_SH_CYLINDER_UP).toBitmapData(),
+											shapeTypeSelector);
+		toolbar.addButton("cylinder_side",
+											ShapeType.CYLINDER_SIDE,
+											TileCraft.atlasSprites.getRegion(TileCraft.ICON_SH_CYLINDER_SIDE).toBitmapData(),
+											shapeTypeSelector);
+		toolbar.addButton("ramp_up",
+											ShapeType.RAMP_UP,
+											TileCraft.atlasSprites.getRegion(TileCraft.ICON_SH_RAMP_UP).toBitmapData(),
+											shapeTypeSelector);
+		toolbar.addButton("ramp_down",
+											ShapeType.RAMP_DOWN,
+											TileCraft.atlasSprites.getRegion(TileCraft.ICON_SH_RAMP_DOWN).toBitmapData(),
+											shapeTypeSelector);
+		toolbar.addButton("arch_up",
+											ShapeType.ARCH_UP,
+											TileCraft.atlasSprites.getRegion(TileCraft.ICON_SH_ARCH_UP).toBitmapData(),
+											shapeTypeSelector);
+		toolbar.addButton("arch_down",
+											ShapeType.ARCH_DOWN,
+												TileCraft.atlasSprites.getRegion(TileCraft.ICON_SH_ARCH_DOWN).toBitmapData(),
+												shapeTypeSelector);
+		toolbar.addButton("corner_se",
+											ShapeType.CORNER_SE,
+											TileCraft.atlasSprites.getRegion(TileCraft.ICON_SH_CORNER_SE).toBitmapData(),
+											shapeTypeSelector);
+		toolbar.addButton("corner_sw",
+											ShapeType.CORNER_SW,
+											TileCraft.atlasSprites.getRegion(TileCraft.ICON_SH_CORNER_SW).toBitmapData(),
+											shapeTypeSelector);
+		toolbar.addButton("corner_nw",
+											ShapeType.CORNER_NW,
+											TileCraft.atlasSprites.getRegion(TileCraft.ICON_SH_CORNER_NW).toBitmapData(),
+											shapeTypeSelector);
+		toolbar.addButton("corner_ne",
+											ShapeType.CORNER_NE,
+											TileCraft.atlasSprites.getRegion(TileCraft.ICON_SH_CORNER_NE).toBitmapData(),
+											shapeTypeSelector);
 
 		toolbar.x = TOOLBAR_WIDTH/2-toolbar.getGrossWidth()/2;
 		toolbar.y = ACTIONBAR_HEIGHT+10;
@@ -420,6 +488,7 @@ class TileCraft extends Screen
 			button.icon = TileCraft.makeColorIcon(colorToolbar.styleButton,
 																						color);
 			currentModel.setColor(index,color);
+			updateColor(index);
 			renderModel(true);
 		}
 
@@ -437,6 +506,7 @@ class TileCraft extends Screen
 		    var shape:Shape = currentShapeViewList.getSelectedShape();
 			  if (shape!=null) {
 			    shape.color = value;
+					updateShape(shape);
 			    updateModel();
 				}
 
