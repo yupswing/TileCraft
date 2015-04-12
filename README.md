@@ -25,14 +25,30 @@ The project is in development stage. **!! Not fully working prototype !!**
 
 The beta status will be reached on a full prototype.
 
+## Try it
+
+Right now if you want to try it download this project and download also the [PLIK library](https://github.com/yupswing/plik). Then set PLIK on haxelib
+
+````haxelib dev plik path/to/plik````
+
+then cd to tilecraft and run with
+
+````lime test mac/windows/linux -Dv2 -Dlegacy````
+
+**Note**: Save and load are functional but they always point to a file in /var/tmp (only mac/linux) because of troubles with *systool.Dialogs*
+
+**Note**: There are some premade model inside the code. Just comment/uncomment the lines [here](src/TileCraft.hx#L673).
+
+**Note**: Most of the interface works but there are still some dummy buttons. Don't worry if the enviroment looks unfinished because it is! ;)
+
 ## Milestones
 
- - alpha:  Shape and model (load and save to Base64)
- - alpha2: Model renderer
- - alpha3: Lights renderer + postfx (Antialias+outline)
- - alpha4: Basic interface
- - alpha5: Save to PNG (image+model) and big housekeeping
- - alpha6: Shape list + improved gui
+ - **alpha:  Shape and model (load and save to Base64)**
+ - **alpha2: Model renderer**
+ - **alpha3: Lights renderer + postfx (Antialias+outline)**
+ - **alpha4: Basic interface**
+ - **alpha5: Save to PNG (image+model) and big housekeeping**
+ - **alpha6: Shape list + improved gui**
  - *alpha7: Model editing + dispatchers* **<-- in progress**
  - *beta stage: Improve interface and renderer*
  - *rc stage: Polish the app*
