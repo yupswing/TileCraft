@@ -51,7 +51,7 @@ class ModelView extends SpriteContainer {
 		_background.graphics.drawRect(PADDING, PADDING, _width, _height/2);
     // Base background bottom
 		_background.graphics.beginFill(GRAY_2);
-		_background.graphics.drawRect(PADDING, _height/2, _width, _height/2);
+		_background.graphics.drawRect(PADDING, _height/2+PADDING, _width, _height/2);
 
     // Grid
     var gw = _width/Model.MODEL_SIZE;
