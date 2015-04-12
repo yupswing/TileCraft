@@ -71,6 +71,7 @@ class TileCraft extends Screen
 	public static var fxaaModes = [[8,8],[8,8],[8,1]]; //passes + outline
 	public static var renderModes = [0.5,0.25,0.125];
 	var renderMode = 0;
+	var renderOutline:Bool = false;
 
 	var colorToolbar:Toolbar;
 	var toolbar:Toolbar;
@@ -114,10 +115,30 @@ class TileCraft extends Screen
 
 		//TODO show some kind of modal while rendering
 		if (_modelIsPreviewMode) renderModel(false);
-		_outputView.setBitmapData(PostFX.scale(PostFX.fxaaOutline(_modelView.getBitmapData(),
-																															getRenderFxaaPasses(),
-																															getRenderFxaaOutline()),
-																					 getOutputScale()));
+
+		var source:BitmapData = _modelView.getBitmapData();
+		var output:BitmapData;
+
+		if (renderOutline) {
+			// one passage fxaa with black outline
+			output = PostFX.fxaaOutline(
+								source,
+								getRenderFxaaPasses(),
+								getRenderFxaaOutline());
+		} else {
+			// two passages fxaa with alpha blending
+			output = PostFX.fxaa(
+							 		PostFX.fxaaAlphaPrepare(
+									 source),
+							 	getRenderFxaaPasses());
+		}
+
+		// scale
+		output = PostFX.scale(output, getOutputScale());
+
+		// set output view
+		_outputView.setBitmapData(output);
+
 		if (changeScale) _outputView.drawBackground();
 		#end
 	}

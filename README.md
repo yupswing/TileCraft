@@ -70,7 +70,7 @@ The model, renderer and i/o is fully functional ( [Same model in LGModeler](http
   - [x] Convert LGModeler Renderer
   - [x] POSTFX shaders (apply FXAA to have smooth output image)
   - [x] output different size
-  - [ ] **BETA** POSTFX make FXAA support alpha channel
+  - [x] POSTFX make FXAA support alpha channel
   - [ ] **BETA** Fix incorrect Z rendering
   - [ ] **BETA** Support edge smoothing
   - [ ] **BETA** batch renderer and save to file
