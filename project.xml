@@ -4,7 +4,7 @@
 	<!-- ################################ SET ################################### -->
 
 
-	<meta title="TileCraft" package="com.akifox.tilecraft" version="1.0.0-alpha6dev" company="Akifox Studio" /> <!--  #TODEPLOY -->
+	<meta title="TileCraft" package="com.akifox.tilecraft" version="1.0.0-alpha6" company="Akifox Studio" /> <!--  #TODEPLOY -->
     <app main="Main" path="Export" file="TileCraft" />
 
 

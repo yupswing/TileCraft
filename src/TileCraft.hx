@@ -748,8 +748,8 @@ class TileCraft extends Screen
 	public static inline var APP_PACKAGE = "com.akifox.tilecraft" ;
 	public static inline var APP_BUILD = CompileTime.readFile("Export/.build");
 	public static inline var APP_BUILD_DATE = CompileTime.buildDateString();
-	public static inline var APP_VERSION = "1.0.0-alpha6dev"; //TODEPLOY
-	public static inline var APP_STAGE = "alpha6 dev"; //TODEPLOY
+	public static inline var APP_VERSION = "1.0.0-alpha6"; //TODEPLOY
+	public static inline var APP_STAGE = "alpha6"; //TODEPLOY
 	public static inline var APP_PLATFORM =
 	#if debug "dev"
   #elseif flash "swf"
