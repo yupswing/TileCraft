@@ -20,12 +20,14 @@ class Scroll extends Box {
       _listen = value;
       if (value) {
         //hookers on
+        addEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
         addEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
         addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
         addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
         addEventListener(MouseEvent.MOUSE_OUT, onMouseOut);
       } else {
         //hookers off
+        removeEventListener(MouseEvent.MOUSE_WHEEL, onMouseWheel);
         removeEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
         removeEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
         removeEventListener(MouseEvent.MOUSE_UP, onMouseUp);
@@ -151,6 +153,11 @@ class Scroll extends Box {
       if (!_isChoosing) return;
       onMouseUp(event);
       onMouseMove(event);
+    }
+    public function onMouseWheel(event:MouseEvent) {
+      if (_valueView>=_valueMax) return; //no scroll if there is nothing to scroll
+
+      setValue(_value+(event.delta*(10*_valueView/_valueMax)));
     }
 
 }

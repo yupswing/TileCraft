@@ -4,6 +4,8 @@ import gui.*;
 import com.akifox.plik.*;
 import motion.Actuate;
 
+import openfl.events.MouseEvent;
+
 class ShapeViewList extends Box {
 
   var _shapesView = new Array<ShapeView>();
@@ -25,10 +27,10 @@ class ShapeViewList extends Box {
     _scrollable = new SpriteContainer();
     addChild(_scrollable);
     _scroll = new Scroll(_height,scroll,height);
+    addEventListener(MouseEvent.MOUSE_WHEEL,_scroll.onMouseWheel);
     _scroll.listen = true;
     addChild(_scroll);
     _scroll.x = _width-_scroll.getGrossWidth();
-
   }
 
   public override function getNetHeight():Float {
