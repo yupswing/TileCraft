@@ -13,6 +13,7 @@ class ShapeView extends Box {
 
   private var _shape:Shape = null;
   private var _width:Float = 0;
+  private var _height:Float = 0;
   private var _list:ShapeViewList;
 
   private var _icon:Bitmap;
@@ -25,6 +26,10 @@ class ShapeView extends Box {
     _isSelected = value;
     this.draw(_width,0,_isSelected);
     return value;
+  }
+
+  public override function getNetHeight():Float {
+    return _height;
   }
 
   public function new(list:ShapeViewList,shape:Shape,width:Float=0) {
@@ -50,6 +55,7 @@ class ShapeView extends Box {
     var button:Button;
 
     button = new Button();
+
     button.x = offset_x;
     button.y = offset_y;
     button.style = buttonStyle;
@@ -60,6 +66,8 @@ class ShapeView extends Box {
     button.iconSelected = TileCraft.atlasSprites.getRegion(TileCraft.ICON_EYE_OPEN).toBitmapData();
     button.isSelected = true;
     addChild(button);
+
+    _height = button.getGrossHeight();
 
     offset_x += button.getGrossWidth()+_style.offset;
 

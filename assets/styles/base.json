@@ -3,6 +3,8 @@
 
   },
 
+  "tilecraft"
+
   "button": {
     "padding":10,
     "offset":5,
@@ -26,15 +28,16 @@
   },
 
   "miniButton":{
-    "padding" : 2,
+    "padding" : 3,
     "bevel" : 0,
     "rounded":24,
     "font_size":12,
     "color":"0xFFFFFFFF",
-    "outline_size" : 0,
     "background_color":0,
-    "over_background_color":"0x464646FF",
-    "selected_background_color":"0x353535FF",
+    "over_background_color":0,
+    "selected_background_color":0,
+    "_outline_size" : 3,
+    "_over_outline_color":"0xffb500BB",
     "outline_color":0,
     "over_outline_color":0,
     "selected_outline_color":0
@@ -109,10 +112,10 @@
 
   "shapeview": {
       "rounded":8,
-      "padding":-1,
-      "offset":6,
-      "background_color":"0x000000BB",
-      "selected_background_color":"0x666666BB"
+      "padding":3,
+      "offset":4,
+      "background_color":"0x101010FF",
+      "selected_background_color":"0x003d70FF"
   },
 
   "shapeviewlist": {
@@ -125,14 +128,13 @@
       "padding":5,
       "rounded":12,
       "outline_size":0,
-      "background_color":"0x46464666"
+      "background_color":0
   },
 
   "scrollSlider": {
       "padding":0,
       "rounded":12,
       "minWidth":10,
-      "bevel":1,
       "background_color":"0x242424ff",
       "outline_size":2,
       "outline_color":"0xdfdfdf66"

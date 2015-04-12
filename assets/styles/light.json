@@ -1,0 +1,54 @@
+{
+
+  "button": {
+    "color":"0x000000FF",
+    "background_color":"0xe0dee0ff",
+    "over_background_color":"0xdbdbdbff",
+    "selected_background_color":"0xe0dee0ff",
+    "over_outline_color":"0xffb50088",
+    "selected_outline_color":"0xaaaaaaFF"
+  },
+
+  "miniButton":{
+    "color":"0xFFFFFFFF"
+  },
+
+  "miniButtonClose":{
+    "background_color":"0xDADADAFF",
+    "over_background_color":"0xF2F2F2FF"
+  },
+
+  "toolbarButton":{
+    "selected_outline_color":"0xffb500FF"
+  },
+
+  "toolbarButtonFull": {
+    "over_outline_color":"0xffb500DD"
+  },
+
+  "toolbarMiniButtonFull": {
+    "over_outline_color":"0xffb500DD"
+  },
+
+  "colorpicker": {
+    "background_color":"0xdbdbdbCC"
+  },
+
+  "box": {
+      "background_color":"0xdbdbdbBB"
+  },
+
+  "shapeview": {
+    "background_color":"0x4c4c4cFF",
+    "selected_background_color":"0x003d70FF"
+  },
+
+  "shapeviewlist": {
+    "background_color":0
+  },
+
+  "scrollSlider": {
+      "background_color":"0xf1f1f1ff",
+      "outline_color":"0xdddddd66"
+  }
+}

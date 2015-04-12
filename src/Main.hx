@@ -50,7 +50,8 @@ class Main {
 		PLIK.initialize(_container,TileCraft.APP_PACKAGE);
 
 		// STYLED GUI
-		PLIK.initStyle(openfl.Assets.getText("assets/styles/dark.json"));
+		PLIK.initStyle(openfl.Assets.getText("assets/styles/base.json"));
+		//com.akifox.plik.gui.Style.mergeStyleSet(openfl.Assets.getText("assets/styles/light.json")); //TODO light style
 
 		// PREFERENCES
 		PLIK.initPref();
