@@ -106,7 +106,7 @@ class Shape {
 			dest.z2 = Std.int(z + (z2 - z1)*gh*dt*0.5);
 			dest.normal = 0.5 + 0.5*dt;
 		case ROUND_UP:
-			var corner:Float = Math.min(x2 - x1, y2 - y1)/4.0;
+			var corner:Float = Math.min(x2 - x1, y2 - y1)/4.0; //TODO set corners (2.0 big, 4.0 small)
 			var r:Float = corner/(x2 - x1);
 			if(dt < r){
 				dt /= r;
@@ -120,7 +120,7 @@ class Shape {
 				dest.y2 -= Std.int(corner*gh*dt);
 			}
 		case ROUND_SIDE:
-			var corner:Float = Math.min(z2 - z1, x2 - x1)/4.0;
+			var corner:Float = Math.min(z2 - z1, x2 - x1)/4.0; //TODO set corners (2.0 big, 4.0 small)
 			var r:Float = corner/(x2 - x1);
 			if(dt < r){
 				dt /= r;
@@ -140,7 +140,7 @@ class Shape {
 			dest.normal = 0.9;
 		case RAMP_DOWN:
 			dest.z2 = Std.int(Math.min(dest.z2, dest.z1 + Std.int(gh*(1.0 - dt)*(z2 - z1))+1));
-			dest.normal = 0.75; //TODO check if all right
+			dest.normal = 0.75; //TODO check if all right (original 0.8)
 		case ARCH_UP:
 			dest.z1 = dest.z2 - 1 - Std.int(gh*(1.0 - dt)*(z2 - z1));
 		case ARCH_DOWN:

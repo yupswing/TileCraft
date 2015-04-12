@@ -75,6 +75,7 @@ class TileCraft extends Screen
 	var renderMode = 0;
 
 	var colorToolbar:Toolbar;
+	var toolbar:Toolbar;
 
 	var currentRenderer = new Renderer(Std.int(320),Std.int(480));
 
@@ -188,6 +189,14 @@ class TileCraft extends Screen
 		shape.shapeType = shapeType;
 		updateShape(shape);
 		updateModel();
+	}
+
+	public function updateShapeSelect(shape:Shape) {
+		currentShapeViewList.selectByShape(shape);
+		if (shape!=null) {
+			colorToolbar.selectByIndex(shape.color);
+			toolbar.select(toolbar.getButtonByValue(shape.shapeType));
+		}
 	}
 
 	public function deselect() {
@@ -414,7 +423,7 @@ class TileCraft extends Screen
 		var pointerSelector = function(button:Button) {
 			deselect();
 		}
-		var toolbar = new Toolbar(2,true,Style.getStyle('.toolbar'),Style.getStyle('.button.toolbarButton'));
+		toolbar = new Toolbar(2,true,Style.getStyle('.toolbar'),Style.getStyle('.button.toolbarButton'));
 		toolbar.addButton("pointer",null,
 											TileCraft.atlasSprites.getRegion(TileCraft.ICON_POINTER).toBitmapData(),	pointerSelector);
 		toolbar.addButton("cube",

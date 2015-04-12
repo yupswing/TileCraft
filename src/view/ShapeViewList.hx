@@ -13,6 +13,7 @@ class ShapeViewList extends Box {
   var _width:Float=0;
   var _height:Float=0;
   var _base:TileCraft;
+  var _selected:ShapeView = null;
 
   var _scroll:Scroll;
   var _scrollable:SpriteContainer;
@@ -45,91 +46,22 @@ class ShapeViewList extends Box {
     }
   }
 
+  //============================================================================
+
   public function add(shape:Shape) {
-    _shapesView.unshift(new ShapeView(this,shape,_width-_style.padding*2));
+    var index:Int = -1;
+    if (_selected!=null) {
+      index = getSelectedIndex()-1;
+    }
+    if (index<0) index = 0;
+    _shapesView.insert(index,new ShapeView(this,shape,_width-_style.padding*2));
     _scrollable.addChild(_shapesView[0]);
     _shapeview_height = _shapesView[0].getGrossHeight();
     updatePositions();
     updateScroll();
   }
 
-  public function getColor(index:Int):Int {
-    return _base.getColor(index);
-  }
-
-  public function removeAll() {
-    for (i in 0..._shapesView.length) {
-      _scrollable.removeChild(_shapesView.shift());
-    }
-    _selected = null; //deselect
-    updateScroll();
-  }
-
-  var _selected:ShapeView = null;
-
-  public function getSelected():ShapeView {
-    return _selected;
-  }
-
-  public function getSelectedShape():Shape {
-    var shapeView:ShapeView = getSelected();
-    if (shapeView==null) return null;
-    return shapeView.getShape();
-  }
-
-  public function getShapeViewByIndex(index:Int):ShapeView {
-    if (index>=_shapesView.length || index<0) return null;
-    return _shapesView[index];
-  }
-
-  public function getShapeViewByShape(shape:Shape):ShapeView {
-    for (shapeView in _shapesView) {
-      if (shapeView.getShape() == shape) return shapeView;
-    }
-    return null;
-  }
-
-  public function selectByIndex(index:Int):ShapeView {
-    var shapeView = getShapeViewByIndex(index);
-    if (shapeView==null) return null;
-    select(shapeView);
-    return shapeView;
-  }
-
-  public function updateShape(shape:Shape) {
-    var shapeView = getShapeViewByShape(shape);
-    if (shapeView==null) return;
-    shapeView.update();
-  }
-
-  public function updateColor(colorIndex:Int) {
-    for (shapeView in _shapesView) {
-      if (shapeView.getShape().color==colorIndex) shapeView.update();
-    }
-  }
-
-  public function deselect() {
-    if (_selected != null) _selected.isSelected = false;
-    _selected = null;
-  }
-
-  public function select(shapeView:ShapeView):Bool {
-    if (shapeView==null) return false;
-    if (_selected != null) _selected.isSelected = false;
-    _selected = shapeView;
-    shapeView.isSelected = true;
-    return true;
-  }
-
-  public function updateModel() {
-    _base.updateModel();
-  }
-
-  public function updateScroll() {
-    _scroll.setValueMax(Math.max(_height,_style.padding + _shapesView.length*(_shapeview_height+_style.offset)));
-  }
-
-  public function removeShape(shape:Shape) {
+  public function remove(shape:Shape) {
     // TODO this is not right (mixing model + shapeviewlist removals)
     for (i in 0..._shapesView.length) {
       if (_shapesView[i].getShape()==shape) {
@@ -145,6 +77,98 @@ class ShapeViewList extends Box {
     }
   }
 
+  public function removeAll() {
+    for (i in 0..._shapesView.length) {
+      _scrollable.removeChild(_shapesView.shift());
+    }
+    _selected = null; //deselect
+    updateScroll();
+  }
+
+  //============================================================================
+
+  public function getColor(index:Int):Int {
+    return _base.getColor(index);
+  }
+
+  //============================================================================
+
+  public function select(shapeView:ShapeView):ShapeView {
+    if (_selected == shapeView) return shapeView; // avoid loops with _base.updateShapeSelect
+    if (shapeView == null) return deselect();
+    if (_selected != null) _selected.isSelected = false;
+    _selected = shapeView;
+    _base.updateShapeSelect(shapeView.getShape());
+    shapeView.isSelected = true;
+    return shapeView;
+  }
+
+  public function selectByIndex(index:Int):ShapeView {
+    return select(getShapeViewByIndex(index));
+  }
+
+  public function selectByShape(shape:Shape):ShapeView {
+    return select(getShapeViewByShape(shape));
+  }
+
+  public function deselect():ShapeView {
+    if (_selected == null) return null; // avoid loops with _base.updateShapeSelect
+    _selected.isSelected = false;
+    _selected = null;
+    _base.updateShapeSelect(null);
+    return null;
+  }
+
+  //============================================================================
+
+  public function getSelected():ShapeView {
+    return _selected;
+  }
+
+  public function getSelectedShape():Shape {
+    var shapeView:ShapeView = getSelected();
+    if (shapeView==null) return null;
+    return shapeView.getShape();
+  }
+
+  public function getSelectedIndex():Int {
+    if (_selected==null) return -1;
+    return _shapesView.indexOf(_selected);
+  }
+
+  //============================================================================
+
+  public function getShapeViewByIndex(index:Int):ShapeView {
+    if (index>=_shapesView.length || index<0) return null;
+    return _shapesView[index];
+  }
+
+  public function getShapeViewByShape(shape:Shape):ShapeView {
+    if (shape==null) return null;
+    for (shapeView in _shapesView) {
+      if (shapeView.getShape() == shape) return shapeView;
+    }
+    return null;
+  }
+
+  //============================================================================
+
+  public function updateShape(shape:Shape) {
+    var shapeView = getShapeViewByShape(shape);
+    if (shapeView==null) return;
+    shapeView.update();
+  }
+
+  public function updateColor(colorIndex:Int) {
+    for (shapeView in _shapesView) {
+      if (shapeView.getShape().color==colorIndex) shapeView.update();
+    }
+  }
+
+  public function updateModel() {
+    _base.updateModel();
+  }
+
   public function toggleEnabledShape(shape:Shape) {
     shape.enabled = !shape.enabled;
     updateModel();
@@ -154,6 +178,14 @@ class ShapeViewList extends Box {
     shape.locked = !shape.locked;
     updateModel();
   }
+
+  //============================================================================
+
+  public function updateScroll() {
+    _scroll.setValueMax(Math.max(_height,_style.padding + _shapesView.length*(_shapeview_height+_style.offset)));
+  }
+
+  //============================================================================
 
   private function updatePositions() {
     if (_shapesView.length<=0) return;

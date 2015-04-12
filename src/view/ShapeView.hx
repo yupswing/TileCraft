@@ -91,7 +91,7 @@ class ShapeView extends Box {
     _delete.style = buttonStyle;
     _delete.selectable = false;
     _delete.listen = true;
-    _delete.actionF = function(button:Button) { _list.removeShape(_shape); };
+    _delete.actionF = function(button:Button) { _list.remove(_shape); };
     _delete.icon = TileCraft.atlasSprites.getRegion(TileCraft.ICON_DELETE).toBitmapData();
     addChild(_delete);
 
