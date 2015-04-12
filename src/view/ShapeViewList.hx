@@ -10,7 +10,6 @@ class ShapeViewList extends Box {
 
   var _shapesView = new Array<ShapeView>();
   var _shapeview_height:Float = 0;
-  var _selected:Int=-1;
   var _width:Float=0;
   var _height:Float=0;
   var _base:TileCraft;
@@ -62,7 +61,40 @@ class ShapeViewList extends Box {
     for (i in 0..._shapesView.length) {
       _scrollable.removeChild(_shapesView.shift());
     }
+    _selected = null; //deselect
     updateScroll();
+  }
+
+  var _selected:ShapeView = null;
+
+  public function getSelected():ShapeView {
+    return _selected;
+  }
+
+  public function getSelectedShape():Shape {
+    var shapeView:ShapeView = getSelected();
+    if (shapeView==null) return null;
+    return shapeView.getShape();
+  }
+
+  public function getShapeViewByIndex(index:Int):ShapeView {
+    if (index>=_shapesView.length || index<0) return null;
+    return _shapesView[index];
+  }
+
+  public function selectByIndex(index:Int):ShapeView {
+    var shapeView = getShapeViewByIndex(index);
+    if (shapeView==null) return null;
+    select(shapeView);
+    return shapeView;
+  }
+
+  public function select(shapeView:ShapeView):Bool {
+    if (shapeView==null) return false;
+    if (_selected != null) _selected.isSelected = false;
+    _selected = shapeView;
+    shapeView.isSelected = true;
+    return true;
   }
 
   public function updateModel() {
@@ -77,6 +109,7 @@ class ShapeViewList extends Box {
     // TODO this is not right (mixing model + shapeviewlist removals)
     for (i in 0..._shapesView.length) {
       if (_shapesView[i].getShape()==shape) {
+        if (_selected==_shapesView[i]) _selected = null; //deselect
         _scrollable.removeChild(_shapesView[i]); //remove from view
         _base.currentModel.removeShape(shape); //remove from model
         _shapesView.remove(_shapesView[i]); //remove from array list
@@ -106,11 +139,6 @@ class ShapeViewList extends Box {
       _shapesView[i].y = _style.padding + i*(_shapeview_height+_style.offset);
     }
     draw(_width);
-  }
-
-  public function getSelected():Shape {
-    if (_selected<0) return null;
-    return _shapesView[_selected].getShape();
   }
 
 }

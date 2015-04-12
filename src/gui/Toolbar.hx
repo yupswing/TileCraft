@@ -81,7 +81,6 @@ class Toolbar extends SpriteContainer implements IStyle
     return getNetHeight()+_style.padding*2;//+_style.outline_size/2;
   }
 
-
   public function getSelected():Button {
     return _selected;
   }

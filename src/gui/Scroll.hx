@@ -119,11 +119,11 @@ class Scroll extends Box {
 
     var _lastdraw:Float = 0;
 
-    public override function draw(?width:Float=0,?height:Float=0) {
+    public override function draw(?width:Float=0,?height:Float=0,?isSelected:Bool=false) {
       //if (haxe.Timer.stamp()-_lastdraw<0.05 && !forceDraw) return;
       drawScroll();
       _lastdraw = haxe.Timer.stamp();
-      super.draw();
+      super.draw(width,height,isSelected);
     }
 
     //*****************************************************************

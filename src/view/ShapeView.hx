@@ -5,6 +5,8 @@ import openfl.display.Bitmap;
 import openfl.display.BitmapData;
 import Shape;
 
+import openfl.events.MouseEvent;
+
 using hxColorToolkit.ColorToolkit;
 
 class ShapeView extends Box {
@@ -15,11 +17,23 @@ class ShapeView extends Box {
 
   private var _icon:Bitmap;
 
+  var _isSelected:Bool = false;
+  public var isSelected(get,set):Bool;
+  private function get_isSelected():Bool {return _isSelected;}
+  private function set_isSelected(value:Bool):Bool {
+    if (_isSelected==value) return value;
+    _isSelected = value;
+    this.draw(_width,0,_isSelected);
+    return value;
+  }
+
   public function new(list:ShapeViewList,shape:Shape,width:Float=0) {
     _list = list;
     _width = width;
     _shape = shape;
     super(Style.shapeview());
+
+    addEventListener(MouseEvent.CLICK,function(e:MouseEvent) { list.select(this); });
 
     var offset_x:Float = _style.padding;
     var offset_y:Float = _style.padding;
@@ -74,11 +88,7 @@ class ShapeView extends Box {
 
     offset_x += button.getGrossWidth()+_style.offset;
 
-    //draw();
-    draw(_width);
-
-
-
+    this.draw(_width,0,_isSelected);
   }
 
   public function makeIcon():BitmapData {

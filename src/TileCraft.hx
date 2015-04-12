@@ -51,7 +51,6 @@ class TileCraft extends Screen
 	var currentShapeViewList:ShapeViewList;
 
 	var modelView:ModelView = new ModelView();
-	var shapeViewList:ShapeViewList = null;
 
 	public function new () {
 		super();
@@ -423,12 +422,20 @@ class TileCraft extends Screen
 
 		var colorToolbarAction = function(button:Button) {
 				var value:Int = cast(button.value,Int);
-				if (value==0) {
-					hideColorPicker();
-					return; //hole
+				// change shape color
+		    var shape:Shape = currentShapeViewList.getSelectedShape();
+			  if (shape!=null) {
+			    shape.color = value;
+			    updateModel();
 				}
-				//Lib.current.stage.color = currentModel.getColor(value);
-				if (_colorPickerOnStage) showColorPicker(currentModel.getColor(value));
+
+				if (value==0) {
+					//hole
+					hideColorPicker();
+				} else if (_colorPickerOnStage) {
+					showColorPicker(currentModel.getColor(value));
+				}
+
 		};
 
 		var colorToolbarActionAlt = function(button:Button) {
@@ -547,7 +554,9 @@ class TileCraft extends Screen
 		// complex shape
 		var original = "Ff//1fb/QEW7PqXys9vuJDI/OVJXUpAjpswzUUY1p3At////9+F2vjJB33qSfoaPprO8Ezw5DkBLCjwAWldvAGlIj1CrKhJwRZrNMEtIzmJFGhKCq5rNAiNnvALNRc0CzXgSAiNFEgJ4Zj9MacxpDng7eEMS3gFD3t4BAy3eAUBF3gFDq+8B";
 
-		var original = "HwAAFjxKKyZGRp4mm0aeRFaaeUSamnlEVokBRJqJAUNmmnhDqpp4FzxZvCxVV90sqmfdRGaaREYBRVVG70VVBh5FVRxVRO8cqkTvwQFWAcHvzQHBVs0BwQEBAVKa3gFSAc0BUu9FAVI0EgFSvO8BQu-aAUpF7wFKI6sBM81nAQ..";
+		// 32 shapes (scroll shapeview test)
+		//var original = "HwAAFjxKKyZGRp4mm0aeRFaaeUSamnlEVokBRJqJAUNmmnhDqpp4FzxZvCxVV90sqmfdRGaaREYBRVVG70VVBh5FVRxVRO8cqkTvwQFWAcHvzQHBVs0BwQEBAVKa3gFSAc0BUu9FAVI0EgFSvO8BQu-aAUpF7wFKI6sBM81nAQ..";
+
 		// home
 		//var original = "DAAACGneAQk8XCgIPF0SWzdcv183er9rjFy_b4x6v2mMzJ1ZN7ydCDysmgBpXiVAaaxH";
 

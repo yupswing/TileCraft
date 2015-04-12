@@ -243,7 +243,8 @@ class Style {
           'rounded':8,
           'padding':-1,
           'offset':6,
-          'background_color':0x000000BB
+          'background_color':0x000000BB,
+          'selected_background_color':0x666666BB
         });
     }
 

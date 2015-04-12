@@ -56,9 +56,9 @@ class Box extends SpriteContainer implements IStyle {
     }
 
 
-    public function draw(?width:Float=0,?height:Float=0) {
+    public function draw(?width:Float=0,?height:Float=0,?isSelected:Bool=false) {
 		  graphics.clear();
-      Style.drawBackground(this,_style,false,false,width,height);
+      Style.drawBackground(this,_style,isSelected,false,width,height);
     }
 
 }
