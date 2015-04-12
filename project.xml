@@ -53,6 +53,8 @@
 
 	<assets path="assets/fonts" include="*.ttf" />
 
+	<assets path="assets/styles" include="*.json" />
+
 	<!-- PLIK Debug -->
 	<assets path="assets/debug" include="*" />
 

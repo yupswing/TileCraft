@@ -53,7 +53,7 @@ The beta status will be reached on a full prototype.
  - **alpha3: Lights renderer + postfx (Antialias+outline)**
  - **alpha4: Basic interface**
  - **alpha5: Save to PNG (image+model) and big housekeeping**
- - alpha6: Shape list **<-- in progress**
+ - alpha6: Shape list + improved gui + dispatcher **<-- in progress**
  - alpha7: Model editing
  - beta stage
 

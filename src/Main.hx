@@ -49,9 +49,13 @@ class Main {
 
 		PLIK.initialize(_container,TileCraft.APP_PACKAGE);
 
+		// STYLED GUI
+		PLIK.initStyle(openfl.Assets.getText("assets/styles/dark.json"));
+
 		// PREFERENCES
 		PLIK.initPref();
 
+		// SET DEFAULT FONT
 		PLIK.setDefaultFont(TileCraft.FONT_SQUARE);
 
 		// INITIALIZE GFX

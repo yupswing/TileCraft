@@ -1,6 +1,6 @@
 package view;
 
-import gui.*;
+import com.akifox.plik.gui.*;
 import openfl.display.Bitmap;
 import openfl.display.BitmapData;
 import Shape;
@@ -31,14 +31,14 @@ class ShapeView extends Box {
     _list = list;
     _width = width;
     _shape = shape;
-    super(Style.shapeview());
+    super(Style.getStyle('.box.shapeview'));
 
     addEventListener(MouseEvent.CLICK,function(e:MouseEvent) { list.select(this); });
 
     var offset_x:Float = _style.padding;
     var offset_y:Float = _style.padding;
 
-    var buttonStyle = Style.miniButton();
+    var buttonStyle = Style.getStyle('.button.miniButton');
 
     _icon = new Bitmap(makeIcon());
     _icon.x = offset_x+buttonStyle.padding+_style.offset;

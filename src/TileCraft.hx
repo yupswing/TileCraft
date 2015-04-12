@@ -20,7 +20,7 @@ import com.akifox.transform.Transformation;
 import format.png.*;
 
 import Shape;
-import gui.*;
+import com.akifox.plik.gui.*;
 import view.*;
 import postfx.*;
 
@@ -341,7 +341,7 @@ class TileCraft extends Screen
 		// var button = new Button("TEST");
 		// button.x = 130;
 		// button.y = 100;
-		// button.style = Style.button();
+		// button.style = Style.getStyle('button');
 		// button.selectable = true;
 		// button.listen = true;
 		// button.actionF = function(button:Button) { TileCraft.logger(button.toString()); };
@@ -353,7 +353,7 @@ class TileCraft extends Screen
 		// var button = new Button("TEST2");
 		// button.x = 130;
 		// button.y = 150;
-		// button.style = Style.button();
+		// button.style = Style.getStyle('button');
 		// button.listen = true;
 		// button.makeText("Button test");
 		// addChild(button);
@@ -361,7 +361,7 @@ class TileCraft extends Screen
 		// var button = new Button("TEST3");
 		// button.x = 130;
 		// button.y = 200;
-		// button.style = Style.button();
+		// button.style = Style.getStyle('button');
 		// button.listen = true;
 		// button.icon = TileCraft.atlasSprites.getRegion(TileCraft.ICON_CHECKBOX).toBitmapData();
 		// addChild(button);
@@ -369,13 +369,13 @@ class TileCraft extends Screen
 		// var button = new Button("TEST4");
 		// button.x = 130;
 		// button.y = 250;
-		// button.style = Style.button();
+		// button.style = Style.getStyle('button');
 		// button.listen = true;
 		// addChild(button);
 
 		// MODEL TOOLBAR --------------------------------------------------------
 
-		var toolbar = new Toolbar(2,true,Style.toolbar(),Style.toolbarButton());
+		var toolbar = new Toolbar(2,true,Style.getStyle('.toolbar'),Style.getStyle('.button.toolbarButton'));
 		toolbar.addButton("pointer",null,					TileCraft.atlasSprites.getRegion(TileCraft.ICON_POINTER).toBitmapData());
 		toolbar.addButton("sh_cube",null,					TileCraft.atlasSprites.getRegion(TileCraft.ICON_SH_CUBE).toBitmapData());
 		toolbar.addButton("sh_round_up",null,			TileCraft.atlasSprites.getRegion(TileCraft.ICON_SH_ROUND_UP).toBitmapData());
@@ -398,7 +398,7 @@ class TileCraft extends Screen
 
 		// COLOR TOOLBAR --------------------------------------------------------
 
-		colorToolbar = new Toolbar(2,true,Style.toolbar(),Style.toolbarButtonFull());
+		colorToolbar = new Toolbar(2,true,Style.getStyle('.toolbar'),Style.getStyle('.button.toolbarButton.toolbarButtonFull'));
 
 		//---
 
@@ -466,7 +466,7 @@ class TileCraft extends Screen
 		// ACTION TOOLBAR ----------------------------------------------------------
 
 		var actionToolbarAction = function(button:Button) { TileCraft.logger("NOT IMPLEMENTED"); }
-		var actionToolbar = new Toolbar(0,false,Style.toolbar(),Style.toolbarButton());
+		var actionToolbar = new Toolbar(0,false,Style.getStyle('.toolbar'),Style.getStyle('.button.toolbarButton'));
 		actionToolbar.addButton("new",null,			TileCraft.atlasSprites.getRegion(TileCraft.ICON_NEW).toBitmapData(),
 																						function(_) {
 																							newModel();
@@ -499,7 +499,7 @@ class TileCraft extends Screen
 			_outputView.setBackgroundColor(cast(button.value,Int));
 		};
 
-		var previewColorToolbar = new Toolbar(0,true,Style.toolbar(),Style.toolbarMiniButtonFull());
+		var previewColorToolbar = new Toolbar(0,true,Style.getStyle('.toolbar'),Style.getStyle('.button.toolbarButton.toolbarMiniButton.toolbarMiniButtonFull'));
 		previewColorToolbar.addButton('preview0',-1,
 																  TileCraft.makeColorIcon(previewColorToolbar.styleButton,
 																													-1),
@@ -516,7 +516,7 @@ class TileCraft extends Screen
 		previewColorToolbar.y = rheight-STATUSBAR_HEIGHT/2-previewColorToolbar.getGrossHeight()/2;
 		addChild(previewColorToolbar);
 
-		var previewActionToolbar = new Toolbar(0,false,Style.toolbar(),Style.toolbarMiniButton());
+		var previewActionToolbar = new Toolbar(0,false,Style.getStyle('.toolbar'),Style.getStyle('.button.toolbarButton.toolbarMiniButton'));
 		previewActionToolbar.addButton('resize',0,TileCraft.atlasSprites.getRegion(TileCraft.ICON_RESIZE).toBitmapData(),renderModeLoop);
 		previewActionToolbar.addButton('save',0,TileCraft.atlasSprites.getRegion(TileCraft.ICON_SAVE).toBitmapData());
 																						//function(_){ saveFile(); });
@@ -766,6 +766,155 @@ class TileCraft extends Screen
 	public static inline var ICON_SHT_CORNER_SW = 'sht_corner_sw.png';
 	public static inline var ICON_SHT_CORNER_NE = 'sht_corner_ne.png';
 	public static inline var ICON_SHT_CORNER_NW = 'sht_corner_nw.png';
+
+
+
+
+// 'font_name':'"+com.akifox.plik.PLIK.getFont(TileCraft.FONT_SQUARE).fontName+"'',
+// 'font_offset_x':1,
+// 'font_offset_y':1,
+
+	public static var STYLE = '
+	{"": {
+
+	},
+
+"button": {
+		"padding":10,
+		"offset":5,
+		"rounded":8,
+		"minWidth":5,
+		"minHeight":5,
+
+		"font_name":"Lato-Bold",
+
+		"font_size":18,
+		"color":"0xFFFFFFFF",
+
+		"outline_size":3,
+		"bevel":2,
+		"background_color":"0x3d4246ff",
+		"over_background_color":"0x575a5eff",
+		"selected_background_color":"0x3d4246ff",
+		"outline_color":0,
+		"over_outline_color":"0xffb50088",
+		"selected_outline_color":"0xaaaaaaFF"
+	},
+
+"miniButton":{
+		"padding" : 2,
+		"bevel" : 0,
+		"rounded":24,
+		"font_size":12,
+		"color":"0xFFFFFFFF",
+		"outline_size" : 0,
+		"background_color":0,
+		"over_background_color":"0x464646FF",
+		"selected_background_color":"0x353535FF",
+		"outline_color":0,
+		"over_outline_color":0,
+		"selected_outline_color":0
+	},
+
+"miniButtonClose":{
+		"background_color":"0xDADADAFF",
+		"over_background_color":"0xF2F2F2FF"
+	},
+
+"toolbarButton":{
+		"padding" : 5,
+		"bevel":1,
+		"outline_size" : 3,
+		"outline_color":0,
+		"over_outline_color":0,
+		"selected_outline_color":"0xffb500FF"
+	},
+
+"toolbarMiniButton": {
+		"padding" : 3,
+		"rounded":12
+	},
+
+"toolbarButtonFull": {
+		"padding" : 0,
+		"bevel":2,
+		"outline_size" : 6,
+		"minWidth": 30,
+		"minHeight": 30,
+		"background_color" : 0,
+		"over_background_color":0,
+		"selected_background_color":0,
+		"over_outline_color":"0xffb500DD"
+	},
+
+"toolbarMiniButtonFull": {
+		"padding" : 0,
+		"bevel":2,
+		"outline_size" : 4,
+		"minWidth": 26,
+		"minHeight": 26,
+		"background_color" : 0,
+		"over_background_color":0,
+		"selected_background_color":0,
+		"over_outline_color":"0xffb500DD"
+	},
+
+"toolbar":{
+			"padding":5,
+			"offset":5,
+			"rounded":8,
+			"outline_size":0,
+			"background_color":0
+	},
+
+"colorpicker": {
+			"padding":20,
+			"rounded":8,
+			"offset":10,
+			"outline_size":0,
+			"background_color":"0x242424CC"
+	},
+
+"box": {
+			"padding":10,
+			"rounded":0,
+			"offset":10,
+			"outline_size":0,
+			"background_color":"0x242424BB"
+	},
+
+"shapeview": {
+			"rounded":8,
+			"padding":-1,
+			"offset":6,
+			"background_color":"0x000000BB",
+			"selected_background_color":"0x666666BB"
+	},
+
+"shapeviewlist": {
+			"padding":5,
+			"offset":2,
+			"background_color":0
+	},
+
+"scroll": {
+			"padding":5,
+			"rounded":12,
+			"outline_size":0,
+			"background_color":"0x46464666"
+	},
+
+"scrollSlider": {
+			"padding":0,
+			"rounded":12,
+			"minWidth":10,
+			"bevel":1,
+			"background_color":"0x242424ff",
+			"outline_size":2,
+			"outline_color":"0xdfdfdf66"
+	}
+}
+	';
 
 	//############################################################################
 

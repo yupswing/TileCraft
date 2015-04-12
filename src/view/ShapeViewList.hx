@@ -1,6 +1,6 @@
 package view;
 
-import gui.*;
+import com.akifox.plik.gui.*;
 import com.akifox.plik.*;
 import motion.Actuate;
 
@@ -18,14 +18,14 @@ class ShapeViewList extends Box {
   var _scrollable:SpriteContainer;
 
   public function new(base:TileCraft,width:Float=0,height:Float=0) {
-    super(Style.shapeviewlist());
+    super(Style.getStyle('.box.shapeviewlist'));
     _base = base;
     _width = width;
     _height = height;
     draw(_width);
     _scrollable = new SpriteContainer();
     addChild(_scrollable);
-    _scroll = new Scroll(_height,scroll,height);
+    _scroll = new Scroll(Style.getStyle('.scroll'),Style.getStyle('.scrollSlider'),_height,scroll,height);
     addEventListener(MouseEvent.MOUSE_WHEEL,_scroll.onMouseWheel);
     _scroll.listen = true;
     addChild(_scroll);

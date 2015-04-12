@@ -1,6 +1,6 @@
 package view;
 
-import gui.*;
+import com.akifox.plik.gui.*;
 
 class ColorPickerView extends Box {
 
@@ -10,19 +10,19 @@ class ColorPickerView extends Box {
   var _width:Float = 0;
 
 	public function new (width:Float,action:Int->Void,actionClose:Void->Void) {
-    var style = Style.box();
+    var style = Style.getStyle('.box');
 		super(style);
 
     _width = width;
 
     _buttonClose = new Button();
-    _colorPicker = new ColorPicker(action);
+    _colorPicker = new ColorPicker(Style.getStyle('.colorpicker'),action);
     _colorPicker.x = _width/2-_colorPicker.width/2;
 
     _colorPicker.y = style.padding+style.offset; // special to keep the button on the spectrum
     addChild(_colorPicker);
 
-    _buttonClose.style = Style.miniButtonClose();
+    _buttonClose.style = Style.getStyle('.button.miniButton.miniButtonClose');
     _buttonClose.listen = true;
     _buttonClose.actionF = function(button:Button) { actionClose(); };
     //_buttonClose.text = new Text("Close",14,TileCraft.COLOR_DARK,openfl.text.TextFormatAlign.CENTER);
