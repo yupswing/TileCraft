@@ -340,8 +340,8 @@ class TileCraft extends Screen
 
 	public function setSelectedShape(shape:Shape):Shape {
 		_theSelectedShape = shape;
-		_shapeViewList.selectByShape(shape);
-		_modelView.select(shape);
+		_shapeViewList.selectByShape(shape); //dispatch
+		_modelView.select(shape); //dispatch
 		if (shape!=null) {
 			_colorToolbar.selectByIndex(shape.color);
 			_mainToolbar.select(_mainToolbar.getButtonByValue(shape.shapeType));
@@ -361,14 +361,14 @@ class TileCraft extends Screen
 
 	public function addShape(shape:Shape) {
 		// called to add a shape
-		_shapeViewList.add(shape);
+		_shapeViewList.add(shape); //dispatch
 		_theModel.addShape(shape);
 	}
 
 	public function removeShape(shape:Shape) {
 		// called to remove a shape
 		if (_theSelectedShape == shape) setSelectedShape(null);
-		_shapeViewList.remove(shape);
+		_shapeViewList.remove(shape); //dispatch
 		_theModel.removeShape(shape);
 	}
 
@@ -387,7 +387,7 @@ class TileCraft extends Screen
 	}
 
 	public function updateShape(shape:Shape) {
-		_shapeViewList.updateShape(shape);
+		_shapeViewList.updateShape(shape); //dispatch
 	}
 
 	public function changeColor(index:Int,color:Int) {

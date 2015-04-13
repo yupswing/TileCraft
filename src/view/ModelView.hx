@@ -14,6 +14,7 @@ class ModelView extends SpriteContainer {
   var _grid:ShapeContainer = new ShapeContainer();
   var _projection:ShapeContainer = new ShapeContainer();
   var _foreground:ShapeContainer = new ShapeContainer();
+  var _selectedShape:Shape = null;
 
   var _height:Float = 0;
   var _width:Float = 0;
@@ -56,18 +57,42 @@ class ModelView extends SpriteContainer {
   }
 
   public function select(shape:Shape):Shape {
-    paint(); //TODO wrong place
-    var _selected:Shape = _base.getSelectedShape();
 
-    if (_selected == shape) return shape; // avoid loops with _base.updateShapeSelect
+    if (_selectedShape == shape) return shape; // avoid loops with _base.updateShapeSelect
     if (shape == null) return deselect();
+
+    _selectedShape = shape;
     _base.setSelectedShape(shape);
+
+		var top:Rectangle = getTop(shape);
+    var side:Rectangle = getSide(shape);
+		handles[0].y = top.y;
+		handles[1].y = handles[0].y;
+		handles[2].y = side.y - HANDLE_WIDTH/2;
+		handles[3].y = handles[2].y;
+		handles[4].y = side.y + HANDLE_WIDTH/2;
+		handles[5].y = handles[4].y;
+		handles[6].y = side.y + side.height;
+		handles[7].y = handles[6].y;
+		var leftX = top.x;
+		var rightX = top.x + top.width;
+		for(i in 0...handles.length) {
+      if (i%2==0) {
+        handles[i].x = leftX;
+      }else{
+        handles[i].x = rightX;
+      }
+		}
+
+		paint();
     return shape;
   }
 
   public function deselect():Shape {
-    if (_base.getSelectedShape() == null) return null; // avoid loops with _base.updateShapeSelect
+    if (_selectedShape == null) return null; // avoid loops with _base.updateShapeSelect
+    _selectedShape = null;
     _base.setSelectedShape(null);
+    paint();
     return null;
   }
 
@@ -110,10 +135,10 @@ class ModelView extends SpriteContainer {
 		var x1:Float = 0;
 		var y1:Float = 0;
 
-    var s:Shape = _base.getSelectedShape();
+    var s:Shape = _selectedShape;
 		if(s!=null){
 
-      // draw selected shape projection
+      // draw _selectedShape shape projection
       g = _projection.graphics;
       g.clear();
 
@@ -166,6 +191,30 @@ class ModelView extends SpriteContainer {
 				g.drawRect(handles[i].x-hw2, handles[i].y-hw2, HANDLE_WIDTH, HANDLE_WIDTH);
 			}
 		}
+	}
+
+	public function getTop(s:Shape):Rectangle{
+    var h2 = (_height)/2;
+    var cw = (_width)/Model.MODEL_SIZE;
+    var ch = (_height)/(Model.MODEL_SIZE*2);
+		var rect = new Rectangle();
+		rect.x = s.x1*cw;
+		rect.width = s.x2*cw - rect.x;
+		rect.y = h2 - (s.z2 - s.y1)*ch;
+		rect.height = (h2 - (s.z2 - s.y2)*ch) - rect.y;
+		return rect;
+	}
+
+	public function getSide(s:Shape):Rectangle{
+    var h2 = (_height)/2;
+    var cw = (_width)/Model.MODEL_SIZE;
+    var ch = (_height)/(Model.MODEL_SIZE*2);
+		var rect = new Rectangle();
+		rect.x = s.x1*cw;
+		rect.width = s.x2*cw - rect.x;
+		rect.y = h2 - (s.z2 - s.y2)*ch;
+		rect.height = (h2 - (s.z1 - s.y2)*ch) - rect.y;
+		return rect;
 	}
 
   public function setBitmapData(bitmapData:BitmapData) {
