@@ -119,6 +119,8 @@ class TileCraft extends Screen
 		var source:BitmapData = _modelView.getBitmapData();
 		var output:BitmapData;
 
+		// output = PostFX.prepassEdgeColor(source); //TODO left for testing the prepass alone
+
 		if (renderOutline) {
 			// one passage fxaa with black outline
 			output = PostFX.fxaaOutline(
@@ -128,8 +130,7 @@ class TileCraft extends Screen
 		} else {
 			// two passages fxaa with alpha blending
 			output = PostFX.fxaa(
-							 		PostFX.fxaaAlphaPrepare(
-									 source),
+							 		PostFX.prepassEdgeColor(source),
 							 	getRenderFxaaPasses());
 		}
 

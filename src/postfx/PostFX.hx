@@ -44,17 +44,18 @@ class PostFX {
 
 	}
 
-	public static function fxaaAlphaPrepare(bitmapdata:BitmapData):BitmapData {
+	public static function prepassEdgeColor(bitmapdata:BitmapData):BitmapData {
 		if (!OpenGLView.isSupported)
 			trace("Couldn't get openGL view");
 
 		var shader = "
 			/*
+			Edge expander shader by Simone Cingano
+			(improved by TommyXXX)
+
 			Extend image coverage expanding the visible picture of 3 pixels
-			It copies the color and set the alpha to 0 (apply only on pixel with alpha==0)
-			This leaves some 'space' to the fxaa to blend the edges correctly
-			(NEED TO BE APPLIED BEFORE THE FXAA)
-			[Maybe not the best GLGS algorithm but it works and I am quite happy it does]
+			using an average of a 5x5 grid around the pixel
+			*** It changes only pixels with alpha=0 ***
 
 			You need to provide
 				vTexCoord: Fragment Coordinates
@@ -65,37 +66,61 @@ class PostFX {
 
 			#version 120
 			varying vec2 vTexCoord;
-			uniform sampler2D uImage0; //redered scene texture
+			uniform sampler2D uImage0; //input texture
 			uniform float uImage0Width; //texture width
 			uniform float uImage0Height; //texture height
 
+			vec2 rcpFrame = vec2(1.0/uImage0Width, 1.0/uImage0Height);
+
 			void main()
 			{
-				vec4 color = texture2D(uImage0, vTexCoord.xy);
+		    vec4 color = texture2D(uImage0, vTexCoord.xy);
+		    if (color.a==0) {
+					// 5x5 grid average
 
-				if (color.a==0) {
-					// this is quite dirty if you know how to improve it write me please!
-			  	vec2 rcpFrame = vec2(1.0/uImage0Width, 1.0/uImage0Height);
-					vec4 colorB = vec4(0);
-					colorB = texture2D(uImage0, vTexCoord.xy + vec2(1.0,1.0)*rcpFrame.xy);
-					if (colorB.a>0) color = vec4(colorB.rgb,0);
-					colorB = texture2D(uImage0, vTexCoord.xy + vec2(-1.0,1.0)*rcpFrame.xy);
-					if (colorB.a>0) color = vec4(colorB.rgb,0);
-					colorB = texture2D(uImage0, vTexCoord.xy + vec2(1.0,-1.0)*rcpFrame.xy);
-					if (colorB.a>0) color = vec4(colorB.rgb,0);
-					colorB = texture2D(uImage0, vTexCoord.xy + vec2(-1.0,-1.0)*rcpFrame.xy);
-					if (colorB.a>0) color = vec4(colorB.rgb,0);
-					colorB = texture2D(uImage0, vTexCoord.xy + vec2(2.0,2.0)*rcpFrame.xy);
-					if (colorB.a>0) color = vec4(colorB.rgb,0);
-					colorB = texture2D(uImage0, vTexCoord.xy + vec2(-2.0,2.0)*rcpFrame.xy);
-					if (colorB.a>0) color = vec4(colorB.rgb,0);
-					colorB = texture2D(uImage0, vTexCoord.xy + vec2(2.0,-2.0)*rcpFrame.xy);
-					if (colorB.a>0) color = vec4(colorB.rgb,0);
-					colorB = texture2D(uImage0, vTexCoord.xy + vec2(-2.0,-2.0)*rcpFrame.xy);
-					if (colorB.a>0) color = vec4(colorB.rgb,0);
+	        vec4 near = texture2D(uImage0, vTexCoord.xy + vec2(1.0,1.0)*rcpFrame.xy);
+	        near.a = ceil(near.a);
+	        float divisor = near.a;
+	        color.rgb = near.rgb*near.a;
+
+	        near = texture2D(uImage0, vTexCoord.xy + vec2(-1.0,1.0)*rcpFrame.xy);
+	        near.a = ceil(near.a);
+	        divisor += near.a;
+	        color.rgb += near.rgb*near.a;
+
+	        near = texture2D(uImage0, vTexCoord.xy + vec2(1.0,-1.0)*rcpFrame.xy);
+	        near.a = ceil(near.a);
+	        divisor += near.a;
+	        color.rgb += near.rgb*near.a;
+
+	        near = texture2D(uImage0, vTexCoord.xy + vec2(-1.0,-1.0)*rcpFrame.xy);
+	        near.a = ceil(near.a);
+	        divisor += near.a;
+	        color.rgb += near.rgb*near.a;
+
+	        near = texture2D(uImage0, vTexCoord.xy + vec2(2.0,2.0)*rcpFrame.xy);
+	        near.a = ceil(near.a);
+	        divisor += near.a;
+	        color.rgb += near.rgb*near.a;
+
+	        near = texture2D(uImage0, vTexCoord.xy + vec2(-2.0,2.0)*rcpFrame.xy);
+	        near.a = ceil(near.a);
+	        divisor += near.a;
+	        color.rgb += near.rgb*near.a;
+
+	        near = texture2D(uImage0, vTexCoord.xy + vec2(2.0,-2.0)*rcpFrame.xy);
+	        near.a = ceil(near.a);
+	        divisor += near.a;
+	        color.rgb += near.rgb*near.a;
+
+	        near = texture2D(uImage0, vTexCoord.xy + vec2(-2.0,-2.0)*rcpFrame.xy);
+	        near.a = ceil(near.a);
+	        divisor += near.a;
+	        color.rgb += near.rgb*near.a;
+
+	        color.rgb /= divisor;
 				}
-
-				gl_FragColor = color;
+			   gl_FragColor = color;
 			}";
 
 		ShaderCompositing.init(bitmapdata.width, bitmapdata.height);
