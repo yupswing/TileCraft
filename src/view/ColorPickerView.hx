@@ -13,11 +13,8 @@ class ColorPickerView extends Box {
     var style = Style.getStyle('.box');
 		super(style);
 
-    _width = width;
-
     _buttonClose = new Button();
     _colorPicker = new ColorPicker(Style.getStyle('.colorpicker'),action);
-    _colorPicker.x = _width/2-_colorPicker.width/2;
 
     _colorPicker.y = style.padding+style.offset; // special to keep the button on the spectrum
     addChild(_colorPicker);
@@ -27,13 +24,19 @@ class ColorPickerView extends Box {
     _buttonClose.actionF = function(button:Button) { actionClose(); };
     //_buttonClose.text = new Text("Close",14,APP.COLOR_DARK,openfl.text.TextFormatAlign.CENTER);
     _buttonClose.icon = APP.atlasSPRITES.getRegion(APP.ICON_CLOSE).toBitmapData();
-    _buttonClose.x = _colorPicker.width+_colorPicker.x-_buttonClose.width+10;
     _buttonClose.y = style.padding;
     addChild(_buttonClose);
 
 
-    draw(width);
+    updateWidth(width);
 	}
+
+  public function updateWidth(width:Float) {
+    _width = width;
+    _colorPicker.x = _width/2-_colorPicker.width/2;
+    _buttonClose.x = _colorPicker.width+_colorPicker.x-_buttonClose.width+10;
+    draw(width);
+  }
 
   public function show() {
     _colorPicker.listen = true;

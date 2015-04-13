@@ -46,9 +46,7 @@ class TileCraft extends Screen
 	public function new () {
 		super();
 		cycle = false;
-		title = "Main";
-		rwidth = 950;
-		rheight = 650;
+		title = "TileCraft";
 	}
 
 	public var currentModel:Model = Model.makeNew();
@@ -511,7 +509,7 @@ class TileCraft extends Screen
 
 		//---
 
-		_colorPicker = new ColorPickerView(rwidth-TOOLBAR_WIDTH-SHAPELIST_WIDTH-PREVIEW_WIDTH,colorPickerAction,function() {hideColorPicker();});
+		_colorPicker = new ColorPickerView(100,colorPickerAction,function() {hideColorPicker();});
 
 		//---
 
@@ -570,13 +568,13 @@ class TileCraft extends Screen
 																						function(_) { openFile(); });
 		actionToolbar.addButton("save",null,false,		[APP.atlasSPRITES.getRegion(APP.ICON_SAVE).toBitmapData()],
 																						function(_) { saveFile(); });
-		actionToolbar.addButton("-");
+		//actionToolbar.addButton("-");
 		actionToolbar.addButton("render",null,false,	[APP.atlasSPRITES.getRegion(APP.ICON_RENDER).toBitmapData()],
 																						function(_) { renderOutput(); });
-		actionToolbar.addButton("-");
-		actionToolbar.addButton("copy",null,false,		[APP.atlasSPRITES.getRegion(APP.ICON_COPY).toBitmapData()],		actionToolbarAction);
-		actionToolbar.addButton("paste",null,false,	[APP.atlasSPRITES.getRegion(APP.ICON_PASTE).toBitmapData()],	actionToolbarAction);
-		actionToolbar.addButton("-");
+		//actionToolbar.addButton("-");
+		//actionToolbar.addButton("copy",null,false,		[APP.atlasSPRITES.getRegion(APP.ICON_COPY).toBitmapData()],		actionToolbarAction);
+		//actionToolbar.addButton("paste",null,false,	[APP.atlasSPRITES.getRegion(APP.ICON_PASTE).toBitmapData()],	actionToolbarAction);
+		//actionToolbar.addButton("-");
 		actionToolbar.addButton("quit",null,false,		[APP.atlasSPRITES.getRegion(APP.ICON_QUIT).toBitmapData()],
 																						function(_) {
 																							// BOOL isError
@@ -701,12 +699,10 @@ class TileCraft extends Screen
 	}
 
 	public override function resize() {
-		trace('resize');
 
 		var screenWidth = Lib.current.stage.stageWidth;
 		var screenHeight = Lib.current.stage.stageHeight;
 
-		trace(screenWidth,screenHeight);
 		if (screenWidth<800) screenWidth = 800;
 		if (screenHeight<600) screenHeight = 600;
 
@@ -752,6 +748,7 @@ class TileCraft extends Screen
 		toolbar.y = ACTIONBAR_HEIGHT+10;
 		_colorPicker.x = TOOLBAR_WIDTH;
 		_colorPicker.y = rheight-_colorPicker.getGrossHeight();
+		_colorPicker.updateWidth(rwidth-TOOLBAR_WIDTH-SHAPELIST_WIDTH-PREVIEW_WIDTH);
 		colorToolbar.x = TOOLBAR_WIDTH/2-colorToolbar.getGrossWidth()/2;
 		colorToolbar.y = toolbar.y + toolbar.height + BASE_SPAN;
 		actionToolbar.x = TOOLBAR_WIDTH+BASE_SPAN;
