@@ -154,6 +154,13 @@ class TileCraft extends Screen
 		renderOutput(true);
 	}
 
+	public function outlineModeLoop(_) {
+		renderOutline = !renderOutline;
+		renderOutput(true);
+	}
+
+
+
 	// used by outputview
 	public function getOutputScale():Float {
 		return renderModes[renderMode];
@@ -643,7 +650,7 @@ class TileCraft extends Screen
 
 		var previewActionToolbar = new Toolbar(0,false,Style.getStyle('.toolbar'),Style.getStyle('.button.toolbarButton.toolbarMiniButton'));
 		previewActionToolbar.addButton('resize',0,TileCraft.atlasSprites.getRegion(TileCraft.ICON_RESIZE).toBitmapData(),renderModeLoop);
-		previewActionToolbar.addButton('save',0,TileCraft.atlasSprites.getRegion(TileCraft.ICON_SAVE).toBitmapData());
+		previewActionToolbar.addButton('outline',0,TileCraft.atlasSprites.getRegion(TileCraft.ICON_OUTLINE).toBitmapData(),outlineModeLoop);
 																						//function(_){ saveFile(); });
 		previewActionToolbar.x = rwidth-SHAPELIST_WIDTH-BASE_SPAN/2-previewActionToolbar.getGrossWidth();
 		previewActionToolbar.y = rheight-STATUSBAR_HEIGHT/2-previewActionToolbar.getGrossHeight()/2;
@@ -859,8 +866,11 @@ class TileCraft extends Screen
 	public static inline var ICON_QUIT = 'quit.png';
 	public static inline var ICON_RENDER = 'render.png';
 	public static inline var ICON_CLOSE = 'close.png';
-	public static inline var ICON_RESIZE = 'resize.png';
 	public static inline var ICON_PALETTE = 'palette.png';
+
+	public static inline var ICON_RESIZE = 'resize.png';
+	public static inline var ICON_OUTLINE = 'outline.png';
+	public static inline var ICON_OUTLINE_NO = 'outline_no.png';
 
 	public static inline var ICON_ROUND0 = 'round_0.png';
 	public static inline var ICON_ROUND1 = 'round_1.png';
