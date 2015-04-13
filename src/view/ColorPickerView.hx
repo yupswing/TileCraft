@@ -25,8 +25,8 @@ class ColorPickerView extends Box {
     _buttonClose.style = Style.getStyle('.button.miniButton.miniButtonClose');
     _buttonClose.listen = true;
     _buttonClose.actionF = function(button:Button) { actionClose(); };
-    //_buttonClose.text = new Text("Close",14,TileCraft.COLOR_DARK,openfl.text.TextFormatAlign.CENTER);
-    _buttonClose.icon = TileCraft.atlasSprites.getRegion(TileCraft.ICON_CLOSE).toBitmapData();
+    //_buttonClose.text = new Text("Close",14,APP.COLOR_DARK,openfl.text.TextFormatAlign.CENTER);
+    _buttonClose.icon = APP.atlasSPRITES.getRegion(APP.ICON_CLOSE).toBitmapData();
     _buttonClose.x = _colorPicker.width+_colorPicker.x-_buttonClose.width+10;
     _buttonClose.y = style.padding;
     addChild(_buttonClose);

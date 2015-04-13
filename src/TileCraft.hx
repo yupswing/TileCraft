@@ -43,19 +43,6 @@ using hxColorToolkit.ColorToolkit;
 class TileCraft extends Screen
 {
 
-
-	public static inline function logger(string:String) {
-		trace('>>> $string');
-	}
-
-	public static inline function error(string:String) {
-		trace('!!! $string');
-	}
-
-	public var currentModel:Model = Model.makeNew();
-	var currentShapeViewList:ShapeViewList;
-
-
 	public function new () {
 		super();
 		cycle = false;
@@ -64,22 +51,28 @@ class TileCraft extends Screen
 		rheight = 650;
 	}
 
-	var _outputView:OutputView = null;
-	var _modelView:ModelView = null;
-	var _modelIsPreviewMode:Bool=true;
+	public var currentModel:Model = Model.makeNew();
 
-	public static var fxaaModes = [[8,8],[8,8],[8,1]]; //passes + outline
-	public static var renderModes = [0.5,0.25,0.125];
-	var renderMode = 0;
-	var renderOutline:Bool = false;
+	// INTERFACE -----------------------------------------------------------------
 
 	var colorToolbar:Toolbar;
 	var toolbar:Toolbar;
+	var actionToolbar:Toolbar;
+	var previewColorToolbar:Toolbar;
+	var previewActionToolbar:Toolbar;
 
-	public static inline var RENDER_WIDTH = 320;
-	public static inline var RENDER_HEIGHT = 480;
+	var _colorPicker:ColorPickerView;
 
-	var currentRenderer = new Renderer(RENDER_WIDTH,RENDER_HEIGHT);
+	var currentShapeViewList:ShapeViewList;
+
+	var _outputView:OutputView = null;
+	var _modelView:ModelView = null;
+
+	// status
+	var _modelIsPreviewMode:Bool=true;
+	var _colorPickerOnStage:Bool = false;
+
+	// INTERFACE SIZE ------------------------------------------------------------
 
 	public static inline var ACTIONBAR_HEIGHT = 40;
 	public static inline var STATUSBAR_HEIGHT = 40;
@@ -87,6 +80,18 @@ class TileCraft extends Screen
 	public static inline var SHAPELIST_WIDTH = 150;
 	public static inline var PREVIEW_WIDTH = 200;
 	public static inline var BASE_SPAN = 20;
+
+	// RENDERER ------------------------------------------------------------------
+
+	public static inline var RENDER_WIDTH = 320;
+	public static inline var RENDER_HEIGHT = 480;
+
+	var currentRenderer = new Renderer(RENDER_WIDTH,RENDER_HEIGHT);
+
+	public static var fxaaModes = [[8,8],[8,8],[8,1]]; //passes + outline
+	public static var renderModes = [0.5,0.25,0.125];
+	var renderMode = 0;
+	var renderOutline:Bool = false;
 
 	var _lastRenderModelTime:Float = 0;
 
@@ -159,8 +164,6 @@ class TileCraft extends Screen
 		renderOutput(true);
 	}
 
-
-
 	// used by outputview
 	public function getOutputScale():Float {
 		return renderModes[renderMode];
@@ -180,7 +183,7 @@ class TileCraft extends Screen
 	private function changeModel(model:Model) {
 		if (model==null) {
 			//TODO report the problem to the user (CHECK ALL PROJECT FOR THIS KIND OF MISSING FEEDBACKS)
-			TileCraft.error('invalid change model');
+			APP.error('invalid change model');
 			return;
 		}
 		if (currentModel!=null) currentModel.destroy();
@@ -189,7 +192,7 @@ class TileCraft extends Screen
 		updateShapeList();
 		renderModel(false);
 		renderOutput();
-		//TileCraft.logger(currentModel.toPNGString(_outputBitmap.bitmapData)); //TODO should be a TextField to output this on request
+		//APP.log(currentModel.toPNGString(_outputBitmap.bitmapData)); //TODO should be a TextField to output this on request
 	}
 
 	//============================================================================
@@ -239,7 +242,7 @@ class TileCraft extends Screen
 
 	public function updatePalette(){
 		for (i in 1...16) {
-			colorToolbar.getButtonByIndex(i).icon = TileCraft.makeColorIcon(colorToolbar.styleButton,
+			colorToolbar.getButtonByIndex(i).icon = APP.makeColorIcon(colorToolbar.styleButton,
 																																			currentModel.getColor(i));
 		}
 	}
@@ -273,7 +276,7 @@ class TileCraft extends Screen
 		// Determine the file path
 		var filename:String = saveDialog("TileCraft PNG image","*.png");
 		if (filename==null) {
-			TileCraft.logger('User canceled the dialog');
+			APP.log('User canceled the dialog');
 			return false;
 		}
 
@@ -281,7 +284,7 @@ class TileCraft extends Screen
 		var fo:haxe.io.Output = null;
 		try { fo = sys.io.File.write(filename,true); }
 		catch (e:Dynamic){
-			TileCraft.error('File write error $e');
+			APP.error('File write error $e');
 			fo = null;
 		}
 
@@ -290,7 +293,7 @@ class TileCraft extends Screen
 
 		// Check if everything is ok
 		if (fo==null) {
-			TileCraft.error('Unable to save the Model to "$filename"');
+			APP.error('Unable to save the Model to "$filename"');
 			return false;
 		} else {
 			try { fo.close(); } catch(e:Dynamic) {}
@@ -306,14 +309,14 @@ class TileCraft extends Screen
 		// Determine the file path
 		var filename:String = openDialog("TileCraft PNG image","*.png");
 		if (filename==null) {
-			TileCraft.logger('User canceled the dialog');
+			APP.log('User canceled the dialog');
 			return false;
 		}
 
 		// Get FileInput
 		var fr:FileInput = null;
 		try { fr = sys.io.File.read(filename,true); }
-		catch (e:Dynamic){ TileCraft.error('File read error $e'); fr = null; }
+		catch (e:Dynamic){ APP.error('File read error $e'); fr = null; }
 
 		// Import the model
 		var model:Model = Model.fromPNG(fr);
@@ -323,7 +326,7 @@ class TileCraft extends Screen
 
 		// Check if everything is ok
 		if (model==null) {
-			TileCraft.error('Unable to load the model "$filename"');
+			APP.error('Unable to load the model "$filename"');
 			return false;
 		} else {
 			// prepare context
@@ -346,7 +349,7 @@ class TileCraft extends Screen
 		// 						 , extensions: [extension]
 		// 						}
 		// 						);
-		// TileCraft.logger('SAVE DIALOG RESPONSE: '+file);
+		// APP.log('SAVE DIALOG RESPONSE: '+file);
 		// if (file!=null) return file;
 		// return "";
 	}
@@ -361,7 +364,7 @@ class TileCraft extends Screen
 		// 						 , extensions: [extension]
 		// 					  }
 		// 						);
-		// TileCraft.logger('OPENDIALOG RESPONSE: '+files);
+		// APP.log('OPENDIALOG RESPONSE: '+files);
 		// if (files==null) return null;
 		// return files[0];
 	}
@@ -427,10 +430,10 @@ class TileCraft extends Screen
 		// button.style = Style.getStyle('button');
 		// button.selectable = true;
 		// button.listen = true;
-		// button.actionF = function(button:Button) { TileCraft.logger(button.toString()); };
+		// button.actionF = function(button:Button) { APP.log(button.toString()); };
 		// button.makeText("Button test");
-		// button.icon = TileCraft.atlasSprites.getRegion(TileCraft.ICON_CHECKBOX).toBitmapData();
-		// button.iconSelected = TileCraft.atlasSprites.getRegion(TileCraft.ICON_CHECKBOX_CHECKED).toBitmapData();
+		// button.icon = APP.atlasSPRITES.getRegion(APP.ICON_CHECKBOX).toBitmapData();
+		// button.iconSelected = APP.atlasSPRITES.getRegion(APP.ICON_CHECKBOX_CHECKED).toBitmapData();
 		// addChild(button);
 		//
 		// var button = new Button("TEST2");
@@ -446,7 +449,7 @@ class TileCraft extends Screen
 		// button.y = 200;
 		// button.style = Style.getStyle('button');
 		// button.listen = true;
-		// button.icon = TileCraft.atlasSprites.getRegion(TileCraft.ICON_CHECKBOX).toBitmapData();
+		// button.icon = APP.atlasSPRITES.getRegion(APP.ICON_CHECKBOX).toBitmapData();
 		// addChild(button);
 		//
 		// var button = new Button("TEST4");
@@ -466,59 +469,59 @@ class TileCraft extends Screen
 			deselect();
 		}
 		toolbar = new Toolbar(2,true,Style.getStyle('.toolbar'),Style.getStyle('.button.toolbarButton'));
-		toolbar.addButton("pointer",null,
-											TileCraft.atlasSprites.getRegion(TileCraft.ICON_POINTER).toBitmapData(),	pointerSelector);
+		toolbar.addButton("pointer",null,true,
+											[APP.atlasSPRITES.getRegion(APP.ICON_POINTER).toBitmapData()],	pointerSelector);
 		toolbar.addButton("cube",
-											ShapeType.CUBE,
-											TileCraft.atlasSprites.getRegion(TileCraft.ICON_SH_CUBE).toBitmapData(),
+											ShapeType.CUBE,true,
+											[APP.atlasSPRITES.getRegion(APP.ICON_SH_CUBE).toBitmapData()],
 											shapeTypeSelector);
 		toolbar.addButton("round_up",
-											ShapeType.ROUND_UP,
-											TileCraft.atlasSprites.getRegion(TileCraft.ICON_SH_ROUND_UP).toBitmapData(),
+											ShapeType.ROUND_UP,true,
+											[APP.atlasSPRITES.getRegion(APP.ICON_SH_ROUND_UP).toBitmapData()],
 											shapeTypeSelector);
 		toolbar.addButton("round_side",
-											ShapeType.ROUND_SIDE,
-											TileCraft.atlasSprites.getRegion(TileCraft.ICON_SH_ROUND_SIDE).toBitmapData(),
+											ShapeType.ROUND_SIDE,true,
+											[APP.atlasSPRITES.getRegion(APP.ICON_SH_ROUND_SIDE).toBitmapData()],
 											shapeTypeSelector);
 		toolbar.addButton("cylinder_up",
-											ShapeType.CYLINDER_UP,
-											TileCraft.atlasSprites.getRegion(TileCraft.ICON_SH_CYLINDER_UP).toBitmapData(),
+											ShapeType.CYLINDER_UP,true,
+											[APP.atlasSPRITES.getRegion(APP.ICON_SH_CYLINDER_UP).toBitmapData()],
 											shapeTypeSelector);
 		toolbar.addButton("cylinder_side",
-											ShapeType.CYLINDER_SIDE,
-											TileCraft.atlasSprites.getRegion(TileCraft.ICON_SH_CYLINDER_SIDE).toBitmapData(),
+											ShapeType.CYLINDER_SIDE,true,
+											[APP.atlasSPRITES.getRegion(APP.ICON_SH_CYLINDER_SIDE).toBitmapData()],
 											shapeTypeSelector);
 		toolbar.addButton("ramp_up",
-											ShapeType.RAMP_UP,
-											TileCraft.atlasSprites.getRegion(TileCraft.ICON_SH_RAMP_UP).toBitmapData(),
+											ShapeType.RAMP_UP,true,
+											[APP.atlasSPRITES.getRegion(APP.ICON_SH_RAMP_UP).toBitmapData()],
 											shapeTypeSelector);
 		toolbar.addButton("ramp_down",
-											ShapeType.RAMP_DOWN,
-											TileCraft.atlasSprites.getRegion(TileCraft.ICON_SH_RAMP_DOWN).toBitmapData(),
+											ShapeType.RAMP_DOWN,true,
+											[APP.atlasSPRITES.getRegion(APP.ICON_SH_RAMP_DOWN).toBitmapData()],
 											shapeTypeSelector);
 		toolbar.addButton("arch_up",
-											ShapeType.ARCH_UP,
-											TileCraft.atlasSprites.getRegion(TileCraft.ICON_SH_ARCH_UP).toBitmapData(),
+											ShapeType.ARCH_UP,true,
+											[APP.atlasSPRITES.getRegion(APP.ICON_SH_ARCH_UP).toBitmapData()],
 											shapeTypeSelector);
 		toolbar.addButton("arch_down",
-											ShapeType.ARCH_DOWN,
-												TileCraft.atlasSprites.getRegion(TileCraft.ICON_SH_ARCH_DOWN).toBitmapData(),
-												shapeTypeSelector);
+											ShapeType.ARCH_DOWN,true,
+											[APP.atlasSPRITES.getRegion(APP.ICON_SH_ARCH_DOWN).toBitmapData()],
+											shapeTypeSelector);
 		toolbar.addButton("corner_se",
-											ShapeType.CORNER_SE,
-											TileCraft.atlasSprites.getRegion(TileCraft.ICON_SH_CORNER_SE).toBitmapData(),
+											ShapeType.CORNER_SE,true,
+											[APP.atlasSPRITES.getRegion(APP.ICON_SH_CORNER_SE).toBitmapData()],
 											shapeTypeSelector);
 		toolbar.addButton("corner_sw",
-											ShapeType.CORNER_SW,
-											TileCraft.atlasSprites.getRegion(TileCraft.ICON_SH_CORNER_SW).toBitmapData(),
+											ShapeType.CORNER_SW,true,
+											[APP.atlasSPRITES.getRegion(APP.ICON_SH_CORNER_SW).toBitmapData()],
 											shapeTypeSelector);
 		toolbar.addButton("corner_nw",
-											ShapeType.CORNER_NW,
-											TileCraft.atlasSprites.getRegion(TileCraft.ICON_SH_CORNER_NW).toBitmapData(),
+											ShapeType.CORNER_NW,true,
+											[APP.atlasSPRITES.getRegion(APP.ICON_SH_CORNER_NW).toBitmapData()],
 											shapeTypeSelector);
 		toolbar.addButton("corner_ne",
-											ShapeType.CORNER_NE,
-											TileCraft.atlasSprites.getRegion(TileCraft.ICON_SH_CORNER_NE).toBitmapData(),
+											ShapeType.CORNER_NE,true,
+											[APP.atlasSPRITES.getRegion(APP.ICON_SH_CORNER_NE).toBitmapData()],
 											shapeTypeSelector);
 
 		toolbar.x = TOOLBAR_WIDTH/2-toolbar.getGrossWidth()/2;
@@ -536,7 +539,7 @@ class TileCraft extends Screen
 			var button:Button = colorToolbar.getSelected();
 			var index:Int = cast(button.value,Int);
 			if (index==0) return; //hole
-			button.icon = TileCraft.makeColorIcon(colorToolbar.styleButton,
+			button.icon = APP.makeColorIcon(colorToolbar.styleButton,
 																						color);
 			currentModel.setColor(index,color);
 			updateColor(index);
@@ -579,14 +582,14 @@ class TileCraft extends Screen
 		//---
 
 		//colorToolbar.setPalette(currentModel.getPalette());
-		colorToolbar.addButton('palette0',0,
-													 TileCraft.makeColorIcon(colorToolbar.styleButton,
-																									 -1),
+		colorToolbar.addButton('palette0',0,true,
+													 [APP.makeColorIcon(colorToolbar.styleButton,
+																									 -1)],
 													 colorToolbarAction);
 		for (i in 1...16) {
-			colorToolbar.addButton('palette$i',i,
-														 TileCraft.makeColorIcon(colorToolbar.styleButton,
-																										 currentModel.getColor(i)),
+			colorToolbar.addButton('palette$i',i,true,
+														 [APP.makeColorIcon(colorToolbar.styleButton,
+																										 currentModel.getColor(i))],
 														 colorToolbarAction,colorToolbarActionAlt);
 		}
 		colorToolbar.selectByIndex(1);
@@ -597,27 +600,27 @@ class TileCraft extends Screen
 
 		// ACTION TOOLBAR ----------------------------------------------------------
 
-		var actionToolbarAction = function(button:Button) { TileCraft.logger("NOT IMPLEMENTED"); }
-		var actionToolbar = new Toolbar(0,false,Style.getStyle('.toolbar'),Style.getStyle('.button.toolbarButton'));
-		actionToolbar.addButton("new",null,			TileCraft.atlasSprites.getRegion(TileCraft.ICON_NEW).toBitmapData(),
+		var actionToolbarAction = function(button:Button) { APP.log("NOT IMPLEMENTED"); }
+		actionToolbar = new Toolbar(0,false,Style.getStyle('.toolbar'),Style.getStyle('.button.toolbarButton'));
+		actionToolbar.addButton("new",null,false,			[APP.atlasSPRITES.getRegion(APP.ICON_NEW).toBitmapData()],
 																						function(_) {
 																							newModel();
 																						});
-		actionToolbar.addButton("open",null,		TileCraft.atlasSprites.getRegion(TileCraft.ICON_OPEN).toBitmapData(),
+		actionToolbar.addButton("open",null,false,		[APP.atlasSPRITES.getRegion(APP.ICON_OPEN).toBitmapData()],
 																						function(_) { openFile(); });
-		actionToolbar.addButton("save",null,		TileCraft.atlasSprites.getRegion(TileCraft.ICON_SAVE).toBitmapData(),
+		actionToolbar.addButton("save",null,false,		[APP.atlasSPRITES.getRegion(APP.ICON_SAVE).toBitmapData()],
 																						function(_) { saveFile(); });
 		actionToolbar.addButton("-");
-		actionToolbar.addButton("render",null,	TileCraft.atlasSprites.getRegion(TileCraft.ICON_RENDER).toBitmapData(),
+		actionToolbar.addButton("render",null,false,	[APP.atlasSPRITES.getRegion(APP.ICON_RENDER).toBitmapData()],
 																						function(_) { renderOutput(); });
 		actionToolbar.addButton("-");
-		actionToolbar.addButton("copy",null,		TileCraft.atlasSprites.getRegion(TileCraft.ICON_COPY).toBitmapData(),		actionToolbarAction);
-		actionToolbar.addButton("paste",null,	TileCraft.atlasSprites.getRegion(TileCraft.ICON_PASTE).toBitmapData(),	actionToolbarAction);
+		actionToolbar.addButton("copy",null,false,		[APP.atlasSPRITES.getRegion(APP.ICON_COPY).toBitmapData()],		actionToolbarAction);
+		actionToolbar.addButton("paste",null,false,	[APP.atlasSPRITES.getRegion(APP.ICON_PASTE).toBitmapData()],	actionToolbarAction);
 		actionToolbar.addButton("-");
-		actionToolbar.addButton("quit",null,		TileCraft.atlasSprites.getRegion(TileCraft.ICON_QUIT).toBitmapData(),
+		actionToolbar.addButton("quit",null,false,		[APP.atlasSPRITES.getRegion(APP.ICON_QUIT).toBitmapData()],
 																						function(_) {
 																							// BOOL isError
-																							//if (Dialogs.confirm(TileCraft.APP_NAME,"Do you really want to quit?",false))
+																							//if (Dialogs.confirm(APP.APP_NAME,"Do you really want to quit?",false))
 																								PLIK.quit();
 																						});
 		actionToolbar.x = TOOLBAR_WIDTH+BASE_SPAN;
@@ -631,45 +634,51 @@ class TileCraft extends Screen
 			_outputView.setBackgroundColor(cast(button.value,Int));
 		};
 
-		var previewColorToolbar = new Toolbar(0,true,Style.getStyle('.toolbar'),Style.getStyle('.button.toolbarButton.toolbarMiniButton.toolbarMiniButtonFull'));
-		previewColorToolbar.addButton('preview0',-1,
-																  TileCraft.makeColorIcon(previewColorToolbar.styleButton,
-																													-1),
+		previewColorToolbar = new Toolbar(0,true,Style.getStyle('.toolbar'),
+																		  Style.getStyle('.button.toolbarButton.toolbarMiniButton.toolbarMiniButtonFull'));
+		previewColorToolbar.addButton('preview0',-1,true,
+																  [APP.makeColorIcon(previewColorToolbar.styleButton,-1)],
 																	previewColorToolbarAction);
-		previewColorToolbar.addButton('preview1',0xFFFFFF,
-																	TileCraft.makeColorIcon(previewColorToolbar.styleButton,
-																													0xCCCCCC),
+		previewColorToolbar.addButton('preview1',0xFFFFFF,true,
+																	[APP.makeColorIcon(previewColorToolbar.styleButton,0xCCCCCC)],
 																	previewColorToolbarAction);
-		previewColorToolbar.addButton('preview2',0,
-															    TileCraft.makeColorIcon(previewColorToolbar.styleButton,
-																													0x333333),
+		previewColorToolbar.addButton('preview2',0,true,
+															    [APP.makeColorIcon(previewColorToolbar.styleButton,0x333333)],
 																	previewColorToolbarAction);
 		previewColorToolbar.x = rwidth-SHAPELIST_WIDTH-PREVIEW_WIDTH+BASE_SPAN/2;
 		previewColorToolbar.y = rheight-STATUSBAR_HEIGHT/2-previewColorToolbar.getGrossHeight()/2;
 		addChild(previewColorToolbar);
 
-		var previewActionToolbar = new Toolbar(0,false,Style.getStyle('.toolbar'),Style.getStyle('.button.toolbarButton.toolbarMiniButton'));
-		previewActionToolbar.addButton('resize',0,TileCraft.atlasSprites.getRegion(TileCraft.ICON_RESIZE).toBitmapData(),renderModeLoop);
-		previewActionToolbar.addButton('outline',0,TileCraft.atlasSprites.getRegion(TileCraft.ICON_OUTLINE).toBitmapData(),outlineModeLoop);
-																						//function(_){ saveFile(); });
+		// PREVIEW ACTION TOOLBAR --------------------------------------------------
+
+		previewActionToolbar = new Toolbar(0,false,Style.getStyle('.toolbar'),Style.getStyle('.button.toolbarButton.toolbarMiniButton'));
+		previewActionToolbar.addButton('resize',0,false,
+																   [APP.atlasSPRITES.getRegion(APP.ICON_RESIZE).toBitmapData()],
+																	 renderModeLoop);
+		previewActionToolbar.addButton('outline',0,true,
+																	 [APP.atlasSPRITES.getRegion(APP.ICON_OUTLINE_NO).toBitmapData(),
+																			null,
+																			APP.atlasSPRITES.getRegion(APP.ICON_OUTLINE).toBitmapData()],
+																	 outlineModeLoop);
 		previewActionToolbar.x = rwidth-SHAPELIST_WIDTH-BASE_SPAN/2-previewActionToolbar.getGrossWidth();
 		previewActionToolbar.y = rheight-STATUSBAR_HEIGHT/2-previewActionToolbar.getGrossHeight()/2;
 		addChild(previewActionToolbar);
 
 		// APP TITLE ---------------------------------------------------------------
 
-		var text = new Text(TileCraft.APP_NAME.toUpperCase(),18,TileCraft.COLOR_ORANGE,openfl.text.TextFormatAlign.CENTER,TileCraft.FONT_SQUARE);
+		var text = new Text(APP.APP_NAME.toUpperCase(),18,APP.COLOR_ORANGE,openfl.text.TextFormatAlign.CENTER,APP.FONT_SQUARE);
 		text.t.setAnchoredPivot(Transformation.ANCHOR_MIDDLE_CENTER);
 		text.t.x = TOOLBAR_WIDTH/2;
 		text.t.y = ACTIONBAR_HEIGHT/2;
 		addChild(text);
 
-		var text = new Text(TileCraft.APP_STAGE.toUpperCase(),9,TileCraft.COLOR_WHITE,openfl.text.TextFormatAlign.CENTER,TileCraft.FONT_LATO_BOLD);
+		var text = new Text(APP.APP_STAGE.toUpperCase(),9,APP.COLOR_WHITE,openfl.text.TextFormatAlign.CENTER,APP.FONT_LATO_BOLD);
 		text.t.setAnchoredPivot(Transformation.ANCHOR_MIDDLE_CENTER);
 		text.t.x = TOOLBAR_WIDTH/2;
 		text.t.y = ACTIONBAR_HEIGHT/2+12;
 		addChild(text);
-				// -------------------------------------------------------------------------
+
+		// -------------------------------------------------------------------------
 
 		currentShapeViewList = new ShapeViewList(this,SHAPELIST_WIDTH,rheight-ACTIONBAR_HEIGHT-STATUSBAR_HEIGHT);
 		currentShapeViewList.x = rwidth-SHAPELIST_WIDTH;
@@ -745,9 +754,6 @@ class TileCraft extends Screen
 
 	//############################################################################
 
-	var _colorPicker:ColorPickerView;
-	var _colorPickerOnStage:Bool = false;
-
 	private function showColorPicker(color:Int) {
 		_colorPicker.selector(color);
 		if (_colorPickerOnStage) return;
@@ -797,188 +803,5 @@ class TileCraft extends Screen
 
 	///////////////////////////////////////////////////////////////////////////
 	// APP Resources and properties
-
-	public static inline var APP_NAME = "TileCraft" ;
-	public static inline var APP_PACKAGE = "com.akifox.tilecraft" ;
-	public static inline var APP_BUILD = CompileTime.readFile("Export/.build");
-	public static inline var APP_BUILD_DATE = CompileTime.buildDateString();
-	public static inline var APP_VERSION = "1.0.0-alpha7dev"; //TODEPLOY
-	public static inline var APP_STAGE = "alpha7 dev"; //TODEPLOY
-	public static inline var APP_PLATFORM =
-	#if debug "dev"
-  #elseif flash "swf"
-  #elseif ios "ios"
-  #elseif android	"and"
-	#elseif mac "mac"
-  #elseif windows "win"
-  #elseif linux "lnx"
-  #elseif web "web"
-  #else "---"
-  #end;
-	public static inline var APP_BGCOLOR = 0xEEEEEE ;
-
-	//////////////////////////////////////////////////////////////////////////////
-	// Atlases (faster retrive than asking to cache system)
-
-	public static var atlasSprites:TextureAtlas=null;
-
-	//////////////////////////////////////////////////////////////////////////////
-	// URLs and FILEs
-
-  public static inline var LINK_UPDATE = "http://akifox.com/tilecraft/get/";
-	public static inline var LINK_WWW = "http://akifox.com/tilecraft/";
-
-	//////////////////////////////////////////////////////////////////////////////
-	// COLORS
-
-	public static inline var FONT_SQUARE:String = "assets/fonts/Square.ttf";
-  public static inline var FONT_04B_03:String = "assets/fonts/04B_03.TTF";
-  public static inline var FONT_LATO_BOLD:String = "assets/fonts/Lato-Bold.ttf";
-  public static inline var FONT_LATO_LIGHT:String = "assets/fonts/Lato-Light.ttf";
-
-	public static inline var COLOR_WHITE:Int = 	0xFFFFFF;
-	public static inline var COLOR_LIGHT:Int = 	0xDCDCDC;
-	public static inline var COLOR_BLACK:Int = 	0x000000;
-	public static inline var COLOR_DARK:Int = 	0x242424;
-	public static inline var COLOR_ORANGE:Int = 0xffb500;
-	public static inline var COLOR_RED:Int = 	0xcf2d00;
-	public static inline var COLOR_GREEN:Int = 	0x98ca00;
-
-	//////////////////////////////////////////////////////////////////////////////
-	// atlasIcon REGIONS
-
-	public static inline var ICON_POINTER = 'pointer.png';
-	public static inline var ICON_EYE_OPEN = 'eye_open.png';
-	public static inline var ICON_EYE_CLOSED = 'eye_closed.png';
-	public static inline var ICON_LOCK_OPEN = 'lock_open.png';
-	public static inline var ICON_LOCK_CLOSED = 'lock_closed.png';
-
-	public static inline var ICON_CHECKBOX = 'checkbox.png';
-	public static inline var ICON_CHECKBOX_CHECKED = 'checkbox_checked.png';
-
-	public static inline var ICON_NEW = 'new.png';
-	public static inline var ICON_COPY = 'copy.png';
-	public static inline var ICON_PASTE = 'paste.png';
-	public static inline var ICON_OPEN = 'open.png';
-	public static inline var ICON_DELETE = 'delete.png';
-	public static inline var ICON_OK = 'ok.png';
-	public static inline var ICON_SAVE = 'save.png';
-	public static inline var ICON_QUIT = 'quit.png';
-	public static inline var ICON_RENDER = 'render.png';
-	public static inline var ICON_CLOSE = 'close.png';
-	public static inline var ICON_PALETTE = 'palette.png';
-
-	public static inline var ICON_RESIZE = 'resize.png';
-	public static inline var ICON_OUTLINE = 'outline.png';
-	public static inline var ICON_OUTLINE_NO = 'outline_no.png';
-
-	public static inline var ICON_ROUND0 = 'round_0.png';
-	public static inline var ICON_ROUND1 = 'round_1.png';
-	public static inline var ICON_ROUND2 = 'round_2.png';
-	public static inline var ICON_ROUND3 = 'round_3.png';
-
-	public static inline var ICON_SH_CUBE = 'sh_cube.png';
-	public static inline var ICON_SH_ROUND_UP = 'sh_round_up.png';
-	public static inline var ICON_SH_ROUND_SIDE = 'sh_round_side.png';
-	public static inline var ICON_SH_CYLINDER_UP = 'sh_cylinder_up.png';
-	public static inline var ICON_SH_CYLINDER_SIDE = 'sh_cylinder_side.png';
-	public static inline var ICON_SH_RAMP_UP = 'sh_ramp_up.png';
-	public static inline var ICON_SH_RAMP_DOWN = 'sh_ramp_down.png';
-	public static inline var ICON_SH_ARCH_UP = 'sh_arch_up.png';
-	public static inline var ICON_SH_ARCH_DOWN = 'sh_arch_down.png';
-	public static inline var ICON_SH_CORNER_SE = 'sh_corner_se.png';
-	public static inline var ICON_SH_CORNER_SW = 'sh_corner_sw.png';
-	public static inline var ICON_SH_CORNER_NE = 'sh_corner_ne.png';
-	public static inline var ICON_SH_CORNER_NW = 'sh_corner_nw.png';
-
-	public static inline var ICON_SHT_CUBE = 'sht_cube.png';
-	public static inline var ICON_SHT_ROUND_UP = 'sht_round_up.png';
-	public static inline var ICON_SHT_ROUND_SIDE = 'sht_round_side.png';
-	public static inline var ICON_SHT_CYLINDER_UP = 'sht_cylinder_up.png';
-	public static inline var ICON_SHT_CYLINDER_SIDE = 'sht_cylinder_side.png';
-	public static inline var ICON_SHT_RAMP_UP = 'sht_ramp_up.png';
-	public static inline var ICON_SHT_RAMP_DOWN = 'sht_ramp_down.png';
-	public static inline var ICON_SHT_ARCH_UP = 'sht_arch_up.png';
-	public static inline var ICON_SHT_ARCH_DOWN = 'sht_arch_down.png';
-	public static inline var ICON_SHT_CORNER_SE = 'sht_corner_se.png';
-	public static inline var ICON_SHT_CORNER_SW = 'sht_corner_sw.png';
-	public static inline var ICON_SHT_CORNER_NE = 'sht_corner_ne.png';
-	public static inline var ICON_SHT_CORNER_NW = 'sht_corner_nw.png';
-
-
-// TODO check it out
-// 'font_name':'"+com.akifox.plik.PLIK.getFont(TileCraft.FONT_SQUARE).fontName+"'',
-// 'font_offset_x':1,
-// 'font_offset_y':1,
-
-	//############################################################################
-
-	public static function makeChessboard(graphics:openfl.display.Graphics,size:Int,offset_x:Int,offset_y:Int,width:Float,height:Float,color0:Int,color1:Int) {
-			var gridX = Math.ceil(width/size);
-			var gridY = Math.ceil(height/size);
-			for (y in 0...gridY) {
-				for (x in 0...gridX) {
-					if ((x+y)%2==0) graphics.beginFill(color0);
-					else graphics.beginFill(color1);
-					graphics.drawRect(size*x+offset_x,size*y+offset_y,(size*x+size>width?width-size*x:size),(size*y+size>height?height-size*y:size));
-				}
-			}
-	}
-
-	public static function makeColorIcon(style:Style,color:Int):BitmapData {
-		var span = style.bevel;
-		var size:Int = style.minWidth;
-		var round = style.rounded;
-		var hole = false;
-		if (color==-1) {
-			hole = true;
-			span += 1;
-			color = 0xBBBBBB;
-		}
-
-		var shape = new openfl.display.Shape();
-		var matrix = new openfl.geom.Matrix();
-		matrix.createGradientBox(size,size,90*Math.PI/180);
-		shape.graphics.beginGradientFill(openfl.display.GradientType.LINEAR,[ColorToolkit.shiftBrighteness(color,25),ColorToolkit.shiftBrighteness(color,-25)],[1,1],[0,255],matrix);
-		shape.graphics.drawRoundRect(0,0,size,size,round);
-		shape.graphics.endFill();
-
-		if (hole) {
-			var grid = 5;
-			var div = (size-span*2)/grid;
-			for (y in 0...grid) {
-				for (x in 0...grid) {
-					if ((x+y)%2==0) shape.graphics.beginFill(0x999999);
-					else shape.graphics.beginFill(0xEEEEEE);
-					shape.graphics.drawRect(div*x+span,div*y+span,div,div);
-				}
-			}
-		} else {
-			shape.graphics.beginFill(color);
-			shape.graphics.drawRoundRect(span,span,size-span*2,size-span*2,round);
-			shape.graphics.endFill();
-		}
-
-		var bd = new BitmapData(size,size,true,0);
-		bd.draw(shape);
-		shape = null;
-		return bd;
-
-	};
-
-
-	///////////////////////////////////////////////////////////////////////////
-	// MEMORY MANAGEMENT
-
-	public static function preloadAssets():Void {
-
-		PLIK.preloadFont(TileCraft.FONT_SQUARE);
-    PLIK.preloadFont(TileCraft.FONT_04B_03);
-		PLIK.preloadFont(TileCraft.FONT_LATO_LIGHT);
-		PLIK.preloadFont(TileCraft.FONT_LATO_BOLD);
-
-		if (TileCraft.atlasSprites==null) TileCraft.atlasSprites = Gfx.getTextureAtlas('sprites.xml');
-
-	}
 
 }

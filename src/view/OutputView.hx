@@ -46,7 +46,7 @@ class OutputView extends SpriteContainer {
 
 		if (_backgroundColor==-1) {
 			//transparent
-			TileCraft.makeChessboard(graphics,Std.int(20*_base.getOutputScale()),0,0,_width,height,0xBBBBBB,0xEEEEEE);
+			APP.makeChessboard(graphics,Std.int(20*_base.getOutputScale()),0,0,_width,height,0xBBBBBB,0xEEEEEE);
 
 		} else {
 			graphics.beginFill(_backgroundColor);

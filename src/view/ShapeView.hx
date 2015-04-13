@@ -62,8 +62,8 @@ class ShapeView extends Box {
     _show.selectable = true;
     _show.listen = true;
     _show.actionF = function(button:Button) { _list.toggleEnabledShape(_shape); };
-    _show.icon = TileCraft.atlasSprites.getRegion(TileCraft.ICON_EYE_CLOSED).toBitmapData();
-    _show.iconSelected = TileCraft.atlasSprites.getRegion(TileCraft.ICON_EYE_OPEN).toBitmapData();
+    _show.icon = APP.atlasSPRITES.getRegion(APP.ICON_EYE_CLOSED).toBitmapData();
+    _show.iconSelected = APP.atlasSPRITES.getRegion(APP.ICON_EYE_OPEN).toBitmapData();
     _show.isSelected = _shape.enabled;
     addChild(_show);
 
@@ -78,8 +78,8 @@ class ShapeView extends Box {
     _lock.selectable = true;
     _lock.listen = true;
     _lock.actionF = function(button:Button) { _list.toggleLockedShape(_shape); };
-    _lock.icon = TileCraft.atlasSprites.getRegion(TileCraft.ICON_LOCK_OPEN).toBitmapData();
-    _lock.iconSelected = TileCraft.atlasSprites.getRegion(TileCraft.ICON_LOCK_CLOSED).toBitmapData();
+    _lock.icon = APP.atlasSPRITES.getRegion(APP.ICON_LOCK_OPEN).toBitmapData();
+    _lock.iconSelected = APP.atlasSPRITES.getRegion(APP.ICON_LOCK_CLOSED).toBitmapData();
     _lock.isSelected = _shape.locked;
     addChild(_lock);
 
@@ -92,7 +92,7 @@ class ShapeView extends Box {
     _delete.selectable = false;
     _delete.listen = true;
     _delete.actionF = function(button:Button) { _list.remove(_shape); };
-    _delete.icon = TileCraft.atlasSprites.getRegion(TileCraft.ICON_DELETE).toBitmapData();
+    _delete.icon = APP.atlasSPRITES.getRegion(APP.ICON_DELETE).toBitmapData();
     addChild(_delete);
 
     //offset_x += _delete.getGrossWidth()+_style.offset;
@@ -106,23 +106,23 @@ class ShapeView extends Box {
     var shapeColorIndex = _shape.getColor();
 
     var icon = switch(_shape.getShapeType()) {
-      case ShapeType.ROUND_UP: (shapeColorIndex==0?TileCraft.ICON_SHT_ROUND_UP:TileCraft.ICON_SH_ROUND_UP);
-      case ShapeType.ROUND_SIDE: (shapeColorIndex==0?TileCraft.ICON_SHT_ROUND_SIDE:TileCraft.ICON_SH_ROUND_SIDE);
-      case ShapeType.CYLINDER_UP: (shapeColorIndex==0?TileCraft.ICON_SHT_CYLINDER_UP:TileCraft.ICON_SH_CYLINDER_UP);
-      case ShapeType.CYLINDER_SIDE: (shapeColorIndex==0?TileCraft.ICON_SHT_CYLINDER_SIDE:TileCraft.ICON_SH_CYLINDER_SIDE);
-      case ShapeType.RAMP_UP: (shapeColorIndex==0?TileCraft.ICON_SHT_RAMP_UP:TileCraft.ICON_SH_RAMP_UP);
-      case ShapeType.RAMP_DOWN: (shapeColorIndex==0?TileCraft.ICON_SHT_RAMP_DOWN:TileCraft.ICON_SH_RAMP_DOWN);
-      case ShapeType.ARCH_UP: (shapeColorIndex==0?TileCraft.ICON_SHT_ARCH_UP:TileCraft.ICON_SH_ARCH_UP);
-      case ShapeType.ARCH_DOWN: (shapeColorIndex==0?TileCraft.ICON_SHT_ARCH_DOWN:TileCraft.ICON_SH_ARCH_DOWN);
-      case ShapeType.CORNER_SE: (shapeColorIndex==0?TileCraft.ICON_SHT_CORNER_SE:TileCraft.ICON_SH_CORNER_SE);
-      case ShapeType.CORNER_SW: (shapeColorIndex==0?TileCraft.ICON_SHT_CORNER_SW:TileCraft.ICON_SH_CORNER_SW);
-      case ShapeType.CORNER_NE: (shapeColorIndex==0?TileCraft.ICON_SHT_CORNER_NE:TileCraft.ICON_SH_CORNER_NE);
-      case ShapeType.CORNER_NW: (shapeColorIndex==0?TileCraft.ICON_SHT_CORNER_NW:TileCraft.ICON_SH_CORNER_NW);
-      default: (shapeColorIndex==0?TileCraft.ICON_SHT_CUBE:TileCraft.ICON_SH_CUBE);
+      case ShapeType.ROUND_UP: (shapeColorIndex==0?APP.ICON_SHT_ROUND_UP:APP.ICON_SH_ROUND_UP);
+      case ShapeType.ROUND_SIDE: (shapeColorIndex==0?APP.ICON_SHT_ROUND_SIDE:APP.ICON_SH_ROUND_SIDE);
+      case ShapeType.CYLINDER_UP: (shapeColorIndex==0?APP.ICON_SHT_CYLINDER_UP:APP.ICON_SH_CYLINDER_UP);
+      case ShapeType.CYLINDER_SIDE: (shapeColorIndex==0?APP.ICON_SHT_CYLINDER_SIDE:APP.ICON_SH_CYLINDER_SIDE);
+      case ShapeType.RAMP_UP: (shapeColorIndex==0?APP.ICON_SHT_RAMP_UP:APP.ICON_SH_RAMP_UP);
+      case ShapeType.RAMP_DOWN: (shapeColorIndex==0?APP.ICON_SHT_RAMP_DOWN:APP.ICON_SH_RAMP_DOWN);
+      case ShapeType.ARCH_UP: (shapeColorIndex==0?APP.ICON_SHT_ARCH_UP:APP.ICON_SH_ARCH_UP);
+      case ShapeType.ARCH_DOWN: (shapeColorIndex==0?APP.ICON_SHT_ARCH_DOWN:APP.ICON_SH_ARCH_DOWN);
+      case ShapeType.CORNER_SE: (shapeColorIndex==0?APP.ICON_SHT_CORNER_SE:APP.ICON_SH_CORNER_SE);
+      case ShapeType.CORNER_SW: (shapeColorIndex==0?APP.ICON_SHT_CORNER_SW:APP.ICON_SH_CORNER_SW);
+      case ShapeType.CORNER_NE: (shapeColorIndex==0?APP.ICON_SHT_CORNER_NE:APP.ICON_SH_CORNER_NE);
+      case ShapeType.CORNER_NW: (shapeColorIndex==0?APP.ICON_SHT_CORNER_NW:APP.ICON_SH_CORNER_NW);
+      default: (shapeColorIndex==0?APP.ICON_SHT_CUBE:APP.ICON_SH_CUBE);
     };
 
 
-    var final = TileCraft.atlasSprites.getRegion(icon).toBitmapData();
+    var final = APP.atlasSPRITES.getRegion(icon).toBitmapData();
 
     if (shapeColorIndex>0) {
       final.lock();

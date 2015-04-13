@@ -219,16 +219,16 @@ class Model {
 			model = Model.fromBytes(haxe.crypto.Base64.decode(base64model));
 		} catch (e:Dynamic){
 			// malformed string or other input errors
-			TileCraft.error('ERROR Decoding Base64: $e');
+			APP.error('ERROR Decoding Base64: $e');
 		}
 
 		//#if debug //TODO debug only
 		var reencoded = model.toString();
-		TileCraft.logger('-- > LOAD MODEL < ------------------------------------------------');
-		TileCraft.logger('Base64 Model IN:  ' + base64model);
-		TileCraft.logger('Base64 Model OUT: ' + reencoded);
-		TileCraft.logger((base64model==reencoded?"> TEST PASSED":"> TEST FAILED   *!*!*!* WARNING *!*!*!*"));
-		TileCraft.logger('------------------------------------------------------------------');
+		APP.log('-- > LOAD MODEL < ------------------------------------------------');
+		APP.log('Base64 Model IN:  ' + base64model);
+		APP.log('Base64 Model OUT: ' + reencoded);
+		APP.log((base64model==reencoded?"> TEST PASSED":"> TEST FAILED   *!*!*!* WARNING *!*!*!*"));
+		APP.log('------------------------------------------------------------------');
 		//#end
 
 		return model;
@@ -285,7 +285,7 @@ class Model {
 			}
 		}catch(e:Dynamic) {
 			// read error
-			TileCraft.error('Unable to import model from PNG: $e');
+			APP.error('Unable to import model from PNG: $e');
 			if (input!=null) input.close();
 			input = null;
 			return null;
@@ -293,7 +293,7 @@ class Model {
 
 		// Chunk not found: there was no private TileCraft chunk
 		if (!isValid) {
-			TileCraft.error('Unable to import model from PNG: No TileCraft chunk in PNG');
+			APP.error('Unable to import model from PNG: No TileCraft chunk in PNG');
 			return null;
 		}
 
@@ -334,7 +334,7 @@ class Model {
 
 		} catch (e:Dynamic) {
 			// write error
-			TileCraft.error("Unable to export model to PNG: $e");
+			APP.error("Unable to export model to PNG: $e");
 			if (output!=null) output.close();
 			output = null;
 		}

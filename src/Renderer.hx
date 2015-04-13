@@ -53,8 +53,8 @@ class Renderer {
 		var palette:Array<Int> = m.getPalette();
 
 		var start:Float=0;
-		TileCraft.logger('-- > RENDERING < -------------------------------------------------');
-    TileCraft.logger('> BASE FILL'); var startRender = start = haxe.Timer.stamp();
+		APP.log('-- > RENDERING < -------------------------------------------------');
+    APP.log('> BASE FILL'); var startRender = start = haxe.Timer.stamp();
     arrayIntFill(color, 0x00000000);
     arrayIntFill(yDepth, 0);
     arrayIntFill(heightMap, 0);
@@ -70,8 +70,8 @@ class Renderer {
 			}
 		}
 
-    TileCraft.logger('< BASE FILL END ' + Std.int((haxe.Timer.stamp()-start)*100)/100);
-    TileCraft.logger('> SLICE ELAB START'); start = haxe.Timer.stamp();
+    APP.log('< BASE FILL END ' + Std.int((haxe.Timer.stamp()-start)*100)/100);
+    APP.log('> SLICE ELAB START'); start = haxe.Timer.stamp();
 
 		var size:Int = m.getSize();
 		var gh:Int = Std.int(h/(size*2));
@@ -149,29 +149,29 @@ class Renderer {
 		}
 
 
-		TileCraft.logger('< SLICE ELAB END ' + Std.int((haxe.Timer.stamp()-start)*100)/100);
-    TileCraft.logger('> APPLY LIGHT START'); start = haxe.Timer.stamp();
+		APP.log('< SLICE ELAB END ' + Std.int((haxe.Timer.stamp()-start)*100)/100);
+    APP.log('> APPLY LIGHT START'); start = haxe.Timer.stamp();
 		if(preview){
 			previewLight();
 		} else {
 			light();
 		}
-    TileCraft.logger('< APPLY LIGHT END ' + Std.int((haxe.Timer.stamp()-start)*100)/100);
+    APP.log('< APPLY LIGHT END ' + Std.int((haxe.Timer.stamp()-start)*100)/100);
 
-    // TileCraft.logger('BA START');
+    // APP.log('BA START');
     // var ba = new openfl.utils.ByteArray();
     // for (i in 0...color.length) {
     //   ba.writeUnsignedInt(color[i]);
     // }
-    // TileCraft.logger('BA END');
+    // APP.log('BA END');
     //
     // buffer.lock();
     // buffer.setPixels(new openfl.geom.Rectangle(0,0,w,h),ba);
     // buffer.unlock();
     // ba = null;
-    // TileCraft.logger('BP END');
+    // APP.log('BP END');
 
-		TileCraft.logger('> DRAW BITMAP START'); start = haxe.Timer.stamp();
+		APP.log('> DRAW BITMAP START'); start = haxe.Timer.stamp();
     buffer.lock();
     //write to buffer
     for(y in 0...h){
@@ -180,9 +180,9 @@ class Renderer {
       }
     }
     buffer.unlock();
-    TileCraft.logger('< DRAW BITMAP END ' + Std.int((haxe.Timer.stamp()-start)*100)/100);
-    TileCraft.logger('<<< TOTAL RENDERING TIME ' + Std.int((haxe.Timer.stamp()-startRender)*100)/100);
-		TileCraft.logger('-- > END RENDERING < ------------------------------------------------');
+    APP.log('< DRAW BITMAP END ' + Std.int((haxe.Timer.stamp()-start)*100)/100);
+    APP.log('<<< TOTAL RENDERING TIME ' + Std.int((haxe.Timer.stamp()-startRender)*100)/100);
+		APP.log('-- > END RENDERING < ------------------------------------------------');
 
     return buffer;
 	}

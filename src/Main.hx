@@ -24,7 +24,7 @@ class Main {
 		// ------------------------------
 		// "PRINT" LOADING SPLASH
 
-    Lib.current.stage.color = TileCraft.COLOR_WHITE;
+    Lib.current.stage.color = APP.COLOR_WHITE;
 		_loadingBitmap = new Bitmap(openfl.Assets.getBitmapData('assets/graphics/generic/loading.png',false));
 		_loadingBitmap.scaleX = _loadingBitmap.scaleY = Lib.current.stage.stageWidth/_loadingBitmap.width;
 		_loadingBitmap.smoothing = true;
@@ -47,7 +47,7 @@ class Main {
 		var _container = Lib.current.stage;
 		#end
 
-		PLIK.initialize(_container,TileCraft.APP_PACKAGE);
+		PLIK.initialize(_container,APP.APP_PACKAGE);
 
 		// STYLED GUI
 		PLIK.initStyle(openfl.Assets.getText("assets/styles/base.json"));
@@ -57,7 +57,7 @@ class Main {
 		PLIK.initPref();
 
 		// SET DEFAULT FONT
-		PLIK.setDefaultFont(TileCraft.FONT_SQUARE);
+		PLIK.setDefaultFont(APP.FONT_SQUARE);
 
 		// INITIALIZE GFX
 		Gfx.setBasePath("assets/graphics/generic/"); // no multiresolution
@@ -70,13 +70,13 @@ class Main {
 
 		// ------------------------------
 		// ASSETS
-    TileCraft.preloadAssets();
+    APP.preloadAssets();
 
 		// ------------------------------
     // DEBUG
    	#if debug
     var performance = new com.akifox.plik.debug.Performance(
-    						PLIK.getFont(TileCraft.FONT_SQUARE),
+    						PLIK.getFont(APP.FONT_SQUARE),
     						openfl.Assets.getBitmapData('assets/debug/akifox_logo_small.png',false),
     						true,
     						true);
@@ -89,7 +89,7 @@ class Main {
 		Lib.current.stage.removeChild(_loadingBitmap);
 		_loadingBitmap.bitmapData.dispose();
 		_loadingBitmap=null;
-    Lib.current.stage.color = TileCraft.APP_BGCOLOR;
+    Lib.current.stage.color = APP.APP_BGCOLOR;
 
 		// ------------------------------
     // FIRST SCREEN
