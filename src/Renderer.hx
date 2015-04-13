@@ -92,14 +92,10 @@ class Renderer {
         while(index < m.getShapeCount()) {
 					var shape:Shape = m.getShapeByIndex(index);
 					if(shape.enabled && shape.getX1() <= g && shape.getX2() > g){
-						if(shape.getColor() == 0 && index != selected){
-							shape.getSlice(x, gw, gh, subSlice, palette, m);
-							sub();
-						} else {
-							shape.getSlice(x, gw, gh, subSlice, palette, m);
-							sub();
+						shape.getSlice(x, gw, gh, subSlice, palette, m);
+						sub();
+						if(shape.getColor() > 0 || index == selected)
 							slices[sliceCount++].setFromSlice(subSlice);
-						}
 					}
           index++;
 				}

@@ -76,8 +76,8 @@ class ShapeViewList extends Box {
       if (_shapesView[i].getShape()==shape) {
         if (_selected==_shapesView[i]) _selected = null; //deselect
         _scrollable.removeChild(_shapesView[i]); //remove from view
-        _base.removeShape(shape); //remove from model
         _shapesView.remove(_shapesView[i]); //remove from array list
+        _base.removeShape(shape); //remove from model
         updatePositions();
         updateModel();
         updateScroll();

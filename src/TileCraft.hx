@@ -49,20 +49,20 @@ class TileCraft extends Screen
 		title = "TileCraft";
 	}
 
-	private var currentModel:Model = Model.makeNew();
-	private var selectedShape:Shape = null;
+	private var _theModel:Model = Model.makeNew();
+	private var _theSelectedShape:Shape = null;
 
 	// INTERFACE -----------------------------------------------------------------
 
-	var colorToolbar:Toolbar;
-	var toolbar:Toolbar;
-	var actionToolbar:Toolbar;
-	var previewColorToolbar:Toolbar;
-	var previewActionToolbar:Toolbar;
+	var _mainToolbar:Toolbar;
+	var _actionToolbar:Toolbar;
+	var _colorToolbar:Toolbar;
+	var _previewColorToolbar:Toolbar;
+	var _outputActionToolbar:Toolbar;
 
 	var _colorPicker:ColorPickerView;
 
-	var currentShapeViewList:ShapeViewList;
+	var _shapeViewList:ShapeViewList;
 
 	var _outputView:OutputView = null;
 	var _modelView:ModelView = null;
@@ -96,6 +96,154 @@ class TileCraft extends Screen
 
 	//============================================================================
 
+	public override function initialize():Void {
+
+		//initButtonTestCases(); // Just some button test
+		initMainToolbar(); // The shape toolbar
+		initColor(); // Color _mainToolbar + Color picker
+		initActionToolbar(); // Top action bar
+		initModelView(); // Model view
+		initOutput(); // Preview toolbars + output view
+		initAppTitle(); // App title top left
+		initShapeList();
+
+		// -------------------------------------------------------------------------
+
+		// EXAMPLE MODELS
+
+		// stupid guy
+		//var original = "EgQCAJn_Zv8zETxKKyZGRp4mm0aeRFaaeUSamnlEVokBRJqJAUNmmnhDqpp4FzxZvCxVV90sqmfdRGaaREYBRVVG70VVCh5FVRxVRO8cqkTv";
+
+		// complex shape
+		//var original = "Ff//1fb/QEW7PqXys9vuJDI/OVJXUpAjpswzUUY1p3At////9+F2vjJB33qSfoaPprO8Ezw5DkBLCjwAWldvAGlIj1CrKhJwRZrNMEtIzmJFGhKCq5rNAiNnvALNRc0CzXgSAiNFEgJ4Zj9MacxpDng7eEMS3gFD3t4BAy3eAUBF3gFDq+8B";
+
+		// easy cube
+		var original = "AgAAAXhWZxESeAE.";
+
+		// question mark
+		//var original = "BgAABmdnAUY5Z19ASGd9ADVnCwZnZ1ZgNWfP";
+
+		// 32 shapes (scroll shapeview test)
+		//var original = "HwAAFjxKKyZGRp4mm0aeRFaaeUSamnlEVokBRJqJAUNmmnhDqpp4FzxZvCxVV90sqmfdRGaaREYBRVVG70VVBh5FVRxVRO8cqkTvwQFWAcHvzQHBVs0BwQEBAVKa3gFSAc0BUu9FAVI0EgFSvO8BQu-aAUpF7wFKI6sBM81nAQ..";
+
+		// home
+		//var original = "DAAACGneAQk8XCgIPF0SWzdcv183er9rjFy_b4x6v2mMzJ1ZN7ydCDysmgBpXiVAaaxH";
+
+		// random stuff
+		//var original = "BxAA_wD_DCM0AQy8RQEMZ6sBXHgBAUwB3gFAq0UBEQgIvQ..";
+
+		//var original = "AQAAAUpJCA.."; //just a cube
+
+		// farm
+		//var original = "E____wAA____PqXys9vuJDI_OVJXUpAjpswzUUY1p3At6pA-9-F2vjJB33qSfoaPprO8OxK8AUo0qwFLq5oBO828ATgjNBg5IlUDOd1VAwgeVSIBigESMXoBIjGIAQExqgEBUYgAMzYRiAE2FCWbNiM0vBYFFpo27ncCNt40BA..";
+
+		// -------------------------------------------------------------------------
+
+		// set the example test model
+		changeModel(Model.fromString(original));
+
+		//init background image
+		_outputView.drawBackground();
+
+		super.initialize(); // init_super at the end
+	}
+
+	public override function unload():Void {
+		super.unload();
+	}
+
+	public override function start() {
+		super.start();  // call resume
+	}
+
+	public override function hold():Void {
+		super.hold();
+		// HOOKERS OFF
+
+	}
+
+	public override function resume():Void {
+		super.resume();
+    // HOOKERS ON
+
+	}
+
+	// private override function update(delta:Float):Void {
+	//
+	// }
+
+	public override function resize() {
+		var screenWidth = Lib.current.stage.stageWidth;
+		var screenHeight = Lib.current.stage.stageHeight;
+
+		if (screenWidth<800) screenWidth = 800;
+		if (screenHeight<600) screenHeight = 600;
+
+		rwidth = screenWidth;
+		rheight = screenHeight;
+
+		// DRAW BACKGROUND INTERFACE
+
+		graphics.clear();
+		// _theModel+color _mainToolbar bg
+		graphics.beginFill(0x242424,0.9);
+		graphics.drawRect(0,0,
+											TOOLBAR_WIDTH,rheight);
+		// action _mainToolbar bg
+		graphics.beginFill(0x242424,0.9);
+		graphics.drawRect(0,0,
+											rwidth,ACTIONBAR_HEIGHT);
+		// shapelist
+		graphics.beginFill(0x242424,0.9);
+		graphics.drawRect(rwidth-SHAPELIST_WIDTH,
+											0,rwidth,rheight);
+		// preview
+		graphics.beginFill(0x242424,0.8);
+		graphics.drawRect(rwidth-SHAPELIST_WIDTH-PREVIEW_WIDTH,
+											0,rwidth-SHAPELIST_WIDTH,rheight);
+		// status bar
+		graphics.beginFill(0x242424,0.9);
+		graphics.drawRect(0,rheight-STATUSBAR_HEIGHT,
+											rwidth,rheight);
+		// model
+		graphics.beginFill(0x808080,1);
+		graphics.drawRect(TOOLBAR_WIDTH,ACTIONBAR_HEIGHT,
+											rwidth-SHAPELIST_WIDTH-PREVIEW_WIDTH-TOOLBAR_WIDTH,rheight-STATUSBAR_HEIGHT-ACTIONBAR_HEIGHT);
+
+		// INTERFACE POSITIONING
+		_outputView.t.x = rwidth-SHAPELIST_WIDTH-PREVIEW_WIDTH;
+		_outputView.t.y = rheight-STATUSBAR_HEIGHT;
+
+		_modelView.x = TOOLBAR_WIDTH+(rwidth-TOOLBAR_WIDTH-SHAPELIST_WIDTH-PREVIEW_WIDTH)/2-RENDER_WIDTH/2-ModelView.PADDING;
+		_modelView.y = (rheight-ACTIONBAR_HEIGHT-STATUSBAR_HEIGHT)/2-RENDER_HEIGHT/2+ACTIONBAR_HEIGHT-ModelView.PADDING;
+
+		_mainToolbar.x = TOOLBAR_WIDTH/2-_mainToolbar.getGrossWidth()/2;
+		_mainToolbar.y = ACTIONBAR_HEIGHT+10;
+
+		_colorPicker.x = TOOLBAR_WIDTH;
+		_colorPicker.y = rheight-_colorPicker.getGrossHeight();
+		_colorPicker.updateWidth(rwidth-TOOLBAR_WIDTH-SHAPELIST_WIDTH-PREVIEW_WIDTH);
+
+		_colorToolbar.x = TOOLBAR_WIDTH/2-_colorToolbar.getGrossWidth()/2;
+		_colorToolbar.y = _mainToolbar.y + _mainToolbar.height + BASE_SPAN;
+
+		_actionToolbar.x = TOOLBAR_WIDTH+BASE_SPAN;
+		_actionToolbar.y = ACTIONBAR_HEIGHT/2-_actionToolbar.getGrossHeight()/2;
+
+		_previewColorToolbar.x = rwidth-SHAPELIST_WIDTH-PREVIEW_WIDTH+BASE_SPAN/2;
+		_previewColorToolbar.y = rheight-STATUSBAR_HEIGHT/2-_previewColorToolbar.getGrossHeight()/2;
+
+		_outputActionToolbar.x = rwidth-SHAPELIST_WIDTH-BASE_SPAN/2-_outputActionToolbar.getGrossWidth();
+		_outputActionToolbar.y = rheight-STATUSBAR_HEIGHT/2-_outputActionToolbar.getGrossHeight()/2;
+
+		_shapeViewList.x = rwidth-SHAPELIST_WIDTH;
+		_shapeViewList.y = ACTIONBAR_HEIGHT;
+		_shapeViewList.updateHeight(rheight-ACTIONBAR_HEIGHT-STATUSBAR_HEIGHT);
+
+	}
+
+	//############################################################################
+
 	public function renderModel(preview:Bool=true) {
 		#if (!v2 || neko)
 		preview=true;//TODO POSTFX need support for OpenFL3
@@ -107,7 +255,7 @@ class TileCraft extends Screen
 
 		// _modelView.setBitmapData(null); //TODO show some kind of modal while rendering
 
-		var bpd:BitmapData = currentRenderer.render(currentModel,-1,preview);
+		var bpd:BitmapData = currentRenderer.render(_theModel,-1,preview);
 		_modelView.setBitmapData(bpd);
 		_modelIsPreviewMode = preview;
 
@@ -150,19 +298,6 @@ class TileCraft extends Screen
 
 	//============================================================================
 
-	//============================================================================
-
-	public function renderModeLoop(_) {
-		renderMode++;
-		if (renderMode>=renderModes.length) renderMode = 0;
-		renderOutput(true);
-	}
-
-	public function outlineModeLoop(_) {
-		renderOutline = !renderOutline;
-		renderOutput(true);
-	}
-
 	// used by outputview
 	public function getOutputScale():Float {
 		return renderModes[renderMode];
@@ -185,13 +320,13 @@ class TileCraft extends Screen
 			APP.error('invalid change model');
 			return;
 		}
-		if (currentModel!=null) currentModel.destroy();
-		currentModel = model;
+		if (_theModel!=null) _theModel.destroy();
+		_theModel = model;
 		refreshPalette();
 		refreshShapeList();
 		renderModel(false);
 		renderOutput();
-		//APP.log(currentModel.toPNGString(_outputBitmap.bitmapData)); //TODO should be a TextField to output this on request
+		//APP.log(_theModel.toPNGString(_outputBitmap.bitmapData)); //TODO should be a TextField to output this on request
 	}
 
 	//============================================================================
@@ -204,17 +339,18 @@ class TileCraft extends Screen
 	}
 
 	public function setSelectedShape(shape:Shape):Shape {
-		selectedShape = shape;
-		currentShapeViewList.selectByShape(shape);
+		_theSelectedShape = shape;
+		_shapeViewList.selectByShape(shape);
+		_modelView.select(shape);
 		if (shape!=null) {
-			colorToolbar.selectByIndex(shape.color);
-			toolbar.select(toolbar.getButtonByValue(shape.shapeType));
+			_colorToolbar.selectByIndex(shape.color);
+			_mainToolbar.select(_mainToolbar.getButtonByValue(shape.shapeType));
 		}
 		return shape;
 	}
 
 	public function getSelectedShape():Shape {
-		return selectedShape;
+		return _theSelectedShape;
 	}
 
 	public function deselect() {
@@ -225,15 +361,15 @@ class TileCraft extends Screen
 
 	public function addShape(shape:Shape) {
 		// called to add a shape
-		currentShapeViewList.add(shape);
-		currentModel.addShape(shape);
+		_shapeViewList.add(shape);
+		_theModel.addShape(shape);
 	}
 
 	public function removeShape(shape:Shape) {
 		// called to remove a shape
-		if (selectedShape == shape) setSelectedShape(null);
-		currentShapeViewList.remove(shape);
-		currentModel.removeShape(shape);
+		if (_theSelectedShape == shape) setSelectedShape(null);
+		_shapeViewList.remove(shape);
+		_theModel.removeShape(shape);
 	}
 
 	public function changeShapeType(shapeType:ShapeType) {
@@ -246,31 +382,103 @@ class TileCraft extends Screen
 	}
 
 	public function getColor(index:Int):Int {
-		if (currentModel==null) return -1;
-		return currentModel.getColor(index);
+		if (_theModel==null) return -1;
+		return _theModel.getColor(index);
 	}
 
 	public function updateShape(shape:Shape) {
-		currentShapeViewList.updateShape(shape);
+		_shapeViewList.updateShape(shape);
 	}
 
 	public function changeColor(index:Int,color:Int) {
-		currentModel.setColor(index,color);
-		currentShapeViewList.refreshColor(index);
+		_theModel.setColor(index,color);
+		_shapeViewList.refreshColor(index);
 	}
 
 	public function refreshShapeList(){
-		currentShapeViewList.removeAll();
-		for (i in 0...currentModel.getShapeCount()) {
-			currentShapeViewList.add(currentModel.getShapeByIndex(i));
+		_shapeViewList.removeAll();
+		for (i in 0..._theModel.getShapeCount()) {
+			_shapeViewList.add(_theModel.getShapeByIndex(i));
 		}
 	}
 
 	public function refreshPalette(){
 		for (i in 1...16) {
-			colorToolbar.getButtonByIndex(i).icon = APP.makeColorIcon(colorToolbar.styleButton,
-																																			currentModel.getColor(i));
+			_colorToolbar.getButtonByIndex(i).icon = APP.makeColorIcon(_colorToolbar.styleButton,
+																																			_theModel.getColor(i));
 		}
+	}
+
+	//============================================================================
+	// TOOLBAR AND VIEWS ACTIONS
+
+	// a color was selected in the color picker
+	private function colorPickerSelect(color:Int) {
+
+		// get the current palette button
+		var button:Button = _colorToolbar.getSelected();
+		var index:Int = cast(button.value,Int);
+		if (index==0) return; //hole, nothing to do
+
+		// update the palette icon
+		button.icon = APP.makeColorIcon(_colorToolbar.styleButton,color);
+
+		// dispatch a color changed
+		changeColor(index,color);
+
+		// render model preview
+		renderModel(true);
+	}
+
+	// a shapetype was selected in the main _mainToolbar
+	private function toolbarShapeTypeSelect(button:Button) {
+		var shapeType:ShapeType = cast(button.value,ShapeType);
+		changeShapeType(shapeType);
+	}
+
+	// the pointer was selected in the main _mainToolbar
+	private function toolbarPointerSelect(button:Button) {
+		deselect();
+	}
+
+	private function colorToolbarSelect(button:Button) {
+		var value:Int = cast(button.value,Int);
+
+		// change shape color
+		var shape:Shape = getSelectedShape();
+		if (shape!=null) {
+			shape.color = value;
+			updateShape(shape);
+			updateModel();
+		}
+
+		if (value==0) {
+			//hole, hide the color picker
+			hideColorPicker();
+		} else if (_colorPickerOnStage) {
+			// if the colorpicker is on stage set its color to the current value
+			showColorPicker(_theModel.getColor(value));
+		}
+	}
+
+	private function colorToolbarDoubleClick(button:Button) {
+		//on double click show the colorpicker with current color
+		var value:Int = cast(button.value,Int);
+		if (value==0) return; //hole, nothing to show
+		showColorPicker(_theModel.getColor(value));
+	};
+
+	public function renderModeLoop(_) {
+		// called by the output toolbar
+		renderMode++;
+		if (renderMode>=renderModes.length) renderMode = 0;
+		renderOutput(true);
+	}
+
+	public function outlineModeLoop(_) {
+		// called by the output toolbar
+		renderOutline = !renderOutline;
+		renderOutput(true);
 	}
 
 	//============================================================================
@@ -300,7 +508,7 @@ class TileCraft extends Screen
 		}
 
 		// Export the model
-		fo = currentModel.toPNG(fo,_outputView.getBitmapData());
+		fo = _theModel.toPNG(fo,_outputView.getBitmapData());
 
 		// Check if everything is ok
 		if (fo==null) {
@@ -380,401 +588,7 @@ class TileCraft extends Screen
 		// return files[0];
 	}
 
-	public override function initialize():Void {
-
-
-		// VIEWS -------------------------------------------------------------------
-
-		_outputView = new OutputView(this,PREVIEW_WIDTH);
-		_outputView.t.setAnchoredPivot(Transformation.ANCHOR_BOTTOM_LEFT);
-		_outputView.addEventListener(MouseEvent.CLICK,function(e:MouseEvent) { renderOutput(); });
-		addChild(_outputView);
-
-		_modelView = new ModelView(this,RENDER_WIDTH,RENDER_HEIGHT);
-		addChild(_modelView);
-
-
-		// STATIC INTERFACE --------------------------------------------------------
-
-
-
-
-		// BUTTON TEST CASES -------------------------------------------------------
-
-		// var button = new Button("TEST");
-		// button.x = 130;
-		// button.y = 100;
-		// button.style = Style.getStyle('button');
-		// button.selectable = true;
-		// button.listen = true;
-		// button.actionF = function(button:Button) { APP.log(button.toString()); };
-		// button.makeText("Button test");
-		// button.icon = APP.atlasSPRITES.getRegion(APP.ICON_CHECKBOX).toBitmapData();
-		// button.iconSelected = APP.atlasSPRITES.getRegion(APP.ICON_CHECKBOX_CHECKED).toBitmapData();
-		// addChild(button);
-		//
-		// var button = new Button("TEST2");
-		// button.x = 130;
-		// button.y = 150;
-		// button.style = Style.getStyle('button');
-		// button.listen = true;
-		// button.makeText("Button test");
-		// addChild(button);
-		//
-		// var button = new Button("TEST3");
-		// button.x = 130;
-		// button.y = 200;
-		// button.style = Style.getStyle('button');
-		// button.listen = true;
-		// button.icon = APP.atlasSPRITES.getRegion(APP.ICON_CHECKBOX).toBitmapData();
-		// addChild(button);
-		//
-		// var button = new Button("TEST4");
-		// button.x = 130;
-		// button.y = 250;
-		// button.style = Style.getStyle('button');
-		// button.listen = true;
-		// addChild(button);
-
-		// MODEL TOOLBAR --------------------------------------------------------
-
-		var shapeTypeSelector = function(button:Button) {
-			var shapeType:ShapeType = cast(button.value,ShapeType);
-			changeShapeType(shapeType);
-		};
-		var pointerSelector = function(button:Button) {
-			deselect();
-		}
-		toolbar = new Toolbar(2,true,Style.getStyle('.toolbar'),Style.getStyle('.button.toolbarButton'));
-		toolbar.addButton("pointer",null,true,
-											[APP.atlasSPRITES.getRegion(APP.ICON_POINTER).toBitmapData()],	pointerSelector);
-		toolbar.addButton("cube",
-											ShapeType.CUBE,true,
-											[APP.atlasSPRITES.getRegion(APP.ICON_SH_CUBE).toBitmapData()],
-											shapeTypeSelector);
-		toolbar.addButton("round_up",
-											ShapeType.ROUND_UP,true,
-											[APP.atlasSPRITES.getRegion(APP.ICON_SH_ROUND_UP).toBitmapData()],
-											shapeTypeSelector);
-		toolbar.addButton("round_side",
-											ShapeType.ROUND_SIDE,true,
-											[APP.atlasSPRITES.getRegion(APP.ICON_SH_ROUND_SIDE).toBitmapData()],
-											shapeTypeSelector);
-		toolbar.addButton("cylinder_up",
-											ShapeType.CYLINDER_UP,true,
-											[APP.atlasSPRITES.getRegion(APP.ICON_SH_CYLINDER_UP).toBitmapData()],
-											shapeTypeSelector);
-		toolbar.addButton("cylinder_side",
-											ShapeType.CYLINDER_SIDE,true,
-											[APP.atlasSPRITES.getRegion(APP.ICON_SH_CYLINDER_SIDE).toBitmapData()],
-											shapeTypeSelector);
-		toolbar.addButton("ramp_up",
-											ShapeType.RAMP_UP,true,
-											[APP.atlasSPRITES.getRegion(APP.ICON_SH_RAMP_UP).toBitmapData()],
-											shapeTypeSelector);
-		toolbar.addButton("ramp_down",
-											ShapeType.RAMP_DOWN,true,
-											[APP.atlasSPRITES.getRegion(APP.ICON_SH_RAMP_DOWN).toBitmapData()],
-											shapeTypeSelector);
-		toolbar.addButton("arch_up",
-											ShapeType.ARCH_UP,true,
-											[APP.atlasSPRITES.getRegion(APP.ICON_SH_ARCH_UP).toBitmapData()],
-											shapeTypeSelector);
-		toolbar.addButton("arch_down",
-											ShapeType.ARCH_DOWN,true,
-											[APP.atlasSPRITES.getRegion(APP.ICON_SH_ARCH_DOWN).toBitmapData()],
-											shapeTypeSelector);
-		toolbar.addButton("corner_se",
-											ShapeType.CORNER_SE,true,
-											[APP.atlasSPRITES.getRegion(APP.ICON_SH_CORNER_SE).toBitmapData()],
-											shapeTypeSelector);
-		toolbar.addButton("corner_sw",
-											ShapeType.CORNER_SW,true,
-											[APP.atlasSPRITES.getRegion(APP.ICON_SH_CORNER_SW).toBitmapData()],
-											shapeTypeSelector);
-		toolbar.addButton("corner_nw",
-											ShapeType.CORNER_NW,true,
-											[APP.atlasSPRITES.getRegion(APP.ICON_SH_CORNER_NW).toBitmapData()],
-											shapeTypeSelector);
-		toolbar.addButton("corner_ne",
-											ShapeType.CORNER_NE,true,
-											[APP.atlasSPRITES.getRegion(APP.ICON_SH_CORNER_NE).toBitmapData()],
-											shapeTypeSelector);
-		addChild(toolbar);
-
-
-		// COLOR TOOLBAR --------------------------------------------------------
-
-		colorToolbar = new Toolbar(2,true,Style.getStyle('.toolbar'),Style.getStyle('.button.toolbarButton.toolbarButtonFull'));
-
-		//---
-
-		var colorPickerAction = function(color:Int) {
-			var button:Button = colorToolbar.getSelected();
-			var index:Int = cast(button.value,Int);
-			if (index==0) return; //hole
-			button.icon = APP.makeColorIcon(colorToolbar.styleButton,
-																						color);
-			changeColor(index,color);
-			renderModel(true);
-		}
-
-		//---
-
-		_colorPicker = new ColorPickerView(100,colorPickerAction,function() {hideColorPicker();});
-
-		//---
-
-		var colorToolbarAction = function(button:Button) {
-				var value:Int = cast(button.value,Int);
-				// change shape color
-		    var shape:Shape = getSelectedShape();
-			  if (shape!=null) {
-			    shape.color = value;
-					updateShape(shape);
-			    updateModel();
-				}
-
-				if (value==0) {
-					//hole
-					hideColorPicker();
-				} else if (_colorPickerOnStage) {
-					showColorPicker(currentModel.getColor(value));
-				}
-
-		};
-
-		var colorToolbarActionAlt = function(button:Button) {
-				var value:Int = cast(button.value,Int);
-				if (value==0) return; //hole
-				showColorPicker(currentModel.getColor(value));
-		};
-
-		//---
-
-		//colorToolbar.setPalette(currentModel.getPalette());
-		colorToolbar.addButton('palette0',0,true,
-													 [APP.makeColorIcon(colorToolbar.styleButton,
-																									 -1)],
-													 colorToolbarAction);
-		for (i in 1...16) {
-			colorToolbar.addButton('palette$i',i,true,
-														 [APP.makeColorIcon(colorToolbar.styleButton,
-																										 currentModel.getColor(i))],
-														 colorToolbarAction,colorToolbarActionAlt);
-		}
-		colorToolbar.selectByIndex(1);
-
-		addChild(colorToolbar);
-
-
-		// ACTION TOOLBAR ----------------------------------------------------------
-
-		var actionToolbarAction = function(button:Button) { APP.log("NOT IMPLEMENTED"); }
-		actionToolbar = new Toolbar(0,false,Style.getStyle('.toolbar'),Style.getStyle('.button.toolbarButton'));
-		actionToolbar.addButton("new",null,false,			[APP.atlasSPRITES.getRegion(APP.ICON_NEW).toBitmapData()],
-																						function(_) {
-																							newModel();
-																						});
-		actionToolbar.addButton("open",null,false,		[APP.atlasSPRITES.getRegion(APP.ICON_OPEN).toBitmapData()],
-																						function(_) { openFile(); });
-		actionToolbar.addButton("save",null,false,		[APP.atlasSPRITES.getRegion(APP.ICON_SAVE).toBitmapData()],
-																						function(_) { saveFile(); });
-		//actionToolbar.addButton("-");
-		actionToolbar.addButton("render",null,false,	[APP.atlasSPRITES.getRegion(APP.ICON_RENDER).toBitmapData()],
-																						function(_) { renderOutput(); });
-		//actionToolbar.addButton("-");
-		//actionToolbar.addButton("copy",null,false,		[APP.atlasSPRITES.getRegion(APP.ICON_COPY).toBitmapData()],		actionToolbarAction);
-		//actionToolbar.addButton("paste",null,false,	[APP.atlasSPRITES.getRegion(APP.ICON_PASTE).toBitmapData()],	actionToolbarAction);
-		//actionToolbar.addButton("-");
-		actionToolbar.addButton("quit",null,false,		[APP.atlasSPRITES.getRegion(APP.ICON_QUIT).toBitmapData()],
-																						function(_) {
-																							// BOOL isError
-																							//if (Dialogs.confirm(APP.APP_NAME,"Do you really want to quit?",false))
-																								PLIK.quit();
-																						});
-		addChild(actionToolbar);
-
-
-		// PREVIEW TOOLBAR ---------------------------------------------------------
-
-		var previewColorToolbarAction = function(button:Button) {
-			_outputView.setBackgroundColor(cast(button.value,Int));
-		};
-
-		previewColorToolbar = new Toolbar(0,true,Style.getStyle('.toolbar'),
-																		  Style.getStyle('.button.toolbarButton.toolbarMiniButton.toolbarMiniButtonFull'));
-		previewColorToolbar.addButton('preview0',-1,true,
-																  [APP.makeColorIcon(previewColorToolbar.styleButton,-1)],
-																	previewColorToolbarAction);
-		previewColorToolbar.addButton('preview1',0xFFFFFF,true,
-																	[APP.makeColorIcon(previewColorToolbar.styleButton,0xCCCCCC)],
-																	previewColorToolbarAction);
-		previewColorToolbar.addButton('preview2',0,true,
-															    [APP.makeColorIcon(previewColorToolbar.styleButton,0x333333)],
-																	previewColorToolbarAction);
-		addChild(previewColorToolbar);
-
-		// PREVIEW ACTION TOOLBAR --------------------------------------------------
-
-		previewActionToolbar = new Toolbar(0,false,Style.getStyle('.toolbar'),Style.getStyle('.button.toolbarButton.toolbarMiniButton'));
-		previewActionToolbar.addButton('resize',0,false,
-																   [APP.atlasSPRITES.getRegion(APP.ICON_RESIZE).toBitmapData()],
-																	 renderModeLoop);
-		previewActionToolbar.addButton('outline',0,true,
-																	 [APP.atlasSPRITES.getRegion(APP.ICON_OUTLINE_NO).toBitmapData(),
-																			null,
-																			APP.atlasSPRITES.getRegion(APP.ICON_OUTLINE).toBitmapData()],
-																	 outlineModeLoop);
-		addChild(previewActionToolbar);
-
-		// APP TITLE ---------------------------------------------------------------
-
-		var text = new Text(APP.APP_NAME.toUpperCase(),18,APP.COLOR_ORANGE,openfl.text.TextFormatAlign.CENTER,APP.FONT_SQUARE);
-		text.t.setAnchoredPivot(Transformation.ANCHOR_MIDDLE_CENTER);
-		text.t.x = TOOLBAR_WIDTH/2;
-		text.t.y = ACTIONBAR_HEIGHT/2;
-		addChild(text);
-
-		var text = new Text(APP.APP_STAGE.toUpperCase(),9,APP.COLOR_WHITE,openfl.text.TextFormatAlign.CENTER,APP.FONT_LATO_BOLD);
-		text.t.setAnchoredPivot(Transformation.ANCHOR_MIDDLE_CENTER);
-		text.t.x = TOOLBAR_WIDTH/2;
-		text.t.y = ACTIONBAR_HEIGHT/2+12;
-		addChild(text);
-
-		// -------------------------------------------------------------------------
-
-		currentShapeViewList = new ShapeViewList(this,SHAPELIST_WIDTH,100);
-		addChild(currentShapeViewList);
-
-		// -------------------------------------------------------------------------
-
-		// EXAMPLE MODELS
-
-		// stupid guy
-		//var original = "EgQCAJn_Zv8zETxKKyZGRp4mm0aeRFaaeUSamnlEVokBRJqJAUNmmnhDqpp4FzxZvCxVV90sqmfdRGaaREYBRVVG70VVCh5FVRxVRO8cqkTv";
-
-		// complex shape
-		var original = "Ff//1fb/QEW7PqXys9vuJDI/OVJXUpAjpswzUUY1p3At////9+F2vjJB33qSfoaPprO8Ezw5DkBLCjwAWldvAGlIj1CrKhJwRZrNMEtIzmJFGhKCq5rNAiNnvALNRc0CzXgSAiNFEgJ4Zj9MacxpDng7eEMS3gFD3t4BAy3eAUBF3gFDq+8B";
-
-		// question mark
-		//var original = "BgAABmdnAUY5Z19ASGd9ADVnCwZnZ1ZgNWfP";
-
-		// 32 shapes (scroll shapeview test)
-		//var original = "HwAAFjxKKyZGRp4mm0aeRFaaeUSamnlEVokBRJqJAUNmmnhDqpp4FzxZvCxVV90sqmfdRGaaREYBRVVG70VVBh5FVRxVRO8cqkTvwQFWAcHvzQHBVs0BwQEBAVKa3gFSAc0BUu9FAVI0EgFSvO8BQu-aAUpF7wFKI6sBM81nAQ..";
-
-		// home
-		//var original = "DAAACGneAQk8XCgIPF0SWzdcv183er9rjFy_b4x6v2mMzJ1ZN7ydCDysmgBpXiVAaaxH";
-
-		// random stuff
-		//var original = "BxAA_wD_DCM0AQy8RQEMZ6sBXHgBAUwB3gFAq0UBEQgIvQ..";
-
-		//var original = "AQAAAUpJCA.."; //just a cube
-
-		// farm
-		//var original = "E____wAA____PqXys9vuJDI_OVJXUpAjpswzUUY1p3At6pA-9-F2vjJB33qSfoaPprO8OxK8AUo0qwFLq5oBO828ATgjNBg5IlUDOd1VAwgeVSIBigESMXoBIjGIAQExqgEBUYgAMzYRiAE2FCWbNiM0vBYFFpo27ncCNt40BA..";
-
-		// -------------------------------------------------------------------------
-
-		// set the example test model
-		changeModel(Model.fromString(original));
-
-		//init background image
-		_outputView.drawBackground();
-
-		super.initialize(); // init_super at the end
-	}
-
-	public override function unload():Void {
-		super.unload();
-	}
-
-	public override function start() {
-		super.start();  // call resume
-	}
-
-	public override function hold():Void {
-		super.hold();
-
-		// HOOKERS OFF
-	}
-
-	public override function resume():Void {
-		super.resume();
-
-    // HOOKERS ON
-
-	}
-
-	private override function update(delta:Float):Void {
-
-	}
-
-	public override function resize() {
-
-		var screenWidth = Lib.current.stage.stageWidth;
-		var screenHeight = Lib.current.stage.stageHeight;
-
-		if (screenWidth<800) screenWidth = 800;
-		if (screenHeight<600) screenHeight = 600;
-
-		rwidth = screenWidth;
-		rheight = screenHeight;
-
-		graphics.clear();
-		// currentModel+color toolbar bg
-		graphics.beginFill(0x242424,0.9);
-		graphics.drawRect(0,0,
-											TOOLBAR_WIDTH,rheight);
-
-		// action toolbar bg
-		graphics.beginFill(0x242424,0.9);
-		graphics.drawRect(0,0,
-											rwidth,ACTIONBAR_HEIGHT);
-
-		// shapelist
-		graphics.beginFill(0x242424,0.9);
-		graphics.drawRect(rwidth-SHAPELIST_WIDTH,
-											0,rwidth,rheight);
-
-		// preview
-		graphics.beginFill(0x242424,0.8);
-		graphics.drawRect(rwidth-SHAPELIST_WIDTH-PREVIEW_WIDTH,
-											0,rwidth-SHAPELIST_WIDTH,rheight);
-
-		// status bar
-		graphics.beginFill(0x242424,0.9);
-		graphics.drawRect(0,rheight-STATUSBAR_HEIGHT,
-											rwidth,rheight);
-
-		// model
-		graphics.beginFill(0x808080,1);
-		graphics.drawRect(TOOLBAR_WIDTH,ACTIONBAR_HEIGHT,
-											rwidth-SHAPELIST_WIDTH-PREVIEW_WIDTH-TOOLBAR_WIDTH,rheight-STATUSBAR_HEIGHT-ACTIONBAR_HEIGHT);
-
-		_outputView.t.x = rwidth-SHAPELIST_WIDTH-PREVIEW_WIDTH;
-		_outputView.t.y = rheight-STATUSBAR_HEIGHT;
-		_modelView.x = TOOLBAR_WIDTH+(rwidth-TOOLBAR_WIDTH-SHAPELIST_WIDTH-PREVIEW_WIDTH)/2-RENDER_WIDTH/2-ModelView.PADDING;
-		_modelView.y = (rheight-ACTIONBAR_HEIGHT-STATUSBAR_HEIGHT)/2-RENDER_HEIGHT/2+ACTIONBAR_HEIGHT-ModelView.PADDING;
-		toolbar.x = TOOLBAR_WIDTH/2-toolbar.getGrossWidth()/2;
-		toolbar.y = ACTIONBAR_HEIGHT+10;
-		_colorPicker.x = TOOLBAR_WIDTH;
-		_colorPicker.y = rheight-_colorPicker.getGrossHeight();
-		_colorPicker.updateWidth(rwidth-TOOLBAR_WIDTH-SHAPELIST_WIDTH-PREVIEW_WIDTH);
-		colorToolbar.x = TOOLBAR_WIDTH/2-colorToolbar.getGrossWidth()/2;
-		colorToolbar.y = toolbar.y + toolbar.height + BASE_SPAN;
-		actionToolbar.x = TOOLBAR_WIDTH+BASE_SPAN;
-		actionToolbar.y = ACTIONBAR_HEIGHT/2-actionToolbar.getGrossHeight()/2;
-		previewColorToolbar.x = rwidth-SHAPELIST_WIDTH-PREVIEW_WIDTH+BASE_SPAN/2;
-		previewColorToolbar.y = rheight-STATUSBAR_HEIGHT/2-previewColorToolbar.getGrossHeight()/2;
-		previewActionToolbar.x = rwidth-SHAPELIST_WIDTH-BASE_SPAN/2-previewActionToolbar.getGrossWidth();
-		previewActionToolbar.y = rheight-STATUSBAR_HEIGHT/2-previewActionToolbar.getGrossHeight()/2;
-		currentShapeViewList.x = rwidth-SHAPELIST_WIDTH;
-		currentShapeViewList.y = ACTIONBAR_HEIGHT;
-		currentShapeViewList.updateHeight(rheight-ACTIONBAR_HEIGHT-STATUSBAR_HEIGHT);
-	}
-
-	//############################################################################
+	//============================================================================
 
 	private function showColorPicker(color:Int) {
 		_colorPicker.selector(color);
@@ -796,6 +610,9 @@ class TileCraft extends Screen
 			renderOutput();
 		}
 	}
+
+	//============================================================================
+
 
 	//############################################################################
 	//############################################################################
@@ -824,6 +641,232 @@ class TileCraft extends Screen
 	// trace("Current text on clipboard: "+ cbtext);
 
 	///////////////////////////////////////////////////////////////////////////
-	// APP Resources and properties
+	// INTERFACE INITIALISER
 
+	private inline function initButtonTestCases() {
+		var button = new Button("TEST");
+		button.x = 130;
+		button.y = 100;
+		button.style = Style.getStyle('button');
+		button.selectable = true;
+		button.listen = true;
+		button.actionF = function(button:Button) { APP.log(button.toString()); };
+		button.makeText("Button test");
+		button.icon = APP.atlasSPRITES.getRegion(APP.ICON_CHECKBOX).toBitmapData();
+		button.iconSelected = APP.atlasSPRITES.getRegion(APP.ICON_CHECKBOX_CHECKED).toBitmapData();
+		addChild(button);
+
+		var button = new Button("TEST2");
+		button.x = 130;
+		button.y = 150;
+		button.style = Style.getStyle('button');
+		button.listen = true;
+		button.makeText("Button test");
+		addChild(button);
+
+		var button = new Button("TEST3");
+		button.x = 130;
+		button.y = 200;
+		button.style = Style.getStyle('button');
+		button.listen = true;
+		button.icon = APP.atlasSPRITES.getRegion(APP.ICON_CHECKBOX).toBitmapData();
+		addChild(button);
+
+		var button = new Button("TEST4");
+		button.x = 130;
+		button.y = 250;
+		button.style = Style.getStyle('button');
+		button.listen = true;
+		addChild(button);
+	}
+
+	private inline function initMainToolbar() {
+		// MODEL TOOLBAR --------------------------------------------------------
+		_mainToolbar = new Toolbar(2,true,
+				Style.getStyle('.toolbar'),
+				Style.getStyle('.button.toolbarButton'));
+		_mainToolbar.addButton("pointer",null,true,
+											[APP.atlasSPRITES.getRegion(APP.ICON_POINTER).toBitmapData()],
+											toolbarPointerSelect);
+		_mainToolbar.addButton("cube",
+											ShapeType.CUBE,true,
+											[APP.atlasSPRITES.getRegion(APP.ICON_SH_CUBE).toBitmapData()],
+											toolbarShapeTypeSelect);
+		_mainToolbar.addButton("round_up",
+											ShapeType.ROUND_UP,true,
+											[APP.atlasSPRITES.getRegion(APP.ICON_SH_ROUND_UP).toBitmapData()],
+											toolbarShapeTypeSelect);
+		_mainToolbar.addButton("round_side",
+											ShapeType.ROUND_SIDE,true,
+											[APP.atlasSPRITES.getRegion(APP.ICON_SH_ROUND_SIDE).toBitmapData()],
+											toolbarShapeTypeSelect);
+		_mainToolbar.addButton("cylinder_up",
+											ShapeType.CYLINDER_UP,true,
+											[APP.atlasSPRITES.getRegion(APP.ICON_SH_CYLINDER_UP).toBitmapData()],
+											toolbarShapeTypeSelect);
+		_mainToolbar.addButton("cylinder_side",
+											ShapeType.CYLINDER_SIDE,true,
+											[APP.atlasSPRITES.getRegion(APP.ICON_SH_CYLINDER_SIDE).toBitmapData()],
+											toolbarShapeTypeSelect);
+		_mainToolbar.addButton("ramp_up",
+											ShapeType.RAMP_UP,true,
+											[APP.atlasSPRITES.getRegion(APP.ICON_SH_RAMP_UP).toBitmapData()],
+											toolbarShapeTypeSelect);
+		_mainToolbar.addButton("ramp_down",
+											ShapeType.RAMP_DOWN,true,
+											[APP.atlasSPRITES.getRegion(APP.ICON_SH_RAMP_DOWN).toBitmapData()],
+											toolbarShapeTypeSelect);
+		_mainToolbar.addButton("arch_up",
+											ShapeType.ARCH_UP,true,
+											[APP.atlasSPRITES.getRegion(APP.ICON_SH_ARCH_UP).toBitmapData()],
+											toolbarShapeTypeSelect);
+		_mainToolbar.addButton("arch_down",
+											ShapeType.ARCH_DOWN,true,
+											[APP.atlasSPRITES.getRegion(APP.ICON_SH_ARCH_DOWN).toBitmapData()],
+											toolbarShapeTypeSelect);
+		_mainToolbar.addButton("corner_se",
+											ShapeType.CORNER_SE,true,
+											[APP.atlasSPRITES.getRegion(APP.ICON_SH_CORNER_SE).toBitmapData()],
+											toolbarShapeTypeSelect);
+		_mainToolbar.addButton("corner_sw",
+											ShapeType.CORNER_SW,true,
+											[APP.atlasSPRITES.getRegion(APP.ICON_SH_CORNER_SW).toBitmapData()],
+											toolbarShapeTypeSelect);
+		_mainToolbar.addButton("corner_nw",
+											ShapeType.CORNER_NW,true,
+											[APP.atlasSPRITES.getRegion(APP.ICON_SH_CORNER_NW).toBitmapData()],
+											toolbarShapeTypeSelect);
+		_mainToolbar.addButton("corner_ne",
+											ShapeType.CORNER_NE,true,
+											[APP.atlasSPRITES.getRegion(APP.ICON_SH_CORNER_NE).toBitmapData()],
+											toolbarShapeTypeSelect);
+		addChild(_mainToolbar);
+	}
+
+	private inline function initActionToolbar() {
+
+		// ACTION TOOLBAR ----------------------------------------------------------
+
+		var _actionToolbarAction = function(button:Button) { APP.log("NOT IMPLEMENTED"); }
+		_actionToolbar = new Toolbar(0,false,Style.getStyle('.toolbar'),Style.getStyle('.button.toolbarButton'));
+		_actionToolbar.addButton("new",null,false,
+					[APP.atlasSPRITES.getRegion(APP.ICON_NEW).toBitmapData()],
+					function(_) { newModel(); });
+		_actionToolbar.addButton("open",null,false,
+					[APP.atlasSPRITES.getRegion(APP.ICON_OPEN).toBitmapData()],
+					function(_) { openFile(); });
+		_actionToolbar.addButton("save",null,false,
+					[APP.atlasSPRITES.getRegion(APP.ICON_SAVE).toBitmapData()],
+					function(_) { saveFile(); });
+		//_actionToolbar.addButton("-");
+		_actionToolbar.addButton("render",null,false,
+					[APP.atlasSPRITES.getRegion(APP.ICON_RENDER).toBitmapData()],
+					function(_) { renderOutput(); });
+		//_actionToolbar.addButton("-");
+		//_actionToolbar.addButton("copy",null,false,		[APP.atlasSPRITES.getRegion(APP.ICON_COPY).toBitmapData()],		_actionToolbarAction);
+		//_actionToolbar.addButton("paste",null,false,	[APP.atlasSPRITES.getRegion(APP.ICON_PASTE).toBitmapData()],	_actionToolbarAction);
+		//_actionToolbar.addButton("-");
+		_actionToolbar.addButton("quit",null,false,
+					[APP.atlasSPRITES.getRegion(APP.ICON_QUIT).toBitmapData()],
+					function(_) {
+						// BOOL isError
+						//if (Dialogs.confirm(APP.APP_NAME,"Do you really want to quit?",false))
+							PLIK.quit();
+					});
+		addChild(_actionToolbar);
+	}
+
+	private inline function initOutput() {
+
+		// OUTPUT VIEW -------------------------------------------------------------
+
+		_outputView = new OutputView(this,PREVIEW_WIDTH);
+		_outputView.t.setAnchoredPivot(Transformation.ANCHOR_BOTTOM_LEFT);
+		_outputView.addEventListener(MouseEvent.CLICK,function(e:MouseEvent) { renderOutput(); });
+		addChild(_outputView);
+
+		// PREVIEW TOOLBAR ---------------------------------------------------------
+
+		var _previewColorToolbarAction = function(button:Button) {
+			_outputView.setBackgroundColor(cast(button.value,Int));
+		};
+
+		_previewColorToolbar = new Toolbar(0,true,Style.getStyle('.toolbar'),
+					Style.getStyle('.button.toolbarButton.toolbarMiniButton.toolbarMiniButtonFull'));
+		_previewColorToolbar.addButton('preview0',-1,true,
+					[APP.makeColorIcon(_previewColorToolbar.styleButton,-1)],
+					_previewColorToolbarAction);
+		_previewColorToolbar.addButton('preview1',0xFFFFFF,true,
+					[APP.makeColorIcon(_previewColorToolbar.styleButton,0xCCCCCC)],
+					_previewColorToolbarAction);
+		_previewColorToolbar.addButton('preview2',0,true,
+					[APP.makeColorIcon(_previewColorToolbar.styleButton,0x333333)],
+					_previewColorToolbarAction);
+		addChild(_previewColorToolbar);
+
+		// OUTPUT ACTION TOOLBAR ---------------------------------------------------
+
+		_outputActionToolbar = new Toolbar(0,false,Style.getStyle('.toolbar'),
+					Style.getStyle('.button.toolbarButton.toolbarMiniButton'));
+		_outputActionToolbar.addButton('resize',0,false,
+					[APP.atlasSPRITES.getRegion(APP.ICON_RESIZE).toBitmapData()],
+					renderModeLoop);
+		_outputActionToolbar.addButton('outline',0,true,
+					[APP.atlasSPRITES.getRegion(APP.ICON_OUTLINE_NO).toBitmapData(),
+							null,
+							APP.atlasSPRITES.getRegion(APP.ICON_OUTLINE).toBitmapData()],
+					outlineModeLoop);
+		addChild(_outputActionToolbar);
+	}
+
+	private inline function initAppTitle() {
+
+		// APP TITLE ---------------------------------------------------------------
+
+		var text = new Text(APP.APP_NAME.toUpperCase(),18,APP.COLOR_ORANGE,openfl.text.TextFormatAlign.CENTER,APP.FONT_SQUARE);
+		text.t.setAnchoredPivot(Transformation.ANCHOR_MIDDLE_CENTER);
+		text.t.x = TOOLBAR_WIDTH/2;
+		text.t.y = ACTIONBAR_HEIGHT/2;
+		addChild(text);
+
+		var text = new Text(APP.APP_STAGE.toUpperCase(),9,APP.COLOR_WHITE,openfl.text.TextFormatAlign.CENTER,APP.FONT_LATO_BOLD);
+		text.t.setAnchoredPivot(Transformation.ANCHOR_MIDDLE_CENTER);
+		text.t.x = TOOLBAR_WIDTH/2;
+		text.t.y = ACTIONBAR_HEIGHT/2+12;
+		addChild(text);
+	}
+
+	private inline function initColor() {
+
+		// COLOR TOOLBAR --------------------------------------------------------
+
+		_colorToolbar = new Toolbar(2,true,Style.getStyle('.toolbar'),Style.getStyle('.button.toolbarButton.toolbarButtonFull'));
+
+		//---
+
+		_colorPicker = new ColorPickerView(100,colorPickerSelect,function() {hideColorPicker();});
+
+		//---
+
+		_colorToolbar.addButton('palette0',0,true,
+					[APP.makeColorIcon(_colorToolbar.styleButton,-1)],colorToolbarSelect);
+		for (i in 1...16) {
+			_colorToolbar.addButton('palette$i',i,true,
+					[APP.makeColorIcon(_colorToolbar.styleButton,_theModel.getColor(i))],
+					colorToolbarSelect,colorToolbarDoubleClick);
+		}
+		_colorToolbar.selectByIndex(1);
+
+		addChild(_colorToolbar);
+	}
+
+	private inline function initModelView() {
+		_modelView = new ModelView(this,RENDER_WIDTH,RENDER_HEIGHT);
+		addChild(_modelView);
+	}
+
+	private inline function initShapeList() {
+		_shapeViewList = new ShapeViewList(this,SHAPELIST_WIDTH,100);
+		addChild(_shapeViewList);
+	}
 }
