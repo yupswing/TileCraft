@@ -33,6 +33,15 @@ class ShapeViewList extends Box {
     _scroll.x = _width-_scroll.getGrossWidth();
   }
 
+  public function updateHeight(height:Float) {
+    _height = height;
+    _scroll.updateHeight(height);
+    _scroll.setValueView(height);
+    updateScroll();
+    _scroll.setValue(0);
+    scroll(0);
+  }
+
   public override function getNetHeight():Float {
     return Math.max(_height,_shapeview_height*_shapesView.length);
   }

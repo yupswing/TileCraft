@@ -12,7 +12,7 @@
 
 	<window fps="60" background="0x242424" />
 
-	<window width="950" height="650" resizable="false" unless="mobile" />
+	<window width="850" height="650" resizable="true" unless="mobile" />
 
 	<window fullscreen="true" if="mobile" />
 	<window orientation="landscape" />

@@ -376,48 +376,14 @@ class TileCraft extends Screen
 
 		_outputView = new OutputView(this,PREVIEW_WIDTH);
 		_outputView.t.setAnchoredPivot(Transformation.ANCHOR_BOTTOM_LEFT);
-		_outputView.t.x = rwidth-SHAPELIST_WIDTH-PREVIEW_WIDTH;
-		_outputView.t.y = rheight-STATUSBAR_HEIGHT;
 		_outputView.addEventListener(MouseEvent.CLICK,function(e:MouseEvent) { renderOutput(); });
 		addChild(_outputView);
 
 		_modelView = new ModelView(this,RENDER_WIDTH,RENDER_HEIGHT);
-		_modelView.x = TOOLBAR_WIDTH+(rwidth-TOOLBAR_WIDTH-SHAPELIST_WIDTH-PREVIEW_WIDTH)/2-RENDER_WIDTH/2-ModelView.PADDING;
-		_modelView.y = (rheight-ACTIONBAR_HEIGHT-STATUSBAR_HEIGHT)/2-RENDER_HEIGHT/2+ACTIONBAR_HEIGHT-ModelView.PADDING;
 		addChild(_modelView);
 
 
 		// STATIC INTERFACE --------------------------------------------------------
-
-		// currentModel+color toolbar bg
-		graphics.beginFill(0x242424,0.9);
-		graphics.drawRect(0,0,
-											TOOLBAR_WIDTH,rheight);
-
-		// action toolbar bg
-		graphics.beginFill(0x242424,0.9);
-		graphics.drawRect(0,0,
-											rwidth,ACTIONBAR_HEIGHT);
-
-		// shapelist
-		graphics.beginFill(0x242424,0.9);
-		graphics.drawRect(rwidth-SHAPELIST_WIDTH,
-											0,rwidth,rheight);
-
-		// preview
-		graphics.beginFill(0x242424,0.8);
-		graphics.drawRect(rwidth-SHAPELIST_WIDTH-PREVIEW_WIDTH,
-											0,rwidth-SHAPELIST_WIDTH,rheight);
-
-		// status bar
-		graphics.beginFill(0x242424,0.9);
-		graphics.drawRect(0,rheight-STATUSBAR_HEIGHT,
-											rwidth,rheight);
-
-		// model
-		graphics.beginFill(0x808080,1);
-		graphics.drawRect(TOOLBAR_WIDTH,ACTIONBAR_HEIGHT,
-										  rwidth-SHAPELIST_WIDTH-PREVIEW_WIDTH-TOOLBAR_WIDTH,rheight-STATUSBAR_HEIGHT-ACTIONBAR_HEIGHT);
 
 
 
@@ -523,9 +489,6 @@ class TileCraft extends Screen
 											ShapeType.CORNER_NE,true,
 											[APP.atlasSPRITES.getRegion(APP.ICON_SH_CORNER_NE).toBitmapData()],
 											shapeTypeSelector);
-
-		toolbar.x = TOOLBAR_WIDTH/2-toolbar.getGrossWidth()/2;
-		toolbar.y = ACTIONBAR_HEIGHT+10;
 		addChild(toolbar);
 
 
@@ -549,8 +512,6 @@ class TileCraft extends Screen
 		//---
 
 		_colorPicker = new ColorPickerView(rwidth-TOOLBAR_WIDTH-SHAPELIST_WIDTH-PREVIEW_WIDTH,colorPickerAction,function() {hideColorPicker();});
-		_colorPicker.x = TOOLBAR_WIDTH;
-		_colorPicker.y = rheight-_colorPicker.getGrossHeight();
 
 		//---
 
@@ -593,8 +554,7 @@ class TileCraft extends Screen
 														 colorToolbarAction,colorToolbarActionAlt);
 		}
 		colorToolbar.selectByIndex(1);
-		colorToolbar.x = TOOLBAR_WIDTH/2-colorToolbar.getGrossWidth()/2;
-		colorToolbar.y = toolbar.y + toolbar.height + BASE_SPAN;
+
 		addChild(colorToolbar);
 
 
@@ -623,8 +583,6 @@ class TileCraft extends Screen
 																							//if (Dialogs.confirm(APP.APP_NAME,"Do you really want to quit?",false))
 																								PLIK.quit();
 																						});
-		actionToolbar.x = TOOLBAR_WIDTH+BASE_SPAN;
-		actionToolbar.y = ACTIONBAR_HEIGHT/2-actionToolbar.getGrossHeight()/2;
 		addChild(actionToolbar);
 
 
@@ -645,8 +603,6 @@ class TileCraft extends Screen
 		previewColorToolbar.addButton('preview2',0,true,
 															    [APP.makeColorIcon(previewColorToolbar.styleButton,0x333333)],
 																	previewColorToolbarAction);
-		previewColorToolbar.x = rwidth-SHAPELIST_WIDTH-PREVIEW_WIDTH+BASE_SPAN/2;
-		previewColorToolbar.y = rheight-STATUSBAR_HEIGHT/2-previewColorToolbar.getGrossHeight()/2;
 		addChild(previewColorToolbar);
 
 		// PREVIEW ACTION TOOLBAR --------------------------------------------------
@@ -660,8 +616,6 @@ class TileCraft extends Screen
 																			null,
 																			APP.atlasSPRITES.getRegion(APP.ICON_OUTLINE).toBitmapData()],
 																	 outlineModeLoop);
-		previewActionToolbar.x = rwidth-SHAPELIST_WIDTH-BASE_SPAN/2-previewActionToolbar.getGrossWidth();
-		previewActionToolbar.y = rheight-STATUSBAR_HEIGHT/2-previewActionToolbar.getGrossHeight()/2;
 		addChild(previewActionToolbar);
 
 		// APP TITLE ---------------------------------------------------------------
@@ -680,9 +634,7 @@ class TileCraft extends Screen
 
 		// -------------------------------------------------------------------------
 
-		currentShapeViewList = new ShapeViewList(this,SHAPELIST_WIDTH,rheight-ACTIONBAR_HEIGHT-STATUSBAR_HEIGHT);
-		currentShapeViewList.x = rwidth-SHAPELIST_WIDTH;
-		currentShapeViewList.y = ACTIONBAR_HEIGHT;
+		currentShapeViewList = new ShapeViewList(this,SHAPELIST_WIDTH,100);
 		addChild(currentShapeViewList);
 
 		// -------------------------------------------------------------------------
@@ -749,7 +701,68 @@ class TileCraft extends Screen
 	}
 
 	public override function resize() {
+		trace('resize');
 
+		var screenWidth = Lib.current.stage.stageWidth;
+		var screenHeight = Lib.current.stage.stageHeight;
+
+		trace(screenWidth,screenHeight);
+		if (screenWidth<800) screenWidth = 800;
+		if (screenHeight<600) screenHeight = 600;
+
+		rwidth = screenWidth;
+		rheight = screenHeight;
+
+		graphics.clear();
+		// currentModel+color toolbar bg
+		graphics.beginFill(0x242424,0.9);
+		graphics.drawRect(0,0,
+											TOOLBAR_WIDTH,rheight);
+
+		// action toolbar bg
+		graphics.beginFill(0x242424,0.9);
+		graphics.drawRect(0,0,
+											rwidth,ACTIONBAR_HEIGHT);
+
+		// shapelist
+		graphics.beginFill(0x242424,0.9);
+		graphics.drawRect(rwidth-SHAPELIST_WIDTH,
+											0,rwidth,rheight);
+
+		// preview
+		graphics.beginFill(0x242424,0.8);
+		graphics.drawRect(rwidth-SHAPELIST_WIDTH-PREVIEW_WIDTH,
+											0,rwidth-SHAPELIST_WIDTH,rheight);
+
+		// status bar
+		graphics.beginFill(0x242424,0.9);
+		graphics.drawRect(0,rheight-STATUSBAR_HEIGHT,
+											rwidth,rheight);
+
+		// model
+		graphics.beginFill(0x808080,1);
+		graphics.drawRect(TOOLBAR_WIDTH,ACTIONBAR_HEIGHT,
+											rwidth-SHAPELIST_WIDTH-PREVIEW_WIDTH-TOOLBAR_WIDTH,rheight-STATUSBAR_HEIGHT-ACTIONBAR_HEIGHT);
+
+		_outputView.t.x = rwidth-SHAPELIST_WIDTH-PREVIEW_WIDTH;
+		_outputView.t.y = rheight-STATUSBAR_HEIGHT;
+		_modelView.x = TOOLBAR_WIDTH+(rwidth-TOOLBAR_WIDTH-SHAPELIST_WIDTH-PREVIEW_WIDTH)/2-RENDER_WIDTH/2-ModelView.PADDING;
+		_modelView.y = (rheight-ACTIONBAR_HEIGHT-STATUSBAR_HEIGHT)/2-RENDER_HEIGHT/2+ACTIONBAR_HEIGHT-ModelView.PADDING;
+		toolbar.x = TOOLBAR_WIDTH/2-toolbar.getGrossWidth()/2;
+		toolbar.y = ACTIONBAR_HEIGHT+10;
+		_colorPicker.x = TOOLBAR_WIDTH;
+		_colorPicker.y = rheight-_colorPicker.getGrossHeight();
+		colorToolbar.x = TOOLBAR_WIDTH/2-colorToolbar.getGrossWidth()/2;
+		colorToolbar.y = toolbar.y + toolbar.height + BASE_SPAN;
+		actionToolbar.x = TOOLBAR_WIDTH+BASE_SPAN;
+		actionToolbar.y = ACTIONBAR_HEIGHT/2-actionToolbar.getGrossHeight()/2;
+		previewColorToolbar.x = rwidth-SHAPELIST_WIDTH-PREVIEW_WIDTH+BASE_SPAN/2;
+		previewColorToolbar.y = rheight-STATUSBAR_HEIGHT/2-previewColorToolbar.getGrossHeight()/2;
+		previewActionToolbar.x = rwidth-SHAPELIST_WIDTH-BASE_SPAN/2-previewActionToolbar.getGrossWidth();
+		previewActionToolbar.y = rheight-STATUSBAR_HEIGHT/2-previewActionToolbar.getGrossHeight()/2;
+		currentShapeViewList.x = rwidth-SHAPELIST_WIDTH;
+		currentShapeViewList.y = ACTIONBAR_HEIGHT;
+		currentShapeViewList.updateHeight(rheight-ACTIONBAR_HEIGHT-STATUSBAR_HEIGHT);
 	}
 
 	//############################################################################
