@@ -49,7 +49,8 @@ class TileCraft extends Screen
 		title = "TileCraft";
 	}
 
-	public var currentModel:Model = Model.makeNew();
+	private var currentModel:Model = Model.makeNew();
+	private var selectedShape:Shape = null;
 
 	// INTERFACE -----------------------------------------------------------------
 
@@ -186,8 +187,8 @@ class TileCraft extends Screen
 		}
 		if (currentModel!=null) currentModel.destroy();
 		currentModel = model;
-		updatePalette();
-		updateShapeList();
+		refreshPalette();
+		refreshShapeList();
 		renderModel(false);
 		renderOutput();
 		//APP.log(currentModel.toPNGString(_outputBitmap.bitmapData)); //TODO should be a TextField to output this on request
@@ -195,42 +196,53 @@ class TileCraft extends Screen
 
 	//============================================================================
 
-	// Listeners
-	// TODO here should be all common calls to dispatch
-	// TODO "events" between   Model/Shape <--> ModelView/ShapeView/ColorPickerView
+	// Dispatchers
 
-	// public function addShape(shape:Shape) {
-	//
-	// }
-	//
-	// public function removeShape(shape:Shape) {
-	//
-	// }
-
-	// CALL WHEN SOMETHING CHANGE THE MODEL
 	public function updateModel() {
+		// called when something change the model
 		renderModel(false);
 	}
 
-	public function updateShapeType(shapeType:ShapeType) {
-		var shape = currentShapeViewList.getSelectedShape();
-		if (shape==null) return;
-		shape.shapeType = shapeType;
-		updateShape(shape);
-		updateModel();
-	}
-
-	public function updateShapeSelect(shape:Shape) {
+	public function setSelectedShape(shape:Shape):Shape {
+		selectedShape = shape;
 		currentShapeViewList.selectByShape(shape);
 		if (shape!=null) {
 			colorToolbar.selectByIndex(shape.color);
 			toolbar.select(toolbar.getButtonByValue(shape.shapeType));
 		}
+		return shape;
+	}
+
+	public function getSelectedShape():Shape {
+		return selectedShape;
 	}
 
 	public function deselect() {
+		// called when something want to deselect the shape
+		setSelectedShape(null);
 		hideColorPicker();
-		currentShapeViewList.deselect();
+	}
+
+	public function addShape(shape:Shape) {
+		// called to add a shape
+		currentShapeViewList.add(shape);
+		currentModel.addShape(shape);
+	}
+
+	public function removeShape(shape:Shape) {
+		// called to remove a shape
+		if (selectedShape == shape) setSelectedShape(null);
+		currentShapeViewList.remove(shape);
+		currentModel.removeShape(shape);
+	}
+
+	public function changeShapeType(shapeType:ShapeType) {
+		// called when something want to change the shapetype
+		var shape = getSelectedShape();
+		if (shape==null) return;
+		shape.shapeType = shapeType;
+		updateShape(shape);
+		updateModel();
 	}
 
 	public function getColor(index:Int):Int {
@@ -238,25 +250,26 @@ class TileCraft extends Screen
 		return currentModel.getColor(index);
 	}
 
-	public function updatePalette(){
-		for (i in 1...16) {
-			colorToolbar.getButtonByIndex(i).icon = APP.makeColorIcon(colorToolbar.styleButton,
-																																			currentModel.getColor(i));
-		}
-	}
-
 	public function updateShape(shape:Shape) {
 		currentShapeViewList.updateShape(shape);
 	}
 
-	public function updateColor(colorIndex:Int) {
-		currentShapeViewList.updateColor(colorIndex);
+	public function changeColor(index:Int,color:Int) {
+		currentModel.setColor(index,color);
+		currentShapeViewList.refreshColor(index);
 	}
 
-	public function updateShapeList(){
+	public function refreshShapeList(){
 		currentShapeViewList.removeAll();
 		for (i in 0...currentModel.getShapeCount()) {
 			currentShapeViewList.add(currentModel.getShapeByIndex(i));
+		}
+	}
+
+	public function refreshPalette(){
+		for (i in 1...16) {
+			colorToolbar.getButtonByIndex(i).icon = APP.makeColorIcon(colorToolbar.styleButton,
+																																			currentModel.getColor(i));
 		}
 	}
 
@@ -427,7 +440,7 @@ class TileCraft extends Screen
 
 		var shapeTypeSelector = function(button:Button) {
 			var shapeType:ShapeType = cast(button.value,ShapeType);
-			updateShapeType(shapeType);
+			changeShapeType(shapeType);
 		};
 		var pointerSelector = function(button:Button) {
 			deselect();
@@ -502,8 +515,7 @@ class TileCraft extends Screen
 			if (index==0) return; //hole
 			button.icon = APP.makeColorIcon(colorToolbar.styleButton,
 																						color);
-			currentModel.setColor(index,color);
-			updateColor(index);
+			changeColor(index,color);
 			renderModel(true);
 		}
 
@@ -516,7 +528,7 @@ class TileCraft extends Screen
 		var colorToolbarAction = function(button:Button) {
 				var value:Int = cast(button.value,Int);
 				// change shape color
-		    var shape:Shape = currentShapeViewList.getSelectedShape();
+		    var shape:Shape = getSelectedShape();
 			  if (shape!=null) {
 			    shape.color = value;
 					updateShape(shape);

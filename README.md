@@ -94,6 +94,9 @@ The model, renderer and i/o is fully functional ( [Same model in LGModeler](http
  - Model
   - [x] Convert LGModeler Model
   - [x] Support for PNG Output with embedded model data
+  - [ ] Add author and model name to PNG metadata
+  - [ ] Save enabled and lock to model data (tcMa)
+  - [ ] Permit change color0 to be used as floor (and render it)
   - [ ] **BETA** Add more primitives (Prism, Arc)
   - [ ] **BETA** Use color index 0 as floor color (if set)
   - [ ] **BETA** Extend to 64 shapes

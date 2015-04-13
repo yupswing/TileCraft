@@ -78,29 +78,30 @@ class PostFX {
 		    if (color.a==0) {
 					// 5x5 grid average
 
-	        vec4 near = texture2D(uImage0, vTexCoord.xy + vec2(1.0,1.0)*rcpFrame.xy);
+					// REMOVED FIRST FOUR SAMPLES TO SPEED UP PROCESS (ALMOST SAME RESULT)
+	        // vec4 near = texture2D(uImage0, vTexCoord.xy + vec2(1.0,1.0)*rcpFrame.xy);
+	        // near.a = ceil(near.a);
+	        // float divisor = near.a;
+	        // color.rgb = near.rgb*near.a;
+					//
+	        // near = texture2D(uImage0, vTexCoord.xy + vec2(-1.0,1.0)*rcpFrame.xy);
+	        // near.a = ceil(near.a);
+	        // divisor += near.a;
+	        // color.rgb += near.rgb*near.a;
+					//
+	        // near = texture2D(uImage0, vTexCoord.xy + vec2(1.0,-1.0)*rcpFrame.xy);
+	        // near.a = ceil(near.a);
+	        // divisor += near.a;
+	        // color.rgb += near.rgb*near.a;
+					//
+	        // near = texture2D(uImage0, vTexCoord.xy + vec2(-1.0,-1.0)*rcpFrame.xy);
+	        // near.a = ceil(near.a);
+	        // divisor += near.a;
+	        // color.rgb += near.rgb*near.a;
+
+	        vec4 near = texture2D(uImage0, vTexCoord.xy + vec2(2.0,2.0)*rcpFrame.xy);
 	        near.a = ceil(near.a);
 	        float divisor = near.a;
-	        color.rgb = near.rgb*near.a;
-
-	        near = texture2D(uImage0, vTexCoord.xy + vec2(-1.0,1.0)*rcpFrame.xy);
-	        near.a = ceil(near.a);
-	        divisor += near.a;
-	        color.rgb += near.rgb*near.a;
-
-	        near = texture2D(uImage0, vTexCoord.xy + vec2(1.0,-1.0)*rcpFrame.xy);
-	        near.a = ceil(near.a);
-	        divisor += near.a;
-	        color.rgb += near.rgb*near.a;
-
-	        near = texture2D(uImage0, vTexCoord.xy + vec2(-1.0,-1.0)*rcpFrame.xy);
-	        near.a = ceil(near.a);
-	        divisor += near.a;
-	        color.rgb += near.rgb*near.a;
-
-	        near = texture2D(uImage0, vTexCoord.xy + vec2(2.0,2.0)*rcpFrame.xy);
-	        near.a = ceil(near.a);
-	        divisor += near.a;
 	        color.rgb += near.rgb*near.a;
 
 	        near = texture2D(uImage0, vTexCoord.xy + vec2(-2.0,2.0)*rcpFrame.xy);

@@ -76,7 +76,7 @@ class ShapeViewList extends Box {
       if (_shapesView[i].getShape()==shape) {
         if (_selected==_shapesView[i]) _selected = null; //deselect
         _scrollable.removeChild(_shapesView[i]); //remove from view
-        _base.currentModel.removeShape(shape); //remove from model
+        _base.removeShape(shape); //remove from model
         _shapesView.remove(_shapesView[i]); //remove from array list
         updatePositions();
         updateModel();
@@ -107,7 +107,7 @@ class ShapeViewList extends Box {
     if (shapeView == null) return deselect();
     if (_selected != null) _selected.isSelected = false;
     _selected = shapeView;
-    _base.updateShapeSelect(shapeView.getShape());
+    _base.setSelectedShape(shapeView.getShape());
     shapeView.isSelected = true;
     return shapeView;
   }
@@ -124,7 +124,7 @@ class ShapeViewList extends Box {
     if (_selected == null) return null; // avoid loops with _base.updateShapeSelect
     _selected.isSelected = false;
     _selected = null;
-    _base.updateShapeSelect(null);
+    _base.setSelectedShape(null);
     return null;
   }
 
@@ -168,7 +168,7 @@ class ShapeViewList extends Box {
     shapeView.update();
   }
 
-  public function updateColor(colorIndex:Int) {
+  public function refreshColor(colorIndex:Int) {
     for (shapeView in _shapesView) {
       if (shapeView.getShape().color==colorIndex) shapeView.update();
     }
