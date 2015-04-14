@@ -103,7 +103,7 @@ The model, renderer and i/o is fully functional ( [Same model in LGModeler](http
   - [ ] **RC** Extend model to 32 colors (use the other 16 as replacement for batch rendering)
  - Interface
   - [x] Resizable window
-  - [ ] ShapeList dragging
+  - [x] ShapeList dragging to reorder shapes in model
   - [ ] Save/Load file (fix Dialogs)
   - [ ] I/O from string (Base64)
   - [ ] History (basic keep last 5 models as steps)

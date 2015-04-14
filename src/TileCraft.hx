@@ -303,8 +303,14 @@ class TileCraft extends Screen
 		#end
 		if (preview==_modelPreviewMode && !forceRender) return;
 		_modelPreviewMode = preview;
-		renderModel();
-		//if (preview==false) renderOutput();
+		trace(preview,getSelectedShape());
+		if (preview==false && getSelectedShape()!=null) {
+			deselect(); //this will call again render()
+			return;
+		} else {
+			renderModel();
+		}
+		if (preview==false) renderOutput();
 	}
 
 	//============================================================================
@@ -392,6 +398,12 @@ class TileCraft extends Screen
 		_theModel.addShape(shape);
 
 		_shapeViewList.add(shape); //dispatch
+	}
+
+	public function swapShapes(shape1:Shape,shape2:Shape) {
+		// called only by shapeviewlist to swap shape order (no dispatcher)
+		_theModel.swapShapes(shape1,shape2);
+		updateModel();
 	}
 
 	public function removeShape(shape:Shape) {
@@ -503,13 +515,13 @@ class TileCraft extends Screen
 		// called by the output toolbar
 		renderMode++;
 		if (renderMode>=renderModes.length) renderMode = 0;
-		renderOutput(true);
+		render(false,true);
 	}
 
 	public function outlineModeLoop(_) {
 		// called by the output toolbar
 		renderOutline = !renderOutline;
-		renderOutput(true);
+		render(false,true);
 	}
 
 	//============================================================================
@@ -521,7 +533,7 @@ class TileCraft extends Screen
 	public function saveFile():Bool {
 		#if sys
 		// Render the _outputBitmap (TODO need to be better, maybe this system in ModelView)
-		renderOutput();
+		render(false,true);
 
 		// Determine the file path
 		var filename:String = saveDialog("TileCraft PNG image","*.png");
@@ -791,7 +803,7 @@ class TileCraft extends Screen
 		//_actionToolbar.addButton("-");
 		_actionToolbar.addButton("render",null,false,
 					[APP.atlasSPRITES.getRegion(APP.ICON_RENDER).toBitmapData()],
-					function(_) { renderOutput(); });
+					function(_) { render(false,true); });
 		//_actionToolbar.addButton("-");
 		//_actionToolbar.addButton("copy",null,false,		[APP.atlasSPRITES.getRegion(APP.ICON_COPY).toBitmapData()],		_actionToolbarAction);
 		//_actionToolbar.addButton("paste",null,false,	[APP.atlasSPRITES.getRegion(APP.ICON_PASTE).toBitmapData()],	_actionToolbarAction);
@@ -812,7 +824,7 @@ class TileCraft extends Screen
 
 		_outputView = new OutputView(this,PREVIEW_WIDTH);
 		_outputView.t.setAnchoredPivot(Transformation.ANCHOR_BOTTOM_LEFT);
-		_outputView.addEventListener(MouseEvent.CLICK,function(e:MouseEvent) { renderOutput(); });
+		_outputView.addEventListener(MouseEvent.CLICK,function(e:MouseEvent) { render(false,true); });
 		addChild(_outputView);
 
 		// PREVIEW TOOLBAR ---------------------------------------------------------

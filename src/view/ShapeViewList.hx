@@ -31,6 +31,10 @@ class ShapeViewList extends Box {
     _scroll.listen = true;
     addChild(_scroll);
     _scroll.x = _width-_scroll.getGrossWidth();
+
+    addEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
+    addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
+    addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
   }
 
   public function updateHeight(height:Float) {
@@ -92,6 +96,17 @@ class ShapeViewList extends Box {
     updateScroll();
   }
 
+  private function swapShapeViewsByIndex(index1:Int,index2:Int) {
+    if (index1>=_shapesView.length || index1<0) return;
+    if (index2>=_shapesView.length || index2<0) return;
+
+    var shapeViewSwap = _shapesView[index1];
+    _shapesView[index1] = _shapesView[index2];
+    _shapesView[index2] = shapeViewSwap;
+    updatePositions();
+    _base.swapShapes(_shapesView[index1].getShape(),_shapesView[index2].getShape());
+  }
+
   //============================================================================
 
   public function getColor(index:Int):Int {
@@ -116,6 +131,10 @@ class ShapeViewList extends Box {
 
   public function selectByShape(shape:Shape):ShapeView {
     return select(getShapeViewByShape(shape));
+  }
+
+  public function selectByY(y:Int):ShapeView {
+    return select(getShapeViewByY(y));
   }
 
   public function deselect():ShapeView {
@@ -158,6 +177,17 @@ class ShapeViewList extends Box {
     return null;
   }
 
+  public function getIndexByY(y:Float):Int {
+    var index = Std.int((y-_style.padding-_scrollable.y)/(_shapeview_height+_style.offset));
+    if (index<0) index = 0;
+    if (index>=_shapesView.length) index = _shapesView.length-1;
+    return index;
+  }
+
+  public function getShapeViewByY(y:Float):ShapeView {
+    return getShapeViewByIndex(getIndexByY(y));
+  }
+
   //============================================================================
 
   public function updateShape(shape:Shape) {
@@ -198,6 +228,47 @@ class ShapeViewList extends Box {
       _shapesView[i].y = _style.padding + i*(_shapeview_height+_style.offset);
     }
     draw(_width);
+  }
+
+  //============================================================================
+
+
+  private var _isDragging = false;
+  private var _dragOffsetY:Float = 0;
+  private function onMouseMove(event:MouseEvent) {
+    if (!_isDragging) return;
+    if (_selected==null) return;
+
+    var y = Std.int(event.stageY-this.y);
+    var newindex = getIndexByY(y);
+    var index = getSelectedIndex();
+
+    _selected.y = y-_scrollable.y-_dragOffsetY;
+
+    if (index!=newindex) {
+      swapShapeViewsByIndex(index,newindex);
+    }
+  }
+
+  private function onMouseDown(event:MouseEvent) {
+    var x = Std.int(event.stageX-this.x);
+    var y = Std.int(event.stageY-this.y);
+    if (x<30) {
+      var shapeview = selectByY(y);
+      trace('dragging');
+      _isDragging=true;
+      _dragOffsetY = y-shapeview.y-_scrollable.y;
+      _scrollable.setChildIndex(_selected,_scrollable.numChildren-1);
+      _selected.alpha = 0.8;
+    }
+  }
+
+  private function onMouseUp(event:MouseEvent) {
+    _isDragging = false;
+    if (_selected!=null) {
+      _selected.alpha = 1;
+      updatePositions();
+    }
   }
 
 }

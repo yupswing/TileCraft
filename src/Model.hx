@@ -67,8 +67,18 @@ class Model {
 		}
 	}
 
-	public function addShapeAtIndex(index:Int, shape:Shape){ //toedit
-		shapes.insert(index, shape);
+	// public function addShapeAtIndex(index:Int, shape:Shape){
+	// 	shapes.insert(index, shape);
+	// }
+
+	public function swapShapes(shape1:Shape, shape2:Shape){
+		var index1 = getIndexOfShape(shape1);
+		var index2 = getIndexOfShape(shape2);
+		if (index1<0 || index1>shapes.length-1) return;
+		if (index2<0 || index2>shapes.length-1) return;
+		var shapeSwap = shapes[index1];
+		shapes[index1] = shapes[index2];
+		shapes[index2] = shapeSwap;
 	}
 
 	public function getShapeByIndex(index:Int):Shape {

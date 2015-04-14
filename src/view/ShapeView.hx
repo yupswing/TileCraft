@@ -21,7 +21,6 @@ class ShapeView extends Box {
   private var _lock:Button;
 
   private var _icon:Bitmap;
-  private var _iconContainer:SpriteContainer = new SpriteContainer();
 
   var _isSelected:Bool = false;
   public var isSelected(get,set):Bool;
@@ -37,9 +36,9 @@ class ShapeView extends Box {
     return _height;
   }
 
-  public function select(_) {
-    _list.select(this);
-  }
+  // public function select(_) {
+  //   _list.select(this);
+  // }
 
   public function new(list:ShapeViewList,shape:Shape,width:Float=0) {
     _list = list;
@@ -56,9 +55,7 @@ class ShapeView extends Box {
     _icon = new Bitmap(makeIcon());
     _icon.x = offset_x+buttonStyle.padding+_style.offset;
     _icon.y = offset_y+buttonStyle.padding;
-    _iconContainer.addChild(_icon);
-    addChild(_iconContainer);
-    _iconContainer.addEventListener(MouseEvent.CLICK,select);
+    addChild(_icon);
 
     offset_x += (_icon.width+buttonStyle.padding*2+_style.offset)+_style.offset;
 
