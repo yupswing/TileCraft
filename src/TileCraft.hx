@@ -747,6 +747,25 @@ class TileCraft extends Screen
 
 	//============================================================================
 
+	private function quitCall() {
+		var _dialog:DialogConfirm = new DialogConfirm(quitResponse,"Do you really want to quit?",
+																		Style.getStyle('.dialog'),
+																		Style.getStyle('.dialogBox'),
+																		Style.getStyle('.button'),
+																		Style.getStyle('.dialogText'));
+		_dialog.textOk = "Quit";
+		_dialog.drawDialogBox(rwidth,rheight);
+		addChild(_dialog);
+	}
+
+	private function quitResponse(dialog:Dialog) {
+		if (cast(dialog.value,Bool)) PLIK.quit();
+		removeChild(dialog);
+		dialog = null; //TODO need to be destroyed
+	}
+
+	//============================================================================
+
 
 	//############################################################################
 	//############################################################################
@@ -909,11 +928,7 @@ class TileCraft extends Screen
 		//_actionToolbar.addButton("-");
 		_actionToolbar.addButton("quit",null,false,
 					[APP.atlasSPRITES.getRegion(APP.ICON_QUIT).toBitmapData()],
-					function(_) {
-						// BOOL isError
-						//if (Dialogs.confirm(APP.APP_NAME,"Do you really want to quit?",false))
-							PLIK.quit();
-					});
+					function(_) { quitCall(); });
 		addChild(_actionToolbar);
 	}
 
