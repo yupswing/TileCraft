@@ -250,7 +250,7 @@ class TileCraft extends Screen
 		//TODO this should be part of ModelView
 
 		// avoid too many calls at once
-		if (_modelPreviewMode && haxe.Timer.stamp()-_lastRenderModelTime<0.05) return;
+		if (_modelPreviewMode && haxe.Timer.stamp()-_lastRenderModelTime<0.01) return; //TODO make the modelview be delayed as well
 
 		// _modelView.setBitmapData(null); //TODO show some kind of modal while rendering
 
@@ -299,7 +299,7 @@ class TileCraft extends Screen
 
 	public function render(preview:Bool,?forceRender:Bool=false) {
 		#if (!v2 || neko)
-		preview = true //TODO POSTFX need support for OpenFL3
+		preview = true; //TODO POSTFX need support for OpenFL3
 		#end
 		if (preview==_modelPreviewMode && !forceRender) return;
 		_modelPreviewMode = preview;
@@ -341,7 +341,7 @@ class TileCraft extends Screen
 
 	//============================================================================
 
-	// Dispatchers
+	// Dispatchers TODO need to be rewritten with events
 
 	public function updateModel() {
 		// called when something change the model

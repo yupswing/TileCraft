@@ -8,6 +8,8 @@ import com.akifox.plik.*;
 import openfl.geom.Point;
 import openfl.geom.Rectangle;
 
+import motion.Actuate;
+
 //TODO work in progress
 
 class ModelView extends SpriteContainer {
@@ -20,8 +22,8 @@ class ModelView extends SpriteContainer {
   var _height:Float = 0;
   var _width:Float = 0;
   var _base:TileCraft;
-	var moveXY:Bool = false;
-	var handle:Int = -1;
+	var _moveXY:Bool = false;
+	var _handle:Int = -1;
 	var handles:Array<Point> = [for (i in 0...8) new Point(0,0)];
 
   private static inline var GRAY_1 = 0x404040;
@@ -56,7 +58,10 @@ class ModelView extends SpriteContainer {
 
     drawBackground();
 
-    addEventListener(MouseEvent.CLICK,onClick);
+    addEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
+    addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
+    addEventListener(MouseEvent.MOUSE_UP, onMouseUp);
+    addEventListener(MouseEvent.MOUSE_OUT, onMouseOut);
   }
 
   public function select(shape:Shape):Shape {
@@ -67,29 +72,34 @@ class ModelView extends SpriteContainer {
     _selectedShape = shape;
     _base.setSelectedShape(shape);
 
+    updateHandles(); //paint as well
+
+    return shape;
+  }
+
+  public function updateHandles() {
+    if (_selectedShape==null) return;
     // set handle points
-		var top:Rectangle = getTop(shape);
-    var side:Rectangle = getSide(shape);
-		handles[0].y = top.y;
-		handles[1].y = handles[0].y;
-		handles[2].y = side.y - HANDLE_WIDTH/2;
-		handles[3].y = handles[2].y;
-		handles[4].y = side.y + HANDLE_WIDTH/2;
-		handles[5].y = handles[4].y;
-		handles[6].y = side.y + side.height;
-		handles[7].y = handles[6].y;
-		var leftX = top.x;
-		var rightX = top.x + top.width;
-		for(i in 0...handles.length) {
+    var top:Rectangle = getTop(_selectedShape);
+    var side:Rectangle = getSide(_selectedShape);
+    handles[0].y = top.y;
+    handles[1].y = handles[0].y;
+    handles[2].y = side.y - HANDLE_WIDTH/2;
+    handles[3].y = handles[2].y;
+    handles[4].y = side.y + HANDLE_WIDTH/2;
+    handles[5].y = handles[4].y;
+    handles[6].y = side.y + side.height;
+    handles[7].y = handles[6].y;
+    var leftX = top.x;
+    var rightX = top.x + top.width;
+    for(i in 0...handles.length) {
       if (i%2==0) {
         handles[i].x = leftX;
       }else{
         handles[i].x = rightX;
       }
-		}
-
-		paint();
-    return shape;
+    }
+    paint();
   }
 
   public function deselect():Shape {
@@ -132,17 +142,16 @@ class ModelView extends SpriteContainer {
     }
   }
 
-	public function paint() {
-    var g:Graphics;
-		var w = _width;
-		var h = _height;
-		var x1:Float = 0;
-		var y1:Float = 0;
+  public function paint() {
+    paintProjection();
+    paintForeground();
+  }
 
+	public function paintProjection() {
     var s:Shape = _selectedShape;
 
     // draw _selectedShape shape projection
-    g = _projection.graphics;
+    var g = _projection.graphics;
     g.clear();
 		if(s!=null){
       var color = _base.getColor(s.getColor());
@@ -160,9 +169,14 @@ class ModelView extends SpriteContainer {
 			rect.height = (h2 - (s.z1*ch) - rect.y);
 			g.drawRect(rect.x, rect.y, rect.width, rect.height);
     }
+	}
 
+
+
+	public function paintForeground() {
+    var s:Shape = _selectedShape;
     // draw handles
-    g = _foreground.graphics;
+    var g = _foreground.graphics;
     g.clear();
     if(s!=null){
 
@@ -184,7 +198,7 @@ class ModelView extends SpriteContainer {
 
 			var hw2 = HANDLE_WIDTH/2;
 			for(i in 0...handles.length){
-				if(handle == i){
+				if(_handle == i){
 					g.beginFill(0xFF0000);
 				} else {
 					if(i < 4){
@@ -237,30 +251,133 @@ class ModelView extends SpriteContainer {
 	}
 
 
-	public function onClick(e:MouseEvent) {
-		var x = e.localX-PADDING;
-		var y = e.localY-PADDING;
+  private var _isDragging = false;
+  private function onMouseMove(event:MouseEvent) {
 
-		// if(addShape != null){
-		// 	modler.modelChanged();
-		// 	mouseEntered(me);
-		// 	mouseMoved(me);
-		// } else {
-			handle = getHandle(x,y);
-			if(handle < 0){
-        var shape:Shape = null;
-				if(x >= 0 && x < _width && y >= 0 && y < _height){
-          shape = _base.getShapeInCoordinates(Std.int(x),Std.int(y));
+    if (!_isDragging) return;
+    if (_selectedShape==null) return;
+
+    var x = Std.int(event.localX)-PADDING;
+    var y = Std.int(event.localY)-PADDING;
+
+    var x_grid = (_width/Model.MODEL_SIZE);
+    var y_grid = (_height/(Model.MODEL_SIZE*2));
+
+    var s:Shape = _selectedShape;
+
+    var changed:Bool = false;
+
+  	if(_handle >= 0){
+      var xg = clampSize(Std.int((x + x_grid/2)/x_grid));
+      var y1 = clampSize(Std.int((y + y_grid/2)/y_grid - Model.MODEL_SIZE + s.z2));
+      var z1 = clampSize(Std.int(Model.MODEL_SIZE - (y + y_grid/2)/y_grid + s.y2));
+			if(_handle%2 == 0){
+				// a left handle
+				if(xg < s.x2 && xg != s.x1){
+					s.x1 = xg;
+					changed = true;
 				}
-				if(shape != null && shape.locked) shape = null;
-				if(shape != null){
-					var top:Rectangle = getTop(shape);
-					moveXY = top.contains(x,y);
+			} else {
+				if(xg > s.x1 && xg != s.x2){
+					s.x2 = xg;
+					changed = true;
 				}
-        select(shape);
 			}
-		// }
-	}
+			if(_handle < 2){
+				// a top handle
+				if(y1 < s.y2 && y1 != s.y1){
+					s.y1 = y1;
+					changed = true;
+				}
+			} else if(_handle < 4){
+				// a mid upper handle
+				if(y1 > s.y1 && y1 != s.y2){
+					s.y2 = y1;
+					changed = true;
+				}
+			} else if(_handle < 6){
+				// mid lower handle
+				if(z1 > s.z1 && z1 != s.z2){
+					s.z2 = z1;
+					changed = true;
+				}
+			} else {
+				// a bottom handle
+				if(z1 < s.z2 && z1 != s.z1){
+					s.z1 = z1;
+					changed = true;
+				}
+			}
+
+		} else {
+			var xg = clampSize(Std.int((x + x_grid/2)/x_grid));
+			var deltaX = xg - s.centerX;
+			if(deltaX != 0 && s.x1 + deltaX >= 0 && s.x2 + deltaX <= Model.MODEL_SIZE){
+				s.x1 = s.x1 + deltaX;
+				s.x2 = s.x2 + deltaX;
+				changed = true;
+			}
+			if(_moveXY){
+				var zg = s.z2;
+				var yg = clampSize(Std.int((y + y_grid/2)/y_grid - Model.MODEL_SIZE + zg));
+				var deltaY = Std.int(yg - (s.y2 + s.y1)/2);
+				if(deltaY != 0 && s.y1 + deltaY >= 0 && s.y2 + deltaY <= Model.MODEL_SIZE){
+					s.y1 = s.y1 + deltaY;
+					s.y2 = s.y2 + deltaY;
+					changed = true;
+				}
+			} else {
+				var yg = s.y2;
+				var zg = clampSize(Std.int(Model.MODEL_SIZE - (y + y_grid/2)/y_grid + yg));
+				var deltaZ = Std.int(zg - (s.z2 + s.z1)/2);
+				if(deltaZ != 0 && s.z1 + deltaZ >= 0 && s.z2 + deltaZ <= Model.MODEL_SIZE){
+					s.z1 = s.z1 + deltaZ;
+					s.z2 = s.z2 + deltaZ;
+					changed = true;
+				}
+			}
+		}
+
+    if(changed){
+      updateHandles();
+      _base.updateModel();
+    }
+  }
+
+  private function onMouseDown(event:MouseEvent) {
+    _isDragging=true;
+    var x = event.localX-PADDING;
+    var y = event.localY-PADDING;
+
+    _handle = getHandle(x,y);
+    if(_handle < 0){
+      var shape:Shape = null;
+      if(x >= 0 && x < _width && y >= 0 && y < _height){
+        shape = _base.getShapeInCoordinates(Std.int(x),Std.int(y));
+      }
+      if(shape != null && shape.locked) shape = null;
+      if(shape != null){
+        var top:Rectangle = getTop(shape);
+        _moveXY = top.contains(x,y);
+      }
+      select(shape); //will paint both
+    } else {
+      paintForeground(); //paint only foreground
+    }
+  }
+
+  private function onMouseUp(event:MouseEvent) {
+    _isDragging = false;
+    _handle = -1;
+    if (_selectedShape!=null) updateHandles();
+  }
+
+  private function onMouseOut(event:MouseEvent) {
+    if (!_isDragging) return;
+    onMouseUp(event);
+    onMouseMove(event);
+  }
+
 
 
 	public function clampSize(value:Int):Int{
