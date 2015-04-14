@@ -289,37 +289,45 @@ class TileCraft extends Screen
 	}
 
 	public function renderOutput(?changedScale=false) {
-		#if (v2 && !flash) //TODO POSTFX need support for OpenFL3
+		#if (!v2 || flash) //TODO POSTFX need support for OpenFL3
+		var supportOpenGL = false;
+		#else
+		var supportOpenGL = openfl.display.OpenGLView.isSupported;
+		#end
 
 		//TODO show some kind of modal while rendering
 		if (_modelPreviewMode) render(false);
 
 		var source:BitmapData = _modelView.getBitmapData();
-		var output:BitmapData;
+		if (!supportOpenGL) source = source.clone();
+		var output:BitmapData = source;
 
-		// output = PostFX.prepassEdgeColor(source); //TODO left for testing the prepass alone
+		if (supportOpenGL) {
+			#if (v2 && !flash)
+			// output = PostFX.prepassEdgeColor(source); //TODO left for testing the prepass alone
 
-		if (renderOutline) {
-			// one passage fxaa with black outline
-			output = PostFX.fxaaOutline(
-								source,
-								getRenderFxaaPasses(),
-								getRenderFxaaOutline());
-		} else {
-			// two passages fxaa with alpha blending
-			output = PostFX.fxaa(
-							 		PostFX.prepassEdgeColor(source),
-							 	getRenderFxaaPasses());
+			if (renderOutline) {
+				// one passage fxaa with black outline
+				output = PostFX.fxaaOutline(
+									source,
+									getRenderFxaaPasses(),
+									getRenderFxaaOutline());
+			} else {
+				// two passages fxaa with alpha blending
+				output = PostFX.fxaa(
+								 		PostFX.prepassEdgeColor(source),
+								 	getRenderFxaaPasses());
+			}
+
+			// scale
+			output = PostFX.scale(output, getOutputScale());
+			#end
 		}
 
-		// scale
-		output = PostFX.scale(output, getOutputScale());
-
 		// set output view
-		_outputView.setBitmapData(output);
+		_outputView.setBitmapData(output,(supportOpenGL?0:getOutputScale()));
 
 		if (changedScale) _outputView.drawBackground();
-		#end
 	}
 
 	public function render(preview:Bool) {

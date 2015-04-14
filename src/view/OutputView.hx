@@ -25,9 +25,13 @@ class OutputView extends SpriteContainer {
     this.updateTransformation();
   }
 
-  public function setBitmapData(bitmapData:BitmapData) {
+  public function setBitmapData(bitmapData:BitmapData,?scale:Float=0) {
     if (_bitmap.bitmapData!=null) _bitmap.bitmapData.dispose();
     _bitmap.bitmapData = bitmapData;
+    if (scale>0) {
+      _bitmap.scaleX = scale;
+      _bitmap.scaleY = scale;
+    }
     _bitmap.x = _width/2-_bitmap.width/2;
     this.updateTransformation();
   }

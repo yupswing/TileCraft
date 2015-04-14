@@ -82,10 +82,11 @@ This were made in just five 5 minutes (all of them!)
   - [x] Model wysiwyg editor
  - Renderer
   - [x] Convert LGModeler Renderer
-  - [x] POSTFX shaders (apply FXAA to have smooth output image)
-  - [x] output different size
-  - [x] POSTFX make FXAA support alpha channel
+  - [x] Output different size ( 0.5 , 0.25 , 0.125 )
   - [x] Fix incorrect rendering (ordering slices)
+  - [x] POSTFX shaders (apply FXAA to have smooth output image)
+  - [x] POSTFX make FXAA support alpha channel
+  - [x] POSTFX Use normal scaling with no PostFx if opengl not supported
   - [ ] **BETA** Support edge smoothing
   - [ ] **BETA** batch renderer and save to file
   - [ ] **BETA** Trick NORM to have N/E Ramps and rounded N/S edges
