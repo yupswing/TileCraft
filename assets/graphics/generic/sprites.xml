@@ -1,29 +1,29 @@
 <TextureAtlas imagePath="sprites.png">
 	<SubTexture name="checkbox.png" x="0" y="52" width="20" height="20" frame_x="0" frame_y="0" frame_width="20" frame_height="20" />
 	<SubTexture name="checkbox_checked.png" x="0" y="74" width="20" height="20" frame_x="0" frame_y="0" frame_width="20" frame_height="20" />
-	<SubTexture name="close.png" x="120" y="0" width="15" height="15" frame_x="3" frame_y="2" frame_width="20" frame_height="20" />
-	<SubTexture name="copy.png" x="119" y="89" width="16" height="16" frame_x="2" frame_y="2" frame_width="20" frame_height="20" />
-	<SubTexture name="delete.png" x="119" y="107" width="16" height="16" frame_x="2" frame_y="2" frame_width="20" frame_height="20" />
+	<SubTexture name="close.png" x="121" y="0" width="15" height="15" frame_x="3" frame_y="2" frame_width="20" frame_height="20" />
+	<SubTexture name="copy_shape.png" x="100" y="86" width="18" height="18" frame_x="1" frame_y="1" frame_width="20" frame_height="20" />
+	<SubTexture name="delete.png" x="120" y="54" width="16" height="16" frame_x="2" frame_y="2" frame_width="20" frame_height="20" />
 	<SubTexture name="eye_closed.png" x="0" y="37" width="20" height="13" frame_x="0" frame_y="5" frame_width="20" frame_height="20" />
 	<SubTexture name="eye_open.png" x="0" y="22" width="20" height="13" frame_x="0" frame_y="2" frame_width="20" frame_height="20" />
-	<SubTexture name="lock_closed.png" x="137" y="39" width="14" height="18" frame_x="3" frame_y="1" frame_width="20" frame_height="20" />
-	<SubTexture name="lock_open.png" x="136" y="17" width="14" height="20" frame_x="3" frame_y="0" frame_width="20" frame_height="20" />
-	<SubTexture name="new.png" x="119" y="54" width="16" height="16" frame_x="2" frame_y="2" frame_width="20" frame_height="20" />
-	<SubTexture name="ok.png" x="100" y="138" width="16" height="13" frame_x="2" frame_y="4" frame_width="20" frame_height="20" />
-	<SubTexture name="open.png" x="102" y="18" width="16" height="16" frame_x="2" frame_y="2" frame_width="20" frame_height="20" />
-	<SubTexture name="outline.png" x="82" y="22" width="18" height="20" frame_x="1" frame_y="0" frame_width="20" frame_height="20" />
-	<SubTexture name="outline_no.png" x="82" y="44" width="18" height="20" frame_x="1" frame_y="0" frame_width="20" frame_height="20" />
-	<SubTexture name="palette.png" x="119" y="72" width="16" height="15" frame_x="2" frame_y="2" frame_width="20" frame_height="20" />
-	<SubTexture name="paste.png" x="102" y="36" width="16" height="16" frame_x="2" frame_y="2" frame_width="20" frame_height="20" />
-	<SubTexture name="pointer.png" x="120" y="17" width="14" height="18" frame_x="3" frame_y="1" frame_width="20" frame_height="20" />
-	<SubTexture name="quit.png" x="102" y="0" width="16" height="16" frame_x="2" frame_y="2" frame_width="20" frame_height="20" />
-	<SubTexture name="render.png" x="62" y="66" width="16" height="15" frame_x="2" frame_y="3" frame_width="20" frame_height="20" />
+	<SubTexture name="lock_closed.png" x="137" y="112" width="14" height="18" frame_x="3" frame_y="1" frame_width="20" frame_height="20" />
+	<SubTexture name="lock_open.png" x="137" y="90" width="14" height="20" frame_x="3" frame_y="0" frame_width="20" frame_height="20" />
+	<SubTexture name="new.png" x="120" y="36" width="16" height="16" frame_x="2" frame_y="2" frame_width="20" frame_height="20" />
+	<SubTexture name="new_shape.png" x="82" y="44" width="18" height="18" frame_x="1" frame_y="1" frame_width="20" frame_height="20" />
+	<SubTexture name="ok.png" x="20" y="138" width="16" height="13" frame_x="2" frame_y="4" frame_width="20" frame_height="20" />
+	<SubTexture name="open.png" x="102" y="36" width="16" height="16" frame_x="2" frame_y="2" frame_width="20" frame_height="20" />
+	<SubTexture name="outline.png" x="100" y="64" width="18" height="20" frame_x="1" frame_y="0" frame_width="20" frame_height="20" />
+	<SubTexture name="outline_no.png" x="82" y="22" width="18" height="20" frame_x="1" frame_y="0" frame_width="20" frame_height="20" />
+	<SubTexture name="palette.png" x="119" y="123" width="16" height="15" frame_x="2" frame_y="2" frame_width="20" frame_height="20" />
+	<SubTexture name="pointer.png" x="137" y="132" width="14" height="18" frame_x="3" frame_y="1" frame_width="20" frame_height="20" />
+	<SubTexture name="quit.png" x="62" y="66" width="16" height="16" frame_x="2" frame_y="2" frame_width="20" frame_height="20" />
+	<SubTexture name="render.png" x="119" y="106" width="16" height="15" frame_x="2" frame_y="3" frame_width="20" frame_height="20" />
 	<SubTexture name="resize.png" x="0" y="0" width="20" height="20" frame_x="0" frame_y="0" frame_width="20" frame_height="20" />
-	<SubTexture name="round_0.png" x="100" y="102" width="17" height="16" frame_x="0" frame_y="4" frame_width="20" frame_height="20" />
-	<SubTexture name="round_1.png" x="100" y="66" width="17" height="16" frame_x="0" frame_y="4" frame_width="20" frame_height="20" />
-	<SubTexture name="round_2.png" x="100" y="120" width="17" height="16" frame_x="0" frame_y="4" frame_width="20" frame_height="20" />
-	<SubTexture name="round_3.png" x="100" y="84" width="17" height="16" frame_x="0" frame_y="4" frame_width="20" frame_height="20" />
-	<SubTexture name="save.png" x="119" y="125" width="16" height="16" frame_x="2" frame_y="2" frame_width="20" frame_height="20" />
+	<SubTexture name="round_0.png" x="102" y="18" width="17" height="16" frame_x="0" frame_y="4" frame_width="20" frame_height="20" />
+	<SubTexture name="round_1.png" x="100" y="124" width="17" height="16" frame_x="0" frame_y="4" frame_width="20" frame_height="20" />
+	<SubTexture name="round_2.png" x="100" y="106" width="17" height="16" frame_x="0" frame_y="4" frame_width="20" frame_height="20" />
+	<SubTexture name="round_3.png" x="102" y="0" width="17" height="16" frame_x="0" frame_y="4" frame_width="20" frame_height="20" />
+	<SubTexture name="save.png" x="120" y="72" width="16" height="16" frame_x="2" frame_y="2" frame_width="20" frame_height="20" />
 	<SubTexture name="sh_arch_down.png" x="82" y="0" width="18" height="20" frame_x="1" frame_y="0" frame_width="20" frame_height="20" />
 	<SubTexture name="sh_arch_up.png" x="62" y="22" width="18" height="20" frame_x="1" frame_y="0" frame_width="20" frame_height="20" />
 	<SubTexture name="sh_corner_ne.png" x="62" y="0" width="18" height="20" frame_x="1" frame_y="0" frame_width="20" frame_height="20" />

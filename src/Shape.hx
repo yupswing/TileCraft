@@ -42,6 +42,20 @@ class Shape {
 		locked = false;
 	}
 
+	public function clone():Shape {
+		var shape = new Shape(shapeType);
+		shape.x1 = x1;
+		shape.y1 = y1;
+		shape.z1 = z1;
+		shape.x2 = x2;
+		shape.y2 = y2;
+		shape.z2 = z2;
+		shape.color = color;
+		shape.enabled = enabled;
+		shape.locked = locked;
+		return shape;
+	}
+
 	public function toString():String {
 		return '[Shape ($x1,$y1,$z1-$x2,$y2,$z2)]';
 	}

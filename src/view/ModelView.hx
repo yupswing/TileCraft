@@ -351,17 +351,42 @@ class ModelView extends SpriteContainer {
 
     _handle = getHandle(x,y);
     if(_handle < 0){
-      var shape:Shape = null;
-      if(x >= 0 && x < _width && y >= 0 && y < _height){
+      var shape:Shape = _selectedShape;
+
+      if (shape!=null) {
+        // shape already selected
+        // if in boundaries keep the selection
+        var top:Rectangle = getTop(shape);
+        var side:Rectangle = getSide(shape);
+        if (!top.contains(x,y)&&!side.contains(x,y)) {
+          // click outside boundaries
+          // let the method determine a new shape
+          shape=null;
+        }
+      }
+
+      if(shape == null && (x >= 0 && x < _width && y >= 0 && y < _height)){
+        // if no shape selected get top shape is in coordinates
         shape = _base.getShapeInCoordinates(Std.int(x),Std.int(y));
       }
-      if(shape != null && shape.locked) shape = null;
+
+      if(shape != null && shape.locked) {
+        // got a shape but it is locked
+        shape = null;
+      }
+
       if(shape != null){
+        // got a shape
+        // determine if moving XY plane or XZ plane
         var top:Rectangle = getTop(shape);
         _moveXY = top.contains(x,y);
       }
+
+      // select and paint (could be null)
       select(shape); //will paint both
     } else {
+      // it is an handle
+      // just repaint them
       paintForeground(); //paint only foreground
     }
   }

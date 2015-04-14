@@ -76,8 +76,6 @@ class APP {
   public static inline var ICON_CHECKBOX_CHECKED = 'checkbox_checked.png';
 
   public static inline var ICON_NEW = 'new.png';
-  public static inline var ICON_COPY = 'copy.png';
-  public static inline var ICON_PASTE = 'paste.png';
   public static inline var ICON_OPEN = 'open.png';
   public static inline var ICON_DELETE = 'delete.png';
   public static inline var ICON_OK = 'ok.png';
@@ -95,6 +93,9 @@ class APP {
   public static inline var ICON_ROUND1 = 'round_1.png';
   public static inline var ICON_ROUND2 = 'round_2.png';
   public static inline var ICON_ROUND3 = 'round_3.png';
+
+  public static inline var ICON_NEW_SHAPE = 'new_shape.png';
+  public static inline var ICON_COPY_SHAPE = 'copy_shape.png';
 
   public static inline var ICON_SH_CUBE = 'sh_cube.png';
   public static inline var ICON_SH_ROUND_UP = 'sh_round_up.png';

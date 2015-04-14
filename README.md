@@ -104,6 +104,8 @@ The model, renderer and i/o is fully functional ( [Same model in LGModeler](http
  - Interface
   - [x] Resizable window
   - [x] ShapeList dragging to reorder shapes in model
+  - [x] Add shape to model
+  - [x] Clone shape
   - [ ] Save/Load file (fix Dialogs)
   - [ ] I/O from string (Base64)
   - [ ] History (basic keep last 5 models as steps)

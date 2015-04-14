@@ -264,10 +264,7 @@ class TileCraft extends Screen
 		#if (v2 && !flash) //TODO POSTFX need support for OpenFL3
 
 		//TODO show some kind of modal while rendering
-		if (_modelPreviewMode) {
-			_modelPreviewMode = false;
-			renderModel();
-		}
+		if (_modelPreviewMode) render(false);
 
 		var source:BitmapData = _modelView.getBitmapData();
 		var output:BitmapData;
@@ -297,20 +294,19 @@ class TileCraft extends Screen
 		#end
 	}
 
-	public function render(preview:Bool,?forceRender:Bool=false) {
+	public function render(preview:Bool) {
 		#if (!v2 || neko)
 		preview = true; //TODO POSTFX need support for OpenFL3
 		#end
-		if (preview==_modelPreviewMode && !forceRender) return;
+		//if (preview==_modelPreviewMode && !forceRender) return;
 		_modelPreviewMode = preview;
-		trace(preview,getSelectedShape());
 		if (preview==false && getSelectedShape()!=null) {
 			deselect(); //this will call again render()
 			return;
 		} else {
 			renderModel();
 		}
-		if (preview==false) renderOutput();
+		//if (preview==false) renderOutput();
 	}
 
 	//============================================================================
@@ -341,7 +337,8 @@ class TileCraft extends Screen
 		_theModel = model;
 		refreshPalette();
 		refreshShapeList();
-		render(false,true);
+		render(false);
+		renderOutput(); //force to render output and modelview
 		//APP.log(_theModel.toString(true));
 		//APP.log(_theModel.toPNGString(_outputBitmap.bitmapData)); //TODO should be a TextField to output this on request
 	}
@@ -369,10 +366,10 @@ class TileCraft extends Screen
 		if (shape!=null) {
 			_colorToolbar.selectByIndex(shape.color);
 			_mainToolbar.select(_mainToolbar.getButtonByValue(shape.shapeType));
-			render(true,true);
+			render(true);
 		} else {
-			_mainToolbar.selectByIndex(0); //select pointer
-			render(false,true);
+			_mainToolbar.selectById('pointer'); //select pointer
+			render(false);
 		}
 		return shape;
 	}
@@ -411,7 +408,7 @@ class TileCraft extends Screen
 		_theModel.removeShape(shape);
 
 		if (_theSelectedShape == shape) setSelectedShape(null);
-		else render(_modelPreviewMode,true);
+		else render(_modelPreviewMode);
 		_shapeViewList.remove(shape); //dispatch
 	}
 
@@ -470,7 +467,7 @@ class TileCraft extends Screen
 		changeColor(index,color);
 
 		// render model preview
-		render(true,true);
+		render(true);
 	}
 
 	// a shapetype was selected in the main _mainToolbar
@@ -515,13 +512,46 @@ class TileCraft extends Screen
 		// called by the output toolbar
 		renderMode++;
 		if (renderMode>=renderModes.length) renderMode = 0;
-		render(false,true);
+		renderOutput(true); //changed scale
 	}
 
 	public function outlineModeLoop(_) {
 		// called by the output toolbar
 		renderOutline = !renderOutline;
-		render(false,true);
+		renderOutput(false); //same scale
+	}
+
+	public function newShape(_) {
+		// called by the main toolbar
+		var shapeType = ShapeType.CUBE;
+		var buttonShape = _mainToolbar.getSelected();
+		//if (Type.getEnum(button.value)==ShapeType)
+		if (buttonShape.value!=null) {
+			shapeType = buttonShape.value;
+		}
+
+		var color:Int = 1;
+		var buttonColor = _colorToolbar.getSelected();
+		if (buttonColor!=null) color = buttonColor.value;
+
+		var shape = new Shape(shapeType);
+		shape.color = color;
+		shape.x2 = shape.y2 = shape.z2 = 2; //2x2 size
+
+		addShape(shape);
+		setSelectedShape(shape);
+	}
+
+	public function cloneShape(_) {
+		// called by the main toolbar
+		var master = getSelectedShape();
+		if (master==null) return;
+
+		var shape = master.clone();
+		shape.locked = false;
+
+		addShape(shape);
+		setSelectedShape(shape);
 	}
 
 	//============================================================================
@@ -533,7 +563,7 @@ class TileCraft extends Screen
 	public function saveFile():Bool {
 		#if sys
 		// Render the _outputBitmap (TODO need to be better, maybe this system in ModelView)
-		render(false,true);
+		render(false);
 
 		// Determine the file path
 		var filename:String = saveDialog("TileCraft PNG image","*.png");
@@ -649,7 +679,7 @@ class TileCraft extends Screen
 
 		//out of preview
 		if (_modelPreviewMode && getSelectedShape()==null) {
-			render(false,true);
+			render(false);
 		}
 	}
 
@@ -727,6 +757,12 @@ class TileCraft extends Screen
 		_mainToolbar = new Toolbar(2,true,
 				Style.getStyle('.toolbar'),
 				Style.getStyle('.button.toolbarButton'));
+		_mainToolbar.addButton("new_shape",null,false,
+											[APP.atlasSPRITES.getRegion(APP.ICON_NEW_SHAPE).toBitmapData()],
+											newShape);
+		_mainToolbar.addButton("copy_shape",null,false,
+											[APP.atlasSPRITES.getRegion(APP.ICON_COPY_SHAPE).toBitmapData()],
+											cloneShape);
 		_mainToolbar.addButton("pointer",null,true,
 											[APP.atlasSPRITES.getRegion(APP.ICON_POINTER).toBitmapData()],
 											toolbarPointerSelect);
@@ -782,6 +818,7 @@ class TileCraft extends Screen
 											ShapeType.CORNER_NE,true,
 											[APP.atlasSPRITES.getRegion(APP.ICON_SH_CORNER_NE).toBitmapData()],
 											toolbarShapeTypeSelect);
+		_mainToolbar.selectById('pointer');
 		addChild(_mainToolbar);
 	}
 
@@ -803,7 +840,7 @@ class TileCraft extends Screen
 		//_actionToolbar.addButton("-");
 		_actionToolbar.addButton("render",null,false,
 					[APP.atlasSPRITES.getRegion(APP.ICON_RENDER).toBitmapData()],
-					function(_) { render(false,true); });
+					function(_) { renderOutput(false); });
 		//_actionToolbar.addButton("-");
 		//_actionToolbar.addButton("copy",null,false,		[APP.atlasSPRITES.getRegion(APP.ICON_COPY).toBitmapData()],		_actionToolbarAction);
 		//_actionToolbar.addButton("paste",null,false,	[APP.atlasSPRITES.getRegion(APP.ICON_PASTE).toBitmapData()],	_actionToolbarAction);
@@ -824,7 +861,7 @@ class TileCraft extends Screen
 
 		_outputView = new OutputView(this,PREVIEW_WIDTH);
 		_outputView.t.setAnchoredPivot(Transformation.ANCHOR_BOTTOM_LEFT);
-		_outputView.addEventListener(MouseEvent.CLICK,function(e:MouseEvent) { render(false,true); });
+		_outputView.addEventListener(MouseEvent.CLICK,function(e:MouseEvent) { renderOutput(); });
 		addChild(_outputView);
 
 		// PREVIEW TOOLBAR ---------------------------------------------------------

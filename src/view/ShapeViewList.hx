@@ -63,9 +63,9 @@ class ShapeViewList extends Box {
 
   public function add(shape:Shape) {
     var index:Int = -1;
-    if (_selected!=null) {
-      index = getSelectedIndex()-1;
-    }
+    // if (_selected!=null) {
+    //   index = getSelectedIndex()-1;
+    // }
     if (index<0) index = 0;
     _shapesView.insert(index,new ShapeView(this,shape,_width-_style.padding*2));
     _scrollable.addChild(_shapesView[0]);
