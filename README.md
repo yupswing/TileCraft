@@ -4,10 +4,11 @@
 
 [![Haxe 3](https://img.shields.io/badge/language-Haxe%203-orange.svg)](http://www.haxe.org)
 [![OpenFL 2](https://img.shields.io/badge/require-OpenFL 2-red.svg)](http://www.openfl.org)
-[![Cross platform](https://img.shields.io/badge/platform-cross%20platform-lightgrey.svg)](http://www.openfl.org)
+[![Cross platform](https://img.shields.io/badge/platform-win%2Bmac%2Blinux-lightgrey.svg)](http://www.openfl.org)
 
 # TileCraft (alpha)
-2.5D multi-platform modeler to make tiles
+2.5D multi-platform modeler to make tiles for games or icons.
+Easy to use, save to PNG with alpha channel. Have some fun and [try it](#try-it)!
 
 Based on [LGModeler](https://github.com/angryoctopus/lgmodeler) by [AngryOctupus](http://www.angryoctopus.co.nz/)
 
@@ -22,9 +23,13 @@ The project is in development stage. **!! Not fully working prototype !!**
 
 The beta status will be reached on a full prototype.
 
-## Try it
+## Download
 
-Right now if you want to try it download this project and download also the [PLIK library](https://github.com/yupswing/plik). Then set PLIK on haxelib
+Coming soon **Mac** and **Windows** version.
+
+## Try it from the sources
+
+Right now, if you want to try it, download this project and download also the [PLIK library](https://github.com/yupswing/plik). Then set PLIK on haxelib
 ````
 haxelib dev plik path/to/plik
 ````
@@ -33,7 +38,7 @@ then cd to tilecraft and run with
 lime test mac/windows/linux -Dv2 -Dlegacy
 ````
 
-**Note**: NEKO is very slow on light rendering, run native instead
+**Note**: NEKO is very slow on light rendering, run native instead (support Windows, Mac and Linux)
 
 **Note**: Save and load are functional but they always point to a file in /var/tmp (only mac/linux) because of troubles with *systool.Dialogs*
 
