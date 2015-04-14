@@ -68,7 +68,7 @@ class TileCraft extends Screen
 	var _modelView:ModelView = null;
 
 	// status
-	var _modelIsPreviewMode:Bool=true;
+	var _modelPreviewMode:Bool=true;
 	var _colorPickerOnStage:Bool = false;
 
 	// INTERFACE SIZE ------------------------------------------------------------
@@ -85,7 +85,7 @@ class TileCraft extends Screen
 	public static inline var RENDER_WIDTH = 320;
 	public static inline var RENDER_HEIGHT = 480;
 
-	var currentRenderer = new Renderer(RENDER_WIDTH,RENDER_HEIGHT);
+	var _theRenderer:Renderer = null;
 
 	public static var fxaaModes = [[8,8],[8,8],[8,1]]; //passes + outline
 	public static var renderModes = [0.5,0.25,0.125];
@@ -97,6 +97,8 @@ class TileCraft extends Screen
 	//============================================================================
 
 	public override function initialize():Void {
+
+		_theRenderer = new Renderer(RENDER_WIDTH,RENDER_HEIGHT); //init renderer
 
 		//initButtonTestCases(); // Just some button test
 		initMainToolbar(); // The shape toolbar
@@ -244,29 +246,28 @@ class TileCraft extends Screen
 
 	//############################################################################
 
-	public function renderModel(preview:Bool=true) {
-		#if (!v2 || neko)
-		preview=true;//TODO POSTFX need support for OpenFL3
-		#end
+	public function renderModel() {
 		//TODO this should be part of ModelView
 
 		// avoid too many calls at once
-		if (preview && haxe.Timer.stamp()-_lastRenderModelTime<0.05) return;
+		if (_modelPreviewMode && haxe.Timer.stamp()-_lastRenderModelTime<0.05) return;
 
 		// _modelView.setBitmapData(null); //TODO show some kind of modal while rendering
 
-		var bpd:BitmapData = currentRenderer.render(_theModel,-1,preview);
+		var bpd:BitmapData = _theRenderer.render(_theModel,_theModel.getIndexOfShape(getSelectedShape()),_modelPreviewMode);
 		_modelView.setBitmapData(bpd);
-		_modelIsPreviewMode = preview;
 
 		_lastRenderModelTime = haxe.Timer.stamp();
 	}
 
-	public function renderOutput(?changeScale=false) {
+	public function renderOutput(?changedScale=false) {
 		#if (v2 && !flash) //TODO POSTFX need support for OpenFL3
 
 		//TODO show some kind of modal while rendering
-		if (_modelIsPreviewMode) renderModel(false);
+		if (_modelPreviewMode) {
+			_modelPreviewMode = false;
+			renderModel();
+		}
 
 		var source:BitmapData = _modelView.getBitmapData();
 		var output:BitmapData;
@@ -292,8 +293,18 @@ class TileCraft extends Screen
 		// set output view
 		_outputView.setBitmapData(output);
 
-		if (changeScale) _outputView.drawBackground();
+		if (changedScale) _outputView.drawBackground();
 		#end
+	}
+
+	public function render(preview:Bool,?forceRender:Bool=false) {
+		#if (!v2 || neko)
+		preview = true //TODO POSTFX need support for OpenFL3
+		#end
+		if (preview==_modelPreviewMode && !forceRender) return;
+		_modelPreviewMode = preview;
+		renderModel();
+		//if (preview==false) renderOutput();
 	}
 
 	//============================================================================
@@ -324,8 +335,7 @@ class TileCraft extends Screen
 		_theModel = model;
 		refreshPalette();
 		refreshShapeList();
-		renderModel(false);
-		renderOutput();
+		render(false,true);
 		//APP.log(_theModel.toPNGString(_outputBitmap.bitmapData)); //TODO should be a TextField to output this on request
 	}
 
@@ -335,16 +345,27 @@ class TileCraft extends Screen
 
 	public function updateModel() {
 		// called when something change the model
-		renderModel(false);
+		renderModel();
+	}
+
+	public function updateShapeLocked(shape:Shape) {
+		if (shape==getSelectedShape() && shape.locked==true) {
+			deselect();
+		}
 	}
 
 	public function setSelectedShape(shape:Shape):Shape {
+		if (shape==_theSelectedShape) return null;
 		_theSelectedShape = shape;
 		_shapeViewList.selectByShape(shape); //dispatch
 		_modelView.select(shape); //dispatch
 		if (shape!=null) {
 			_colorToolbar.selectByIndex(shape.color);
 			_mainToolbar.select(_mainToolbar.getButtonByValue(shape.shapeType));
+			render(true,true);
+		} else {
+			_mainToolbar.selectByIndex(0); //select pointer
+			render(false,true);
 		}
 		return shape;
 	}
@@ -359,17 +380,26 @@ class TileCraft extends Screen
 		hideColorPicker();
 	}
 
+
+	public function getShapeInCoordinates(x:Int,y:Int):Shape {
+		// used by ModelView
+		return _theModel.getShapeByIndex(_theRenderer.getSelect(x,y));
+	}
+
 	public function addShape(shape:Shape) {
 		// called to add a shape
-		_shapeViewList.add(shape); //dispatch
 		_theModel.addShape(shape);
+
+		_shapeViewList.add(shape); //dispatch
 	}
 
 	public function removeShape(shape:Shape) {
 		// called to remove a shape
-		if (_theSelectedShape == shape) setSelectedShape(null);
-		_shapeViewList.remove(shape); //dispatch
 		_theModel.removeShape(shape);
+
+		if (_theSelectedShape == shape) setSelectedShape(null);
+		else render(_modelPreviewMode,true);
+		_shapeViewList.remove(shape); //dispatch
 	}
 
 	public function changeShapeType(shapeType:ShapeType) {
@@ -427,7 +457,7 @@ class TileCraft extends Screen
 		changeColor(index,color);
 
 		// render model preview
-		renderModel(true);
+		render(true,true);
 	}
 
 	// a shapetype was selected in the main _mainToolbar
@@ -605,9 +635,8 @@ class TileCraft extends Screen
 		_colorPickerOnStage = false;
 
 		//out of preview
-		if (_modelIsPreviewMode) { //TODO unified system to handle preview mode
-			renderModel(false);
-			renderOutput();
+		if (_modelPreviewMode && getSelectedShape()==null) {
+			render(false,true);
 		}
 	}
 

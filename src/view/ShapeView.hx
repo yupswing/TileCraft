@@ -1,5 +1,6 @@
 package view;
 
+import com.akifox.plik.*;
 import com.akifox.plik.gui.*;
 import openfl.display.Bitmap;
 import openfl.display.BitmapData;
@@ -20,6 +21,7 @@ class ShapeView extends Box {
   private var _lock:Button;
 
   private var _icon:Bitmap;
+  private var _iconContainer:SpriteContainer = new SpriteContainer();
 
   var _isSelected:Bool = false;
   public var isSelected(get,set):Bool;
@@ -35,13 +37,16 @@ class ShapeView extends Box {
     return _height;
   }
 
+  public function select(_) {
+    _list.select(this);
+  }
+
   public function new(list:ShapeViewList,shape:Shape,width:Float=0) {
     _list = list;
     _width = width;
     _shape = shape;
     super(Style.getStyle('.box.shapeview'));
 
-    addEventListener(MouseEvent.CLICK,function(e:MouseEvent) { list.select(this); });
 
     var offset_x:Float = _style.padding;
     var offset_y:Float = _style.padding;
@@ -51,7 +56,9 @@ class ShapeView extends Box {
     _icon = new Bitmap(makeIcon());
     _icon.x = offset_x+buttonStyle.padding+_style.offset;
     _icon.y = offset_y+buttonStyle.padding;
-    addChild(_icon);
+    _iconContainer.addChild(_icon);
+    addChild(_iconContainer);
+    _iconContainer.addEventListener(MouseEvent.CLICK,select);
 
     offset_x += (_icon.width+buttonStyle.padding*2+_style.offset)+_style.offset;
 
@@ -99,6 +106,10 @@ class ShapeView extends Box {
 
     this.draw(_width,0,_isSelected);
   }
+
+	public override function toString():String {
+		return '[ShapeView $_shape]';
+	}
 
   public function makeIcon():BitmapData {
 

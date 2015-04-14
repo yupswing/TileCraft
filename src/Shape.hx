@@ -42,6 +42,10 @@ class Shape {
 		locked = false;
 	}
 
+	public function toString():String {
+		return '[Shape ($x1,$y1,$z1-$x2,$y2,$z2)]';
+	}
+
 	public function getX1():Int { return this.x1; }
 	public function getX2():Int { return this.x2; }
 	public function getY1():Int { return this.y1; }

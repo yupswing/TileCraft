@@ -3,6 +3,7 @@ package view;
 import openfl.display.Bitmap;
 import openfl.display.BitmapData;
 import openfl.display.Graphics;
+import openfl.events.MouseEvent;
 import com.akifox.plik.*;
 import openfl.geom.Point;
 import openfl.geom.Rectangle;
@@ -54,6 +55,8 @@ class ModelView extends SpriteContainer {
     addChild(_foreground);
 
     drawBackground();
+
+    addEventListener(MouseEvent.CLICK,onClick);
   }
 
   public function select(shape:Shape):Shape {
@@ -64,6 +67,7 @@ class ModelView extends SpriteContainer {
     _selectedShape = shape;
     _base.setSelectedShape(shape);
 
+    // set handle points
 		var top:Rectangle = getTop(shape);
     var side:Rectangle = getSide(shape);
 		handles[0].y = top.y;
@@ -136,12 +140,11 @@ class ModelView extends SpriteContainer {
 		var y1:Float = 0;
 
     var s:Shape = _selectedShape;
+
+    // draw _selectedShape shape projection
+    g = _projection.graphics;
+    g.clear();
 		if(s!=null){
-
-      // draw _selectedShape shape projection
-      g = _projection.graphics;
-      g.clear();
-
       var color = _base.getColor(s.getColor());
 			var h2 = (_height)/2;
 			var cw = (_width)/Model.MODEL_SIZE;
@@ -156,10 +159,12 @@ class ModelView extends SpriteContainer {
 			rect.y = h2 - (s.z2*ch);
 			rect.height = (h2 - (s.z1*ch) - rect.y);
 			g.drawRect(rect.x, rect.y, rect.width, rect.height);
+    }
 
-      // draw handles
-      g = _foreground.graphics;
-      g.clear();
+    // draw handles
+    g = _foreground.graphics;
+    g.clear();
+    if(s!=null){
 
       g.lineStyle(1,0xFFFFFF,0.5);
       g.moveTo(handles[0].x,handles[0].y);
@@ -194,6 +199,7 @@ class ModelView extends SpriteContainer {
 	}
 
 	public function getTop(s:Shape):Rectangle{
+    // get top side of the cube (projected)
     var h2 = (_height)/2;
     var cw = (_width)/Model.MODEL_SIZE;
     var ch = (_height)/(Model.MODEL_SIZE*2);
@@ -206,6 +212,7 @@ class ModelView extends SpriteContainer {
 	}
 
 	public function getSide(s:Shape):Rectangle{
+    // get front side of the cube (projected)
     var h2 = (_height)/2;
     var cw = (_width)/Model.MODEL_SIZE;
     var ch = (_height)/(Model.MODEL_SIZE*2);
@@ -215,6 +222,65 @@ class ModelView extends SpriteContainer {
 		rect.y = h2 - (s.z2 - s.y2)*ch;
 		rect.height = (h2 - (s.z1 - s.y2)*ch) - rect.y;
 		return rect;
+	}
+
+	private function getHandle(x:Float, y:Float):Int{
+		if(_selectedShape == null) return -1;
+		var hw2 = HANDLE_WIDTH/2;
+		for(i in 0...handles.length){
+			var h:Point = handles[i];
+			if(x > h.x - hw2 && x < h.x + hw2 && y > h.y - hw2 && y < h.y + hw2){
+				return i;
+			}
+		}
+		return -1;
+	}
+
+
+	public function onClick(e:MouseEvent) {
+		var x = e.localX-PADDING;
+		var y = e.localY-PADDING;
+
+		// if(addShape != null){
+		// 	modler.modelChanged();
+		// 	mouseEntered(me);
+		// 	mouseMoved(me);
+		// } else {
+			handle = getHandle(x,y);
+			if(handle < 0){
+        var shape:Shape = null;
+				if(x >= 0 && x < _width && y >= 0 && y < _height){
+          shape = _base.getShapeInCoordinates(Std.int(x),Std.int(y));
+				}
+				if(shape != null && shape.locked) shape = null;
+				if(shape != null){
+					var top:Rectangle = getTop(shape);
+					moveXY = top.contains(x,y);
+				}
+        select(shape);
+			}
+		// }
+	}
+
+
+	public function clampSize(value:Int):Int{
+		if(value < 0){
+			return 0;
+		} else if (value > Model.MODEL_SIZE){
+			return Model.MODEL_SIZE;
+		} else {
+			return value;
+		}
+	}
+
+	public function clamp(value:Int, min:Int, max:Int):Int{
+		if (value < min){
+			return min;
+		} else if (value > max){
+			return max;
+		} else {
+			return value;
+		}
 	}
 
   public function setBitmapData(bitmapData:BitmapData) {

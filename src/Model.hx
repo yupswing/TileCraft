@@ -72,6 +72,7 @@ class Model {
 	}
 
 	public function getShapeByIndex(index:Int):Shape {
+		if (index<0 || index>shapes.length-1) return null;
 		return shapes[index];
 	}
 

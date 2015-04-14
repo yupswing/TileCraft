@@ -71,15 +71,13 @@ class ShapeViewList extends Box {
   }
 
   public function remove(shape:Shape) {
-    // TODO this is not right (mixing model + shapeviewlist removals)
     for (i in 0..._shapesView.length) {
       if (_shapesView[i].getShape()==shape) {
         if (_selected==_shapesView[i]) _selected = null; //deselect
         _scrollable.removeChild(_shapesView[i]); //remove from view
-        _shapesView.remove(_shapesView[i]); //remove from array list
+        _shapesView.remove(_shapesView[i]); //remove from array list (do this before calling the _base to avoid loops)
         _base.removeShape(shape); //remove from model
         updatePositions();
-        updateModel();
         updateScroll();
         break;
       }
@@ -174,18 +172,14 @@ class ShapeViewList extends Box {
     }
   }
 
-  public function updateModel() {
-    _base.updateModel();
-  }
-
   public function toggleEnabledShape(shape:Shape) {
     shape.enabled = !shape.enabled;
-    updateModel();
+    _base.updateModel();
   }
 
   public function toggleLockedShape(shape:Shape) {
     shape.locked = !shape.locked;
-    updateModel();
+    _base.updateShapeLocked(shape);
   }
 
   //============================================================================
