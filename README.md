@@ -9,37 +9,35 @@
 # TileCraft (alpha)
 2.5D multi-platform modeler to make tiles
 
-This project is a conversion to Haxe of Java LGMODELER
+Based on [LGModeler](https://github.com/angryoctopus/lgmodeler) by [AngryOctupus](http://www.angryoctopus.co.nz/)
 
-**(There are actually a lot of improvements!)**
+Original idea from [lostgarden.com](http://www.lostgarden.com/2013/10/prototyping-challenge-3d-modeling-tool.html)
 
-Original project https://github.com/angryoctopus/lgmodeler
-
-Original idea http://www.lostgarden.com/2013/10/prototyping-challenge-3d-modeling-tool.html
-
-![Alpha7 Interface](https://dl.dropboxusercontent.com/u/683344/akifox/tilecraft/git/interface.png)
+![Alpha8 Interface](https://dl.dropboxusercontent.com/u/683344/akifox/tilecraft/git/interface.png)
 
 ## Alpha status
 
 The project is in development stage. **!! Not fully working prototype !!**
+(Basically missing some dialogs to save and load files)
 
 The beta status will be reached on a full prototype.
 
 ## Try it
 
 Right now if you want to try it download this project and download also the [PLIK library](https://github.com/yupswing/plik). Then set PLIK on haxelib
-
-````haxelib dev plik path/to/plik````
-
+````
+haxelib dev plik path/to/plik
+````
 then cd to tilecraft and run with
+````
+lime test mac/windows/linux -Dv2 -Dlegacy
+````
 
-````lime test mac/windows/linux -Dv2 -Dlegacy````
+**Note**: NEKO is very slow on light rendering, run native instead
 
 **Note**: Save and load are functional but they always point to a file in /var/tmp (only mac/linux) because of troubles with *systool.Dialogs*
 
-**Note**: There are some premade model inside the code. Just comment/uncomment the lines [here](src/TileCraft.hx#L673).
-
-**Note**: Most of the interface works but there are still some dummy buttons. Don't worry if the environment looks unfinished because it is! ;)
+**Note**: There are some premade model inside the code. Just comment/uncomment the lines [here](src/TileCraft.hx#L114).
 
 ## Milestones
 
@@ -60,12 +58,8 @@ then cd to tilecraft and run with
 
 The model, renderer and i/o is fully functional ( [Same model in LGModeler](http://www.angryoctopus.co.nz/lgmodler/index.php?model=FQQA____Ezw5DkBLCjwAWldvAGlIj1CrKhJwRZrNMEtIzmJFGhKCq5rNAiNnvALNRc0CzXgSAiNFEgJ4Zg9MacxpDng7eEMS3gFD3t4BAy3eAUBF3gFDq-8B) )
 
-(NEKO is very slow on light rendering, run native instead)
-
-### Model View Render (full)
 ![Comparison](https://dl.dropboxusercontent.com/u/683344/akifox/tilecraft/git/comparison.png)
 
-### Final PNG Render
 ![Final render comparison](https://dl.dropboxusercontent.com/u/683344/akifox/tilecraft/git/rendercomparison.png)
 
 # TODO
