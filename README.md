@@ -54,13 +54,15 @@ lime test mac/windows/linux -Dv2 -Dlegacy
  - *release: Done!*
 
 
-## Comparison with original LGmodeler renderer
+## Lostgarden challenge
 
-The model, renderer and i/o is fully functional ( [Same model in LGModeler](http://www.angryoctopus.co.nz/lgmodler/index.php?model=FQQA____Ezw5DkBLCjwAWldvAGlIj1CrKhJwRZrNMEtIzmJFGhKCq5rNAiNnvALNRc0CzXgSAiNFEgJ4Zg9MacxpDng7eEMS3gFD3t4BAy3eAUBF3gFDq-8B) )
+The original idea for this tool comes from [lostgarden.com](http://www.lostgarden.com/2013/10/prototyping-challenge-3d-modeling-tool.html)
 
-![Comparison](https://dl.dropboxusercontent.com/u/683344/akifox/tilecraft/git/comparison.png)
+Here's the test-cases he provides to check the efficiency of the tool.
 
-![Final render comparison](https://dl.dropboxusercontent.com/u/683344/akifox/tilecraft/git/rendercomparison.png)
+This were made in just five 5 minutes (all of them!)
+
+![Test Cases](https://dl.dropboxusercontent.com/u/683344/akifox/tilecraft/git/test-cases.png)
 
 # TODO
  - General

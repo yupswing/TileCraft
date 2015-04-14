@@ -34,8 +34,7 @@ class ModelView extends SpriteContainer {
   private static inline var TOP_HANDLE = 0x535d6c;
   private static inline var SIDE_HANDLE = 0x373e48;
 
-  public static inline var PADDING = 30;
-
+  public static inline var PADDING = 50; //padding for the listeners
 
   public function new(base:TileCraft,width:Float,height:Float) {
     super();
