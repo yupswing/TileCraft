@@ -104,8 +104,10 @@ class Renderer {
           x++;
 					continue;
 				}
-
-        sortSlices(slices,Slice.compare,sliceCount);
+				// TODO it could be better maybe (too much computation)
+        sortSlices(slices,Slice.compareY,sliceCount); //preorder by Y
+        sortSlices(slices,Slice.compareZ,sliceCount); //preorder by Z
+        sortSlices(slices,Slice.compare,sliceCount); //order slices
 
         var i:Int = 0;
         while(i<sliceCount) {
@@ -309,6 +311,10 @@ class Slice {
 		//nothing
   }
 
+	public function toString():String {
+		return '[Slice ($y1,$y2-$z1,$z2)]';
+	}
+
 	public function set(y1:Int, z1:Int, y2:Int, z2:Int, color:Int, index:Int, normal:Float):Void{
 		this.y1 = y1;
 		this.z1 = z1;
@@ -360,10 +366,20 @@ class Slice {
 		return offset;
 	}
 
+	public static function compareY(s1:Slice,s2:Slice):Int {
+		if (s1.y1<s2.y1) return -1;
+		return 1;
+	}
+
+	public static function compareZ(s1:Slice,s2:Slice):Int {
+		if (s1.z1<s2.z1) return -1;
+		return 1;
+	}
+
 	public static function compare(s1:Slice,s2:Slice):Int {
 		if(s1.z2 <= s2.z1){
 			return -1;
-		} else if (s2.z2 < s1.z1){
+		} else if (s2.z2 <= s1.z1){
 			return 1;
 		} else if (s2.y1 >= s1.y2){
 			return -1;

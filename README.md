@@ -87,7 +87,7 @@ The model, renderer and i/o is fully functional ( [Same model in LGModeler](http
   - [x] POSTFX shaders (apply FXAA to have smooth output image)
   - [x] output different size
   - [x] POSTFX make FXAA support alpha channel
-  - [ ] **BETA** Fix incorrect Z rendering
+  - [x] Fix incorrect rendering (ordering slices)
   - [ ] **BETA** Support edge smoothing
   - [ ] **BETA** batch renderer and save to file
   - [ ] **BETA** Trick NORM to have N/E Ramps and rounded N/S edges

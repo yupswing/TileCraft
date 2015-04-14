@@ -117,10 +117,10 @@ class TileCraft extends Screen
 		//var original = "EgQCAJn_Zv8zETxKKyZGRp4mm0aeRFaaeUSamnlEVokBRJqJAUNmmnhDqpp4FzxZvCxVV90sqmfdRGaaREYBRVVG70VVCh5FVRxVRO8cqkTv";
 
 		// complex shape
-		//var original = "Ff//1fb/QEW7PqXys9vuJDI/OVJXUpAjpswzUUY1p3At////9+F2vjJB33qSfoaPprO8Ezw5DkBLCjwAWldvAGlIj1CrKhJwRZrNMEtIzmJFGhKCq5rNAiNnvALNRc0CzXgSAiNFEgJ4Zj9MacxpDng7eEMS3gFD3t4BAy3eAUBF3gFDq+8B";
+		var original = "Ff//1fb/QEW7PqXys9vuJDI/OVJXUpAjpswzUUY1p3At////9+F2vjJB33qSfoaPprO8Ezw5DkBLCjwAWldvAGlIj1CrKhJwRZrNMEtIzmJFGhKCq5rNAiNnvALNRc0CzXgSAiNFEgJ4Zj9MacxpDng7eEMS3gFD3t4BAy3eAUBF3gFDq+8B";
 
 		// easy cube
-		var original = "AgAAAXhWZxESeAE.";
+		//var original = "AgAAAXhWZxESeAE.";
 
 		// question mark
 		//var original = "BgAABmdnAUY5Z19ASGd9ADVnCwZnZ1ZgNWfP";
@@ -336,6 +336,7 @@ class TileCraft extends Screen
 		refreshPalette();
 		refreshShapeList();
 		render(false,true);
+		//APP.log(_theModel.toString(true));
 		//APP.log(_theModel.toPNGString(_outputBitmap.bitmapData)); //TODO should be a TextField to output this on request
 	}
 
