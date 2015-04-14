@@ -4,6 +4,7 @@ import com.akifox.plik.gui.*;
 import com.akifox.plik.atlas.*;
 import openfl.display.BitmapData;
 using hxColorToolkit.ColorToolkit;
+import com.akifox.asynchttp.*;
 
 
 class APP {
@@ -44,6 +45,7 @@ class APP {
   //////////////////////////////////////////////////////////////////////////////
   // URLs and FILEs
 
+	private static inline var URL_SERVICE_VERSION = "http://akifox.com/tilecraft/service/version/";
   public static inline var LINK_UPDATE = "http://akifox.com/tilecraft/get/";
   public static inline var LINK_WWW = "http://akifox.com/tilecraft/";
 
@@ -200,4 +202,28 @@ class APP {
     if (APP.atlasSPRITES==null) APP.atlasSPRITES = Gfx.getTextureAtlas('sprites.xml');
 
   }
+
+	#if app_checkupdates
+	public static var onlineVersion:String = APP_VERSION;
+
+	public static function checkVersion(callback:Void->Void) {
+
+		var apiURL = URL_SERVICE_VERSION;
+
+		var request = new AsyncHttpRequest(apiURL + "?v=" + APP_VERSION,
+			function(response:AsyncHttpResponse) {
+				if (!response.isOK) return;
+
+				var json:Dynamic = response.toJson();
+		    	if (json == null || Std.int(json.e) > 0) return;
+
+					APP.onlineVersion = Std.string(json.c.version);
+		    	if (APP.onlineVersion != APP_VERSION) callback();
+
+			});
+
+		request.send(); //async send
+
+	}
+	#end // app_checkupdates
 }

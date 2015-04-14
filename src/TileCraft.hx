@@ -26,7 +26,7 @@ import view.*;
 import postfx.*;
 #end
 
-//import systools.Dialogs; //TODO temporary disabled because it crashes the app when the dialog close (MAC64)
+// import systools.Dialogs; //TODO temporary disabled because it crashes the app when the dialog close (MAC64)
 
 import haxe.io.Bytes;
 import haxe.io.BytesBuffer;
@@ -59,6 +59,8 @@ class TileCraft extends Screen
 	var _colorToolbar:Toolbar;
 	var _previewColorToolbar:Toolbar;
 	var _outputActionToolbar:Toolbar;
+
+	var _newVersionSprite:SpriteContainer = new SpriteContainer();
 
 	var _colorPicker:ColorPickerView;
 
@@ -176,6 +178,9 @@ class TileCraft extends Screen
 
 	public override function start() {
 		super.start();  // call resume
+		#if app_checkupdates
+		APP.checkVersion(showNewVersion);
+		#end
 	}
 
 	public override function hold():Void {
@@ -261,6 +266,9 @@ class TileCraft extends Screen
 		_shapeViewList.x = rwidth-SHAPELIST_WIDTH;
 		_shapeViewList.y = ACTIONBAR_HEIGHT;
 		_shapeViewList.updateHeight(rheight-ACTIONBAR_HEIGHT-STATUSBAR_HEIGHT);
+
+		_newVersionSprite.x = rwidth-SHAPELIST_WIDTH-PREVIEW_WIDTH;
+		_newVersionSprite.y = 0;
 
 	}
 
@@ -574,6 +582,21 @@ class TileCraft extends Screen
 		setSelectedShape(shape);
 	}
 
+	#if app_checkupdates
+	public function showNewVersion() {
+		//trace(APP.onlineVersion);
+		var text = new Text("New version "+APP.onlineVersion+" available\nClick here to download",12,
+												APP.COLOR_ORANGE,openfl.text.TextFormatAlign.CENTER,APP.FONT_LATO_BOLD);
+		text.t.setAnchoredPivot(Transformation.ANCHOR_MIDDLE_CENTER);
+		text.t.x = PREVIEW_WIDTH/2;
+		text.t.y = ACTIONBAR_HEIGHT/2;
+		addChild(_newVersionSprite);
+		_newVersionSprite.addChild(text);
+		_newVersionSprite.addEventListener(MouseEvent.CLICK,
+			function(e:MouseEvent){com.akifox.plik.Utils.gotoWebsite(APP.LINK_UPDATE);});
+	}
+	#end
+
 	//============================================================================
 
 	public function newModel() {
@@ -676,6 +699,7 @@ class TileCraft extends Screen
 		// 						 , extensions: [extension]
 		// 					  }
 		// 						);
+		// Sys.sleep(0.5);
 		// APP.log('OPENDIALOG RESPONSE: '+files);
 		// if (files==null) return null;
 		// return files[0];

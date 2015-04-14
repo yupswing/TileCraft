@@ -66,9 +66,9 @@ This were made in just five 5 minutes (all of them!)
 
 # TODO
  - General
-  - [ ] Check online for updates
-  - [ ] Unified dispatcher
+  - [x] Check online for updates
   - [ ] **BETA** Housekeeping (make the whole more coherent)
+  - [ ] **RC**Unified dispatcher
   - [ ] **RC** Online repository
   - [ ] **RC** Make sure everything got disposed/destroyed
   - [ ] **RC** Make sure every listener got removed
@@ -92,9 +92,9 @@ This were made in just five 5 minutes (all of them!)
  - Model
   - [x] Convert LGModeler Model
   - [x] Support for PNG Output with embedded model data
-  - [ ] Add author and model name to PNG metadata
-  - [ ] Save enabled and lock to model data (tcMa)
-  - [ ] Permit change color0 to be used as floor (and render it)
+  - [ ] **BETA** Add author and model name to PNG metadata
+  - [ ] **BETA** Save enabled and lock to model data (tcMa)
+  - [ ] **BETA** Permit change color0 to be used as floor (and render it)
   - [ ] **BETA** Add more primitives (Prism, Arc)
   - [ ] **BETA** Use color index 0 as floor color (if set)
   - [ ] **BETA** Extend to 64 shapes
@@ -104,9 +104,9 @@ This were made in just five 5 minutes (all of them!)
   - [x] ShapeList dragging to reorder shapes in model
   - [x] Add shape to model
   - [x] Clone shape
-  - [ ] Save/Load file (fix Dialogs)
-  - [ ] I/O from string (Base64)
-  - [ ] History (basic keep last 5 models as steps)
+  - [ ] Save/Load file (fix Dialogs) **TODO TO GO BETA**
+  - [ ] I/O from string (Base64) **TODO TO GO BETA**
+  - [ ] History (basic keep last 5 models as steps) **TODO TO GO BETA**
   - [ ] **BETA** Report error to the user via GUI
   - [ ] **BETA** Report waiting (render especially) with Thread (and GUI modal 'box')
   - [ ] **BETA** Minimap (Orthogonal Top and Side view)
