@@ -1,4 +1,4 @@
-[![TileCraft](https://img.shields.io/badge/app-TileCraft%201.0.0%20alpha7dev-brightgreen.svg)]()
+[![TileCraft](https://img.shields.io/badge/app-TileCraft%201.0.0%20alpha7-brightgreen.svg)]()
 [![MIT License](https://img.shields.io/badge/license-GNU%20GPL%203-blue.svg)](LICENSE)
 [![Status](https://img.shields.io/badge/status-ALPHA-orange.svg)](#)
 
@@ -17,7 +17,7 @@ Original project https://github.com/angryoctopus/lgmodeler
 
 Original idea http://www.lostgarden.com/2013/10/prototyping-challenge-3d-modeling-tool.html
 
-![Alpha6 Interface](https://dl.dropboxusercontent.com/u/683344/akifox/tilecraft/git/interface.png)
+![Alpha7 Interface](https://dl.dropboxusercontent.com/u/683344/akifox/tilecraft/git/interface.png)
 
 ## Alpha status
 
@@ -39,7 +39,7 @@ then cd to tilecraft and run with
 
 **Note**: There are some premade model inside the code. Just comment/uncomment the lines [here](src/TileCraft.hx#L673).
 
-**Note**: Most of the interface works but there are still some dummy buttons. Don't worry if the enviroment looks unfinished because it is! ;)
+**Note**: Most of the interface works but there are still some dummy buttons. Don't worry if the environment looks unfinished because it is! ;)
 
 ## Milestones
 
@@ -49,7 +49,8 @@ then cd to tilecraft and run with
  - **alpha4: Basic interface**
  - **alpha5: Save to PNG (image+model) and big housekeeping**
  - **alpha6: Shape list + improved gui**
- - *alpha7: Model editing + dispatchers* **<-- in progress**
+ - **alpha7: Model editing**
+ - *alpha8: Preferences + I/O + check updates* **<-- in progress**
  - *beta stage: Improve interface and renderer*
  - *rc stage: Polish the app*
  - *release: Done!*
@@ -69,6 +70,7 @@ The model, renderer and i/o is fully functional ( [Same model in LGModeler](http
 
 # TODO
  - General
+  - [ ] Check online for updates
   - [ ] Unified dispatcher
   - [ ] **BETA** Housekeeping (make the whole more coherent)
   - [ ] **RC** Online repository
