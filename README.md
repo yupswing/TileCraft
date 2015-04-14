@@ -8,11 +8,16 @@
 
 # TileCraft (alpha)
 2.5D multi-platform modeler to make tiles for games or icons.
-Easy to use, save to PNG with alpha channel. Have some fun and [try it](#try-it)!
 
-Based on [LGModeler](https://github.com/angryoctopus/lgmodeler) by [AngryOctupus](http://www.angryoctopus.co.nz/)
+Easy to use, save to PNG with alpha channel.
 
-Original idea from [lostgarden.com](http://www.lostgarden.com/2013/10/prototyping-challenge-3d-modeling-tool.html)
+Have some fun and [try it](#try-it)!
+
+- Developed by [Simone Cingano](http://akifox.com)
+
+- Based on [LGModeler](https://github.com/angryoctopus/lgmodeler) by [AngryOctupus](http://www.angryoctopus.co.nz/)
+
+- Original idea from [lostgarden.com](http://www.lostgarden.com/2013/10/prototyping-challenge-3d-modeling-tool.html)
 
 ![Alpha8 Interface](https://dl.dropboxusercontent.com/u/683344/akifox/tilecraft/git/interface.png)
 
