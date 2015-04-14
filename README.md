@@ -77,7 +77,7 @@ The model, renderer and i/o is fully functional ( [Same model in LGModeler](http
   - [x] I/O + Base64 encoder/decoder *(improved in alpha4)*
   - [x] Renderer (Fast+Lights)
   - [x] GUInterface *(improved in alpha6)*
-  - [ ] Model wysiwyg editor **<-- in progress**
+  - [x] Model wysiwyg editor
  - Renderer
   - [x] Convert LGModeler Renderer
   - [x] POSTFX shaders (apply FXAA to have smooth output image)
