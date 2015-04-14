@@ -45,7 +45,8 @@ lime test mac/windows/linux -Dv2 -Dlegacy
 
 **Note**: NEKO is very slow on light rendering, run native instead (support Windows, Mac and Linux)
 
-**Note**: Save and load are functional but they always point to a file in /var/tmp (only mac/linux) because of troubles with *systool.Dialogs*
+**Note**: Save and load are functional but they always point to */var/tmp/tilecraft.png* (mac/linux) or *C:\tilecraft.png* (windows)
+because of troubles with *systool.Dialogs*
 
 **Note**: There are some premade model inside the code. Just comment/uncomment the lines [here](src/TileCraft.hx#L114).
 
@@ -75,10 +76,13 @@ This were made in just five 5 minutes (all of them!)
 ![Test Cases](https://dl.dropboxusercontent.com/u/683344/akifox/tilecraft/git/test-cases.png)
 
 # TODO
+
+The tag in bold, before every entry, indicates at what stage that feature will be, hopefully, implemented.
+
  - General
   - [x] Check online for updates
   - [ ] **BETA** Housekeeping (make the whole more coherent)
-  - [ ] **RC**Unified dispatcher
+  - [ ] **RC** Unified dispatcher
   - [ ] **RC** Online repository
   - [ ] **RC** Make sure everything got disposed/destroyed
   - [ ] **RC** Make sure every listener got removed

@@ -682,7 +682,12 @@ class TileCraft extends Screen
 	}
 
 	private function saveDialog(filetype:String,extension:String):String {
-		return "/var/tmp/test.png";
+		//TODO temporary fixed path waiting for a GUI
+		#if (windows)
+		return "C:\\tilecraft.png";
+		#else
+		return "/var/tmp/tilecraft.png";
+		#end
 		// var file = Dialogs.saveFile
 		// 						( "Select a file please, or type name"
 		// 						, "This additional message will only be shown on OSX"
@@ -698,7 +703,12 @@ class TileCraft extends Screen
 	}
 
 	private function openDialog(filetype:String,extension:String):String {
-		return "/var/tmp/test.png";
+		//TODO temporary fixed path waiting for a GUI
+		#if (windows)
+		return "C:\\tilecraft.png";
+		#else
+		return "/var/tmp/tilecraft.png";
+		#end
 		// var files = Dialogs.openFile
 		// 						( "Select a file please, or type name"
 		// 						, "This additional message will only be shown on OSX"
