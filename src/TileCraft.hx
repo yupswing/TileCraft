@@ -777,7 +777,7 @@ class TileCraft extends Screen
 	private function exportBase64Call() {
 		var _dialog:DialogMessage = new DialogMessage(exportBase64Response,
 																		false, //no input
-																		_theModel.toString(),
+																		_theModel.toString(true),
 																		Style.getStyle('.dialog'),
 																		Style.getStyle('.dialogBox'),
 																		Style.getStyle('.button'),
@@ -793,7 +793,7 @@ class TileCraft extends Screen
 	private function exportBase64Response(dialog:Dialog) {
 		if (!cast(dialog.value,Bool)) {
 			//Copy
-			systools.Clipboard.setText(_theModel.toString());
+			systools.Clipboard.setText(_theModel.toString(true));
 		}
 		removeChild(dialog);
 		dialog.destroy();
