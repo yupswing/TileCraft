@@ -96,8 +96,6 @@ class TileCraft extends Screen
 	var renderMode = 0;
 	var renderOutline:Bool = false;
 
-	var _lastRenderModelTime:Float = 0;
-
 	//============================================================================
 
 	public override function initialize():Void {
@@ -283,14 +281,13 @@ class TileCraft extends Screen
 		//TODO this should be part of ModelView
 
 		// avoid too many calls at once
-		if (_modelPreviewMode && haxe.Timer.stamp()-_lastRenderModelTime<0.01) return; //TODO make the modelview be delayed as well
+		if (APP.isDelayLocked()) return;
 
 		// _modelView.setBitmapData(null); //TODO show some kind of modal while rendering
 
 		var bpd:BitmapData = _theRenderer.render(_theModel,_theModel.getIndexOfShape(getSelectedShape()),_modelPreviewMode);
 		_modelView.setBitmapData(bpd);
-
-		_lastRenderModelTime = haxe.Timer.stamp();
+		APP.updateDelay(); // Only updater for delay!
 	}
 
 	public function renderOutput(?changedScale=false) {

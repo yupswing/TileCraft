@@ -11,7 +11,7 @@ class APP {
 
 
 	public static inline function log(string:String) {
-		trace('>>> $string');
+		//trace('>>> $string');
 	}
 
 	public static inline function error(string:String) {
@@ -36,6 +36,17 @@ class APP {
   #else "---"
   #end;
   public static inline var APP_BGCOLOR = 0xEEEEEE ;
+
+	public static inline var DELAY = 0.01;
+	private static var _lastDelay:Float = 0;
+
+	public static function isDelayLocked():Bool {
+		return haxe.Timer.stamp()-_lastDelay<APP.DELAY;
+	}
+
+	public static function updateDelay() {
+		_lastDelay = haxe.Timer.stamp();
+	}
 
   //////////////////////////////////////////////////////////////////////////////
   // Atlases (faster retrive than asking to cache system)

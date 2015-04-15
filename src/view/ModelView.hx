@@ -252,6 +252,7 @@ class ModelView extends SpriteContainer {
 
   private var _isDragging = false;
   private function onMouseMove(event:MouseEvent) {
+    if (APP.isDelayLocked()) return;
 
     if (!_isDragging) return;
     if (_selectedShape==null) return;
