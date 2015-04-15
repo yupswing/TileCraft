@@ -182,7 +182,7 @@ class TileCraft extends Screen
 		#if app_checkupdates
 		APP.checkVersion(showNewVersion);
 		#end
-		if (openfl.display.OpenGLView.isSupported) {
+		if (!openfl.display.OpenGLView.isSupported) {
 			messageCall("OpenGL PostFX are not supported on this machine\nThe render quality will be low!");
 		}
 	}
@@ -370,7 +370,7 @@ class TileCraft extends Screen
 	private function changeModel(model:Model) {
 		if (model==null) {
 			//TODO report the problem to the user (CHECK ALL PROJECT FOR THIS KIND OF MISSING FEEDBACKS)
-			APP.error('invalid change model');
+			APP.error('Unable to change the model');
 			return;
 		}
 		if (_theModel!=null) _theModel.destroy();
@@ -685,7 +685,7 @@ class TileCraft extends Screen
 		#end
 	}
 
-	private function saveDialog(filetype:String,extension:String):String {
+	private function saveDialog(filetype:String="",extension:String=""):String {
 		//TODO temporary fixed path waiting for a GUI
 		#if (windows)
 		return "C:\\tilecraft.png";
@@ -706,7 +706,7 @@ class TileCraft extends Screen
 		// return "";
 	}
 
-	private function openDialog(filetype:String,extension:String):String {
+	private function openDialog(filetype:String="",extension:String=""):String {
 		//TODO temporary fixed path waiting for a GUI
 		#if (windows)
 		return "C:\\tilecraft.png";
@@ -766,7 +766,8 @@ class TileCraft extends Screen
 	private function quitResponse(dialog:Dialog) {
 		if (cast(dialog.value,Bool)) PLIK.quit();
 		removeChild(dialog);
-		dialog = null; //TODO need to be destroyed
+		dialog.destroy();
+		dialog = null;
 	}
 
 	//============================================================================
@@ -792,7 +793,8 @@ class TileCraft extends Screen
 			systools.Clipboard.setText(_theModel.toString());
 		}
 		removeChild(dialog);
-		dialog = null; //TODO need to be destroyed
+		dialog.destroy();
+		dialog = null;
 	}
 
 	//============================================================================
@@ -811,7 +813,8 @@ class TileCraft extends Screen
 
 	private function dummyResponse(dialog:Dialog) {
 		removeChild(dialog);
-		dialog = null; //TODO need to be destroyed
+		dialog.destroy();
+		dialog = null;
 	}
 
 	//============================================================================
@@ -964,10 +967,20 @@ class TileCraft extends Screen
 					function(_) { newModel(); });
 		_actionToolbar.addButton("open",null,false,
 					[APP.atlasSPRITES.getRegion(APP.ICON_OPEN).toBitmapData()],
-					function(_) { openFile(); });
+					function(_) {
+						if (!openFile()){
+							messageCall("Unable to load: file I/O error\n"+openDialog());
+						}
+					});
 		_actionToolbar.addButton("save",null,false,
 					[APP.atlasSPRITES.getRegion(APP.ICON_SAVE).toBitmapData()],
-					function(_) { saveFile(); });
+					function(_) {
+						if (saveFile()) {
+							messageCall("File saved\n"+saveDialog());
+						} else {
+							messageCall("Unable to save: file I/O error\n"+saveDialog());
+						}
+					});
 		//_actionToolbar.addButton("-");
 		_actionToolbar.addButton("render",null,false,
 					[APP.atlasSPRITES.getRegion(APP.ICON_RENDER).toBitmapData()],
