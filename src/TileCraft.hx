@@ -33,6 +33,7 @@ import haxe.io.Bytes;
 import haxe.io.BytesBuffer;
 import haxe.io.BytesInput;
 #if sys
+import sys.FileSystem;
 import sys.io.FileInput;
 import sys.io.FileOutput;
 #end
@@ -616,13 +617,13 @@ class TileCraft extends Screen
 		changeModel(Model.makeNew());
 	}
 
-	public function saveFile():Bool {
+	public function saveFile(filename:String):Bool {
 		#if sys
 		// Render the _outputBitmap (TODO need to be better, maybe this system in ModelView)
 		render(false);
 
 		// Determine the file path
-		var filename:String = saveDialog("TileCraft PNG image","*.png");
+		//var filename:String = saveDialog("TileCraft PNG image","*.png");
 		if (filename==null) {
 			APP.log('User canceled the dialog');
 			return false;
@@ -652,10 +653,10 @@ class TileCraft extends Screen
 		#end
 	}
 
-	public function openFile():Bool {
+	public function openFile(filename:String):Bool {
 		#if sys
 		// Determine the file path
-		var filename:String = openDialog("TileCraft PNG image","*.png");
+		//var filename:String = openDialog("TileCraft PNG image","*.png");
 		if (filename==null) {
 			APP.log('User canceled the dialog');
 			return false;
@@ -684,48 +685,6 @@ class TileCraft extends Screen
 		#else
 		return false;
 		#end
-	}
-
-	private function saveDialog(filetype:String="",extension:String=""):String {
-		//TODO temporary fixed path waiting for a GUI
-		#if (windows)
-		return "C:\\tilecraft.png";
-		#else
-		return "/var/tmp/tilecraft.png";
-		#end
-		// var file = Dialogs.saveFile
-		// 						( "Select a file please, or type name"
-		// 						, "This additional message will only be shown on OSX"
-		// 						, "" // initial path, for windows only
-		// 						,{ count: 1
-		// 						 , descriptions: [filetype]
-		// 						 , extensions: [extension]
-		// 						}
-		// 						);
-		// APP.log('SAVE DIALOG RESPONSE: '+file);
-		// if (file!=null) return file;
-		// return "";
-	}
-
-	private function openDialog(filetype:String="",extension:String=""):String {
-		//TODO temporary fixed path waiting for a GUI
-		#if (windows)
-		return "C:\\tilecraft.png";
-		#else
-		return "/var/tmp/tilecraft.png";
-		#end
-		// var files = Dialogs.openFile
-		// 						( "Select a file please, or type name"
-		// 						, "This additional message will only be shown on OSX"
-		// 						,{ count: 1
-		// 						 , descriptions: [filetype]
-		// 						 , extensions: [extension]
-		// 					  }
-		// 						);
-		// Sys.sleep(0.5);
-		// APP.log('OPENDIALOG RESPONSE: '+files);
-		// if (files==null) return null;
-		// return files[0];
 	}
 
 	//============================================================================
@@ -989,6 +948,8 @@ class TileCraft extends Screen
 		addChild(_mainToolbar);
 	}
 
+	private static inline var SAVE_FOLDER = "export"; //TODO to be removed
+
 	private inline function initActionToolbar() {
 
 		// ACTION TOOLBAR ----------------------------------------------------------
@@ -1001,17 +962,25 @@ class TileCraft extends Screen
 		_actionToolbar.addButton("open",null,false,
 					[APP.atlasSPRITES.getRegion(APP.ICON_OPEN).toBitmapData()],
 					function(_) {
-						if (!openFile()){
-							messageCall("Unable to load: file I/O error\n"+openDialog());
+						//TODO to be removed when savedialog will work
+						var filename:String = SAVE_FOLDER + "/tilecraft-import.png";
+						if (!openFile(filename)){
+							messageCall("Unable to load: file I/O error\n"+filename);
 						}
 					});
 		_actionToolbar.addButton("save",null,false,
 					[APP.atlasSPRITES.getRegion(APP.ICON_SAVE).toBitmapData()],
 					function(_) {
-						if (saveFile()) {
-							messageCall("File saved\n"+saveDialog());
+						//TODO to be removed when savedialog will work
+						if ( !FileSystem.exists( SAVE_FOLDER ) ) {
+						    FileSystem.createDirectory( SAVE_FOLDER );
+						}
+						var filename:String = SAVE_FOLDER + "/tilecraft-" + Date.now().getTime() + ".png";
+
+						if (saveFile(filename)) {
+							messageCall("File saved\n"+filename);
 						} else {
-							messageCall("Unable to save: file I/O error\n"+saveDialog());
+							messageCall("Unable to save: file I/O error\n"+filename);
 						}
 					});
 		//_actionToolbar.addButton("-");

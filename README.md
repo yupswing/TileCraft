@@ -59,10 +59,11 @@ lime test mac/windows/linux -Dv2 -Dlegacy
 
 **Note**: NEKO is very slow on light rendering, run native instead (support Windows, Mac and Linux)
 
-**Note**: Save and load are functional but they always point to */var/tmp/tilecraft.png* (mac/linux) or *C:\tilecraft.png* (windows)
-because of troubles with *systool.Dialogs*
+**Note**: Right now the save action saves in '/export/tilecraft-XXXXXX.png' (same folder as the app)
 
-**Note**: There are some premade model inside the code. Just comment/uncomment the lines [here](src/TileCraft.hx#L114).
+*On Mac it will be inside the App package 'TileCraft.app/Contents/Resources/export'*
+
+**Note**: Right now the load action always load the file '/export/tilecraft-import.png' (same folder as the app)
 
 ## Some example models
 
