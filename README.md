@@ -1,12 +1,8 @@
-[![TileCraft](https://img.shields.io/badge/app-TileCraft%201.0.0%20alpha8dev-brightgreen.svg)]()
-[![MIT License](https://img.shields.io/badge/license-GNU%20GPL%203-blue.svg)](LICENSE)
-[![Status](https://img.shields.io/badge/status-ALPHA-orange.svg)](#)
-
-[![Haxe 3](https://img.shields.io/badge/language-Haxe%203-orange.svg)](http://www.haxe.org)
-[![OpenFL 2](https://img.shields.io/badge/require-OpenFL 2-red.svg)](http://www.openfl.org)
-[![Cross platform](https://img.shields.io/badge/platform-win%2Bmac%2Blinux-lightgrey.svg)](http://www.openfl.org)
-
-
+[![TileCraft](https://img.shields.io/badge/app-TileCraft%201.0.0%20alpha8dev-brightgreen.svg)](#) 
+[![MIT License](https://img.shields.io/badge/license-GNU%20GPL%203-blue.svg)](LICENSE) 
+[![Haxe 3](https://img.shields.io/badge/language-Haxe%203-orange.svg)](http://www.haxe.org) 
+[![OpenFL 2](https://img.shields.io/badge/require-OpenFL 2-red.svg)](http://www.openfl.org) 
+[![Cross platform](https://img.shields.io/badge/platform-win%2Bmac%2Blinux-yellow.svg)](http://www.openfl.org)
 # ![TILECRAFT](https://dl.dropboxusercontent.com/u/683344/akifox/tilecraft/git/title.png)
 
 2.5D multi-platform modeler to make tiles for games or icons.
