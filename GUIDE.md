@@ -1,5 +1,4 @@
-# How to use TileCraft
-A quick guide to explain how this modeling tool works.
+![How to use TileCraft](https://dl.dropboxusercontent.com/u/683344/akifox/tilecraft/git/guide/title.png)
 
 ## Index
 
