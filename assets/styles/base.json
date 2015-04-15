@@ -156,5 +156,14 @@
       "font_name":"assets/fonts/Lato-Bold.ttf",
       "font_size":22,
       "color":"0xFFFFFFFF"
+  },
+
+  "textInput":{
+      "font_name":"assets/fonts/Lato-Bold.ttf",
+      "font_size":22,
+      "color":"0x242424FF",
+      "background_color":"0xFFFFFFFF",
+      "padding":10,
+      "rounded":5
   }
 }

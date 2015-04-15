@@ -234,12 +234,14 @@ class Model {
 		}
 
 		//#if debug //TODO debug only
-		var reencoded = model.toString();
-		APP.log('-- > LOAD MODEL < ------------------------------------------------');
-		APP.log('Base64 Model IN:  ' + base64model);
-		APP.log('Base64 Model OUT: ' + reencoded);
-		APP.log((base64model==reencoded?"> TEST PASSED":"> TEST FAILED   *!*!*!* WARNING *!*!*!*"));
-		APP.log('------------------------------------------------------------------');
+		if (model!=null) {
+			var reencoded = model.toString();
+			APP.log('-- > LOAD MODEL < ------------------------------------------------');
+			APP.log('Base64 Model IN:  ' + base64model);
+			APP.log('Base64 Model OUT: ' + reencoded);
+			APP.log((base64model==reencoded?"> TEST PASSED":"> TEST FAILED   *!*!*!* WARNING *!*!*!*"));
+			APP.log('------------------------------------------------------------------');
+		}
 		//#end
 
 		return model;

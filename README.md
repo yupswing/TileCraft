@@ -28,6 +28,20 @@ The project is in development stage. **!! Not fully working prototype !!**
 
 The beta status will be reached on a full prototype.
 
+## Milestones
+
+ - **alpha:  Shape and model (load and save to Base64)**
+ - **alpha2: Model renderer**
+ - **alpha3: Lights renderer + postfx (Antialias+outline)**
+ - **alpha4: Basic interface**
+ - **alpha5: Save to PNG (image+model) and big housekeeping**
+ - **alpha6: Shape list + improved gui**
+ - **alpha7: Model editing**
+ - *alpha8: Preferences + I/O + check updates* **<-- in progress**
+ - *beta stage: Improve interface and renderer*
+ - *rc stage: Polish the app*
+ - *release: Done!*
+
 ## Download
 
 Coming soon **Mac** and **Windows** version.
@@ -50,20 +64,40 @@ because of troubles with *systool.Dialogs*
 
 **Note**: There are some premade model inside the code. Just comment/uncomment the lines [here](src/TileCraft.hx#L114).
 
-## Milestones
+## Some example models
 
- - **alpha:  Shape and model (load and save to Base64)**
- - **alpha2: Model renderer**
- - **alpha3: Lights renderer + postfx (Antialias+outline)**
- - **alpha4: Basic interface**
- - **alpha5: Save to PNG (image+model) and big housekeeping**
- - **alpha6: Shape list + improved gui**
- - **alpha7: Model editing**
- - *alpha8: Preferences + I/O + check updates* **<-- in progress**
- - *beta stage: Improve interface and renderer*
- - *rc stage: Polish the app*
- - *release: Done!*
+When you start the app there is a small icon on the top toolbar with a paper+arrow+64 (It means "Import model from Base64")
 
+Click on it and `CTRL`+`V` or `CMD`+`V` one of this example models
+
+##### A complex shape
+````
+Ff//1fb/QEW7PqXys9vuJDI/OVJXUpAjpswzUUY1p3At////9+F2vjJB33qSfoaPprO8Ezw5DkBLCjwAWldvAGlIj1CrKhJwRZrNMEtIzmJFGhKCq5rNAiNnvALNRc0CzXgSAiNFEgJ4Zj9MacxpDng7eEMS3gFD3t4BAy3eAUBF3gFDq+8B
+````
+##### HOME (lostgarden test-case)
+````
+DP__1fb_QEW7PqXys9vuJDI_OVJXUpAjpswzUUY1x4J11M2l9fDJvjJB33qSfoaPprO8a4xdrVs3Xa0JPE0IAGmNFEBpfTYIad4ACDxNAFo3e61ZN02Laox7rWmMTYsIPF2Z
+````
+##### FACTORY (lostgarden test-case)
+````
+DP__1fb_QEW7PqXys9vuJDI_OVJXUpAjpswzUUY1x4J11M2l9fDJvjJB33qSpmxRprO8CS1tCAA1jRYIJt4ACC1NAAgtfZlLmt5FSIvNNkleIwlLi32rCy19qghpzUUIms1Z
+````
+##### STONE (lostgarden test-case)
+````
+CP__1fb_QEW7PqXys9vuJDI_OVJXUpAjpswzUUY1p3At6pA-9-F2vjJBY2tzfoaPoK66HTwqAh48KjUfPCpnPkQzZz6qRGc-u3dnPlWIZz5nVmc.
+````
+##### TREE (lostgarden test-case)
+````
+BP__1fb_QEW7PqXys9vuJDI_OVJXUpAjpswzUUY1p3At6pA-9-F2vjJBorAneocaoK66HTwqAh48KjUePCqbHTwqaA..
+````
+##### WOODCHUCK (lostgarden test-case)
+````
+DP__1fb_QEW7SGV9s9vuKztNOVJXUpAjpswzUUY1p3At6pA-9-F2vjJBorAneocaoK66FDwqGkRGmgFEm5oBQ0aaV0ObmldEVZpmRKqaZkQ2Vq5EnFauQqtWvUJFVr0ADwMK
+````
+##### An happy farm ;)
+````
+E____wAA____PqXys9vuJDI_OVJXUpAjpswzUUY1p3At6pA-9-F2vjJB33qSfoaPprO8OxK8AUo0qwFLq5oBO828ATgjNBg5IlUDOd1VAwgeVSIBigESMXoBIjGIAQExqgEBUYgAMzYRiAE2FCWbNiM0vBYFFpo27ncCNt40BA..
+````
 
 ## Lostgarden challenge
 
@@ -119,8 +153,9 @@ The tag in bold, before every entry, indicates at what stage that feature will b
   - [x] ShapeList dragging to reorder shapes in model
   - [x] Add shape to model
   - [x] Clone shape
+  - [x] I/O from string (Base64)
+  - [x] Feedback on Load/Save/Boot/Errors
   - [ ] Save/Load file (fix Dialogs) **TODO TO GO BETA**
-  - [ ] I/O from string (Base64) **TODO TO GO BETA**
   - [ ] History (basic keep last 5 models as steps) **TODO TO GO BETA**
   - [ ] **BETA** Report error to the user via GUI
   - [ ] **BETA** Report waiting (render especially) with Thread (and GUI modal 'box')

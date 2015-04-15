@@ -371,6 +371,7 @@ class TileCraft extends Screen
 		if (model==null) {
 			//TODO report the problem to the user (CHECK ALL PROJECT FOR THIS KIND OF MISSING FEEDBACKS)
 			APP.error('Unable to change the model');
+			messageCall("Error\nUnable to load the Model");
 			return;
 		}
 		if (_theModel!=null) _theModel.destroy();
@@ -753,6 +754,7 @@ class TileCraft extends Screen
 
 	private function quitCall() {
 		var _dialog:DialogMessage = new DialogMessage(quitResponse,
+																		false, //no input
 																		"Do you really want to quit?",
 																		Style.getStyle('.dialog'),
 																		Style.getStyle('.dialogBox'),
@@ -774,6 +776,7 @@ class TileCraft extends Screen
 
 	private function exportBase64Call() {
 		var _dialog:DialogMessage = new DialogMessage(exportBase64Response,
+																		false, //no input
 																		_theModel.toString(),
 																		Style.getStyle('.dialog'),
 																		Style.getStyle('.dialogBox'),
@@ -782,7 +785,7 @@ class TileCraft extends Screen
 		_dialog.textOk = "Close";
 		_dialog.textCancel = "Copy";
 		_dialog.selectable = true;
-		_dialog.setWrap(true,350);
+		_dialog.setWordWrap(true,400);
 		_dialog.drawDialogBox(rwidth,rheight);
 		addChild(_dialog);
 	}
@@ -799,8 +802,38 @@ class TileCraft extends Screen
 
 	//============================================================================
 
+	private function importBase64Call() {
+		var _dialog:DialogMessage = new DialogMessage(importBase64Response,
+																		true, //input
+																		"",
+																		Style.getStyle('.dialog'),
+																		Style.getStyle('.dialogBox'),
+																		Style.getStyle('.button'),
+																		Style.getStyle('.textInput'));
+		_dialog.textOk = "Import";
+		_dialog.textCancel = "Cancel";
+		_dialog.selectable = true;
+		_dialog.setWordWrap(true,400,400);
+		_dialog.drawDialogBox(rwidth,rheight);
+		addChild(_dialog);
+		_dialog.setFocus(); //set focus to textfield (need to be on stage)
+	}
+
+	private function importBase64Response(dialog:Dialog) {
+		var response:String = cast(dialog.value,String);
+		if (response!="") {
+			changeModel(Model.fromString(response));
+		}
+		removeChild(dialog);
+		dialog.destroy();
+		dialog = null;
+	}
+
+	//============================================================================
+
 	private function messageCall(string:String) {
 		var _dialog:DialogMessage = new DialogMessage(dummyResponse,
+																		false, //no input
 																		string,
 																		Style.getStyle('.dialog'),
 																		Style.getStyle('.dialogBox'),
@@ -987,14 +1020,10 @@ class TileCraft extends Screen
 					function(_) { renderOutput(false); });
 		_actionToolbar.addButton("base64_input",null,false,
 					[APP.atlasSPRITES.getRegion(APP.ICON_BASE64_INPUT).toBitmapData()],
-					function(_) { messageCall("Feature not implemented... Yet!"); });
+					function(_) { importBase64Call(); });
 		_actionToolbar.addButton("base64_output",null,false,
 					[APP.atlasSPRITES.getRegion(APP.ICON_BASE64_OUTPUT).toBitmapData()],
 					function(_) { exportBase64Call(); });
-		//_actionToolbar.addButton("-");
-		//_actionToolbar.addButton("copy",null,false,		[APP.atlasSPRITES.getRegion(APP.ICON_COPY).toBitmapData()],		_actionToolbarAction);
-		//_actionToolbar.addButton("paste",null,false,	[APP.atlasSPRITES.getRegion(APP.ICON_PASTE).toBitmapData()],	_actionToolbarAction);
-		//_actionToolbar.addButton("-");
 		_actionToolbar.addButton("quit",null,false,
 					[APP.atlasSPRITES.getRegion(APP.ICON_QUIT).toBitmapData()],
 					function(_) { quitCall(); });
