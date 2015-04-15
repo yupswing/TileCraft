@@ -27,6 +27,7 @@ import postfx.*;
 #end
 
 // import systools.Dialogs; //TODO temporary disabled because it crashes the app when the dialog close (MAC64)
+import systools.Clipboard;
 
 import haxe.io.Bytes;
 import haxe.io.BytesBuffer;
@@ -181,6 +182,9 @@ class TileCraft extends Screen
 		#if app_checkupdates
 		APP.checkVersion(showNewVersion);
 		#end
+		if (openfl.display.OpenGLView.isSupported) {
+			messageCall("OpenGL PostFX are not supported on this machine\nThe render quality will be low!");
+		}
 	}
 
 	public override function hold():Void {
@@ -748,7 +752,8 @@ class TileCraft extends Screen
 	//============================================================================
 
 	private function quitCall() {
-		var _dialog:DialogConfirm = new DialogConfirm(quitResponse,"Do you really want to quit?",
+		var _dialog:DialogMessage = new DialogMessage(quitResponse,
+																		"Do you really want to quit?",
 																		Style.getStyle('.dialog'),
 																		Style.getStyle('.dialogBox'),
 																		Style.getStyle('.button'),
@@ -760,6 +765,51 @@ class TileCraft extends Screen
 
 	private function quitResponse(dialog:Dialog) {
 		if (cast(dialog.value,Bool)) PLIK.quit();
+		removeChild(dialog);
+		dialog = null; //TODO need to be destroyed
+	}
+
+	//============================================================================
+
+	private function exportBase64Call() {
+		var _dialog:DialogMessage = new DialogMessage(exportBase64Response,
+																		_theModel.toString(),
+																		Style.getStyle('.dialog'),
+																		Style.getStyle('.dialogBox'),
+																		Style.getStyle('.button'),
+																		Style.getStyle('.dialogText'));
+		_dialog.textOk = "Close";
+		_dialog.textCancel = "Copy";
+		_dialog.selectable = true;
+		_dialog.setWrap(true,350);
+		_dialog.drawDialogBox(rwidth,rheight);
+		addChild(_dialog);
+	}
+
+	private function exportBase64Response(dialog:Dialog) {
+		if (!cast(dialog.value,Bool)) {
+			//Copy
+			systools.Clipboard.setText(_theModel.toString());
+		}
+		removeChild(dialog);
+		dialog = null; //TODO need to be destroyed
+	}
+
+	//============================================================================
+
+	private function messageCall(string:String) {
+		var _dialog:DialogMessage = new DialogMessage(dummyResponse,
+																		string,
+																		Style.getStyle('.dialog'),
+																		Style.getStyle('.dialogBox'),
+																		Style.getStyle('.button'),
+																		Style.getStyle('.dialogText'));
+		_dialog.showCancelButton = false;
+		_dialog.drawDialogBox(rwidth,rheight);
+		addChild(_dialog);
+	}
+
+	private function dummyResponse(dialog:Dialog) {
 		removeChild(dialog);
 		dialog = null; //TODO need to be destroyed
 	}
@@ -922,6 +972,12 @@ class TileCraft extends Screen
 		_actionToolbar.addButton("render",null,false,
 					[APP.atlasSPRITES.getRegion(APP.ICON_RENDER).toBitmapData()],
 					function(_) { renderOutput(false); });
+		_actionToolbar.addButton("base64_input",null,false,
+					[APP.atlasSPRITES.getRegion(APP.ICON_BASE64_INPUT).toBitmapData()],
+					function(_) { messageCall("Feature not implemented... Yet!"); });
+		_actionToolbar.addButton("base64_output",null,false,
+					[APP.atlasSPRITES.getRegion(APP.ICON_BASE64_OUTPUT).toBitmapData()],
+					function(_) { exportBase64Call(); });
 		//_actionToolbar.addButton("-");
 		//_actionToolbar.addButton("copy",null,false,		[APP.atlasSPRITES.getRegion(APP.ICON_COPY).toBitmapData()],		_actionToolbarAction);
 		//_actionToolbar.addButton("paste",null,false,	[APP.atlasSPRITES.getRegion(APP.ICON_PASTE).toBitmapData()],	_actionToolbarAction);

@@ -86,6 +86,8 @@ class APP {
   public static inline var ICON_RENDER = 'render.png';
   public static inline var ICON_CLOSE = 'close.png';
   public static inline var ICON_PALETTE = 'palette.png';
+  public static inline var ICON_BASE64_INPUT= 'base64_input.png';
+  public static inline var ICON_BASE64_OUTPUT = 'base64_output.png';
 
   public static inline var ICON_RESIZE = 'resize.png';
   public static inline var ICON_OUTLINE = 'outline.png';
