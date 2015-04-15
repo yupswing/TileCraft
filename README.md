@@ -75,6 +75,10 @@ Click on it and `CTRL`+`V` or `CMD`+`V` one of this example models
 ````
 Ff//1fb/QEW7PqXys9vuJDI/OVJXUpAjpswzUUY1p3At////9+F2vjJB33qSfoaPprO8Ezw5DkBLCjwAWldvAGlIj1CrKhJwRZrNMEtIzmJFGhKCq5rNAiNnvALNRc0CzXgSAiNFEgJ4Zj9MacxpDng7eEMS3gFD3t4BAy3eAUBF3gFDq+8B
 ````
+##### A fancy home
+````
+Ev__1fb_QEW7PqXys9vuJDI_OVJXUpAjpswzUUY1x4J11M2l9fDJvjJB33qSfoaPprO8WzRo72tWaO9rjG2tWzdtrQk8bQgAaY0UQGl9Nghp3gAIPE0AWjeLrVk3TYtqjIutaYy9iwg8bZkwI94LMM3eCzDNVgsZNmh9
+````
 ##### HOME (lostgarden test-case)
 ````
 DP__1fb_QEW7PqXys9vuJDI_OVJXUpAjpswzUUY1x4J11M2l9fDJvjJB33qSfoaPprO8a4xdrVs3Xa0JPE0IAGmNFEBpfTYIad4ACDxNAFo3e61ZN02Laox7rWmMTYsIPF2Z

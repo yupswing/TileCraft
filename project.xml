@@ -20,6 +20,8 @@
 	<window vsync="true" antialiasing="4" if="cpp" />
 	<window hardware="true" allow-shaders="true" require-shaders="false" if="cpp"/>
 
+	<icon path="assets/icon.svg" />
+
 
 	<!-- ################################ CODE ################################## -->
 
