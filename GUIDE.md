@@ -2,9 +2,9 @@
 
 ## Index
 
-- [The interface](#Interface)
-- [What are the hole shapes?](#Hole)
-- [Export the model](#Export)
+- [The interface](#interface)
+- [What are the hole shapes?](#hole)
+- [Export the model](#export)
 
 ---
 
@@ -21,10 +21,10 @@ There are few buttons on the main toolbar, here's the explanation as they appear
 Close the current model and start over with a new empty model
 
 - **Open model**:
-Open a model from a PNG file (see Model Format)
+Open a model from a PNG file (see [Model Format](#export))
 
 - **Save model**:
-Save/export the model to a PNG file (see Model Format)
+Save/export the model to a PNG file (see [Model Format](#export))
 
 - **Render model**:
 Update the "render view" (same as clicking on the render view picture)
@@ -72,7 +72,7 @@ If no shape is selected you can choose which shape primitive you want to create 
 
 - If no shape is selected you can choose which color index you want to create a new shape.
 
-*Note:* The first button represent the HOLE color. (see hole)
+*Note:* The first button represent the HOLE color. (see [Hole shapes](#hole))
 
 ## Color picker
 
