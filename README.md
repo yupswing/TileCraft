@@ -5,9 +5,7 @@
 [![Cross platform](https://img.shields.io/badge/platform-win%2Bmac%2Blinux-yellow.svg)](http://www.openfl.org)
 # ![TILECRAFT](https://dl.dropboxusercontent.com/u/683344/akifox/tilecraft/git/title.png)
 
-2.5D multi-platform modeler to make tiles for games or icons.
-
-Have some fun and [try it](#try-it-from-the-sources)!
+2.5D fast multi-platform modeling tool to make tiles for games, icons or whatever you want!
 
 - Developed by [Simone Cingano](http://akifox.com)
 
@@ -17,7 +15,21 @@ Have some fun and [try it](#try-it-from-the-sources)!
 
 ![Alpha8 Interface](https://dl.dropboxusercontent.com/u/683344/akifox/tilecraft/git/interface.png)
 
-## Alpha status
+---
+[Read the Quick guide to understand how to use TileCraft](GUIDE.md)
+---
+
+## Index
+
+- [Status of the project](#status)
+- [Milestones](#milestones)
+- [Download](#download)
+- [Build by the sources](#try-it)
+- [Sample models](#examples)
+- [Lostgarden challenge](#lostgarden-challenge)
+- [TODOs](#todo)
+
+## Status
 
 The project is in development stage. **!! Not fully working prototype !!**
 (Basically missing some dialogs to save and load files)
@@ -42,7 +54,7 @@ The beta status will be reached on a full prototype.
 
 Coming soon **Mac** and **Windows** version.
 
-## Try it from the sources
+## Try it
 
 Right now, if you want to try it, download this project and download also the [PLIK library](https://github.com/yupswing/plik). Then set PLIK on haxelib
 ````
@@ -61,7 +73,7 @@ lime test mac/windows/linux -Dv2 -Dlegacy
 
 **Note**: Right now the load action always load the file '/export/tilecraft-import.png' (same folder as the app)
 
-## Some example models
+## Examples
 
 When you start the app there is a small icon on the top toolbar with a paper+arrow+64 (It means "Import model from Base64")
 
