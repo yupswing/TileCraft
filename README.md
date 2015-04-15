@@ -6,12 +6,12 @@
 [![OpenFL 2](https://img.shields.io/badge/require-OpenFL 2-red.svg)](http://www.openfl.org)
 [![Cross platform](https://img.shields.io/badge/platform-win%2Bmac%2Blinux-lightgrey.svg)](http://www.openfl.org)
 
-# TileCraft (alpha)
+
+# ![TILECRAFT](https://dl.dropboxusercontent.com/u/683344/akifox/tilecraft/git/title.png)
+
 2.5D multi-platform modeler to make tiles for games or icons.
 
-Easy to use, save to PNG with alpha channel.
-
-Have some fun and [try it](#try-it)!
+Have some fun and [try it](#try-it-from-the-sources)!
 
 - Developed by [Simone Cingano](http://akifox.com)
 
@@ -140,6 +140,7 @@ The tag in bold, before every entry, indicates at what stage that feature will b
   - [x] POSTFX shaders (apply FXAA to have smooth output image)
   - [x] POSTFX make FXAA support alpha channel
   - [x] POSTFX Use normal scaling with no PostFx if opengl not supported
+  - [x] Sync between renderers delays
   - [ ] **BETA** Support edge smoothing
   - [ ] **BETA** batch renderer and save to file
   - [ ] **BETA** Trick NORM to have N/E Ramps and rounded N/S edges
@@ -148,9 +149,8 @@ The tag in bold, before every entry, indicates at what stage that feature will b
   - [x] Support for PNG Output with embedded model data
   - [ ] **BETA** Add author and model name to PNG metadata
   - [ ] **BETA** Save enabled and lock to model data (tcMa)
-  - [ ] **BETA** Permit change color0 to be used as floor (and render it)
+  - [ ] **BETA** Permit change color0 and use it  as floor color (rendered)
   - [ ] **BETA** Add more primitives (Prism, Arc)
-  - [ ] **BETA** Use color index 0 as floor color (if set)
   - [ ] **BETA** Extend to 64 shapes
   - [ ] **RC** Extend model to 32 colors (use the other 16 as replacement for batch rendering)
  - Interface
@@ -165,7 +165,7 @@ The tag in bold, before every entry, indicates at what stage that feature will b
   - [ ] **BETA** Report error to the user via GUI
   - [ ] **BETA** Report waiting (render especially) with Thread (and GUI modal 'box')
   - [ ] **BETA** Minimap (Orthogonal Top and Side view)
-  - [ ] **BETA** Copy, Paste, ALT (center transformation), SHIFT (keep it square), Rotation (single element, whole context)
+  - [ ] **BETA** ALT (center transformation), SHIFT (keep it square), Rotation (single element, whole context)
   - [ ] **BETA** 90deg rotations (xyz) (changing positions and primitive type to simulate rotation)
   - [ ] **RC** Support light style scheme
 
