@@ -118,7 +118,7 @@ class TileCraft extends Screen
 			//var original = "EgQCAJn_Zv8zETxKKyZGRp4mm0aeRFaaeUSamnlEVokBRJqJAUNmmnhDqpp4FzxZvCxVV90sqmfdRGaaREYBRVVG70VVCh5FVRxVRO8cqkTv";
 
 			// complex shape
-			var original = "Ff//1fb/QEW7PqXys9vuJDI/OVJXUpAjpswzUUY1p3At////9+F2vjJB33qSfoaPprO8Ezw5DkBLCjwAWldvAGlIj1CrKhJwRZrNMEtIzmJFGhKCq5rNAiNnvALNRc0CzXgSAiNFEgJ4Zj9MacxpDng7eEMS3gFD3t4BAy3eAUBF3gFDq+8B";
+			//var original = "Ff//1fb/QEW7PqXys9vuJDI/OVJXUpAjpswzUUY1p3At////9+F2vjJB33qSfoaPprO8Ezw5DkBLCjwAWldvAGlIj1CrKhJwRZrNMEtIzmJFGhKCq5rNAiNnvALNRc0CzXgSAiNFEgJ4Zj9MacxpDng7eEMS3gFD3t4BAy3eAUBF3gFDq+8B";
 
 			// easy cube
 			//var original = "AgAAAXhWZxESeAE.";
@@ -139,7 +139,7 @@ class TileCraft extends Screen
 
 
 			//HOME (lostgarden test-case)
-			var original = "DP__1fb_QEW7PqXys9vuJDI_OVJXUpAjpswzUUY1x4J11M2l9fDJvjJB33qSfoaPprO8a4xdrVs3Xa0JPE0IAGmNFEBpfTYIad4ACDxNAFo3e61ZN02Laox7rWmMTYsIPF2Z";
+			//var original = "DP__1fb_QEW7PqXys9vuJDI_OVJXUpAjpswzUUY1x4J11M2l9fDJvjJB33qSfoaPprO8a4xdrVs3Xa0JPE0IAGmNFEBpfTYIad4ACDxNAFo3e61ZN02Laox7rWmMTYsIPF2Z";
 
 			//FACTORY (lostgarden test-case)
 			//var original = "DP__1fb_QEW7PqXys9vuJDI_OVJXUpAjpswzUUY1x4J11M2l9fDJvjJB33qSpmxRprO8CS1tCAA1jRYIJt4ACC1NAAgtfZlLmt5FSIvNNkleIwlLi32rCy19qghpzUUIms1Z";
@@ -159,9 +159,9 @@ class TileCraft extends Screen
 			// -------------------------------------------------------------------------
 
 			// set the example test model
-			changeModel(Model.fromString(original));
+			//changeModel(Model.fromString(original));
 		//#else //debug
-		//	changeModel(Model.makeNew());
+			changeModel(Model.makeNew());
 		//#end //debug
 
 		//init background image
@@ -363,7 +363,7 @@ class TileCraft extends Screen
 		refreshPalette();
 		refreshShapeList();
 		render(false);
-		renderOutput(); //force to render output and modelview
+		renderOutput();
 		//APP.log(_theModel.toString(true));
 		//APP.log(_theModel.toPNGString(_outputBitmap.bitmapData)); //TODO should be a TextField to output this on request
 	}
@@ -395,6 +395,7 @@ class TileCraft extends Screen
 		} else {
 			_mainToolbar.selectById('pointer'); //select pointer
 			render(false);
+			renderOutput();
 		}
 		return shape;
 	}

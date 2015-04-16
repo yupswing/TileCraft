@@ -1,4 +1,4 @@
-[![TileCraft](https://img.shields.io/badge/app-TileCraft%201.0.0%20alpha8dev-brightgreen.svg)](#)
+[![TileCraft](https://img.shields.io/badge/app-TileCraft%201.0.0%20alpha8-brightgreen.svg)](#)
 [![MIT License](https://img.shields.io/badge/license-GNU%20GPL%203-blue.svg)](LICENSE)
 [![Haxe 3](https://img.shields.io/badge/language-Haxe%203-orange.svg)](http://www.haxe.org)
 [![OpenFL 2](https://img.shields.io/badge/require-OpenFL 2-red.svg)](http://www.openfl.org)
@@ -31,10 +31,11 @@
 
 ## Status
 
-The project is in development stage. **!! Not fully working prototype !!**
-(Basically missing some dialogs to save and load files)
+The project is in an ALPHA development stage.
 
-The beta status will be reached on a full prototype.
+Anyway the BETA status is very close.
+
+See the [TODOs](#todo) to check the work in progress.
 
 ## Milestones
 
@@ -45,8 +46,8 @@ The beta status will be reached on a full prototype.
  - **alpha5: Save to PNG (image+model) and big housekeeping**
  - **alpha6: Shape list + improved gui**
  - **alpha7: Model editing**
- - *alpha8: Preferences + I/O + check updates* **<-- in progress**
- - *beta stage: Improve interface and renderer*
+ - **alpha8: Open/Save + check updates + improved feedbacks**
+ - *beta stage: Improve interface and renderer* **<-- in progress**
  - *rc stage: Polish the app*
  - *release: Done!*
 
@@ -69,9 +70,9 @@ haxelib install systools
 haxelib git plik https://github.com/yupswing/plik.git
 ````
 
-Rebuild systools for your platform (the project need to be revived!)
+(Only Windows or Mac) Rebuild systools for your platform (the project need to be revived!)
 ````
-haxelib run lime rebuild systools [windows|mac|linux]
+haxelib run lime rebuild systools [windows|mac]
 ````
 
 Clone this repository
