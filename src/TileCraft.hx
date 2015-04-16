@@ -722,7 +722,7 @@ class TileCraft extends Screen
 		}
 	}
 
-	#if (windows || mac)
+	#if (windows)
 
 	public function saveAsFileCall() {
 		var saveAsDir = _currentDir;
