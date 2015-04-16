@@ -22,21 +22,16 @@ import format.png.*;
 import Shape;
 import com.akifox.plik.gui.*;
 import view.*;
-#if !flash
-import postfx.*;
-#end
 
-// import systools.Dialogs; //TODO temporary disabled because it crashes the app when the dialog close (MAC64)
+import systools.Dialogs;
 import systools.Clipboard;
 
 import haxe.io.Bytes;
 import haxe.io.BytesBuffer;
 import haxe.io.BytesInput;
-#if sys
 import sys.FileSystem;
 import sys.io.FileInput;
 import sys.io.FileOutput;
-#end
 
 using StringTools;
 using hxColorToolkit.ColorToolkit;
@@ -67,6 +62,8 @@ class TileCraft extends Screen
 	var _colorPicker:ColorPickerView;
 
 	var _shapeViewList:ShapeViewList;
+
+	var _statusBar:Text;
 
 	var _outputView:OutputView = null;
 	var _modelView:ModelView = null;
@@ -109,6 +106,7 @@ class TileCraft extends Screen
 		initModelView(); // Model view
 		initOutput(); // Preview toolbars + output view
 		initAppTitle(); // App title top left
+		initStatusbar(); // Bottom status bar
 		initShapeList();
 
 		// -------------------------------------------------------------------------
@@ -186,22 +184,6 @@ class TileCraft extends Screen
 		}
 	}
 
-	public override function hold():Void {
-		super.hold();
-		// HOOKERS OFF
-
-	}
-
-	public override function resume():Void {
-		super.resume();
-    // HOOKERS ON
-
-	}
-
-	// private override function update(delta:Float):Void {
-	//
-	// }
-
 	public override function resize() {
 		var screenWidth = Lib.current.stage.stageWidth;
 		var screenHeight = Lib.current.stage.stageHeight;
@@ -250,8 +232,11 @@ class TileCraft extends Screen
 		_mainToolbar.x = TOOLBAR_WIDTH/2-_mainToolbar.getGrossWidth()/2;
 		_mainToolbar.y = ACTIONBAR_HEIGHT+10;
 
+		_statusBar.t.x = TOOLBAR_WIDTH+10;
+		_statusBar.t.y = rheight-STATUSBAR_HEIGHT/2;
+
 		_colorPicker.x = TOOLBAR_WIDTH;
-		_colorPicker.y = rheight-_colorPicker.getGrossHeight();
+		_colorPicker.y = rheight-_colorPicker.getGrossHeight()-STATUSBAR_HEIGHT-20;
 		_colorPicker.updateWidth(rwidth-TOOLBAR_WIDTH-SHAPELIST_WIDTH-PREVIEW_WIDTH);
 
 		_colorToolbar.x = TOOLBAR_WIDTH/2-_colorToolbar.getGrossWidth()/2;
@@ -291,7 +276,7 @@ class TileCraft extends Screen
 	}
 
 	public function renderOutput(?changedScale=false) {
-		#if (!v2 || flash) //TODO POSTFX need support for OpenFL3
+		#if (!v2 || neko) //TODO POSTFX need support for OpenFL3
 		var supportOpenGL = false;
 		#else
 		var supportOpenGL = openfl.display.OpenGLView.isSupported;
@@ -305,24 +290,24 @@ class TileCraft extends Screen
 		var output:BitmapData = source;
 
 		if (supportOpenGL) {
-			#if (v2 && !flash)
+			#if (v2 && !neko)
 			// output = PostFX.prepassEdgeColor(source); //TODO left for testing the prepass alone
 
 			if (renderOutline) {
 				// one passage fxaa with black outline
-				output = PostFX.fxaaOutline(
+				output = postfx.PostFX.fxaaOutline(
 									source,
 									getRenderFxaaPasses(),
 									getRenderFxaaOutline());
 			} else {
 				// two passages fxaa with alpha blending
-				output = PostFX.fxaa(
-								 		PostFX.prepassEdgeColor(source),
+				output = postfx.PostFX.fxaa(
+								 		postfx.PostFX.prepassEdgeColor(source),
 								 	getRenderFxaaPasses());
 			}
 
 			// scale
-			output = PostFX.scale(output, getOutputScale());
+			output = postfx.PostFX.scale(output, getOutputScale());
 			#end
 		}
 
@@ -372,13 +357,14 @@ class TileCraft extends Screen
 			messageCall("Error\nUnable to load the Model");
 			return;
 		}
+		setCurrentPath(); // no file name
 		if (_theModel!=null) _theModel.destroy();
 		_theModel = model;
 		refreshPalette();
 		refreshShapeList();
 		render(false);
 		renderOutput(); //force to render output and modelview
-		APP.log(_theModel.toString(true));
+		//APP.log(_theModel.toString(true));
 		//APP.log(_theModel.toPNGString(_outputBitmap.bitmapData)); //TODO should be a TextField to output this on request
 	}
 
@@ -593,9 +579,10 @@ class TileCraft extends Screen
 		setSelectedShape(shape);
 	}
 
+	//============================================================================
+
 	#if app_checkupdates
 	public function showNewVersion() {
-		//trace(APP.onlineVersion);
 		var text = new Text("New version "+APP.onlineVersion+" available\nClick here to download",12,
 												APP.COLOR_ORANGE,openfl.text.TextFormatAlign.CENTER,APP.FONT_LATO_BOLD);
 		text.t.setAnchoredPivot(Transformation.ANCHOR_MIDDLE_CENTER);
@@ -610,78 +597,16 @@ class TileCraft extends Screen
 
 	//============================================================================
 
-	public function newModel() {
+	private function updateStatusBar() {
+		var filename = _currentFilename;
+		if (filename=="") filename = "Untitled model";
+		_statusBar.text = 'Model: $filename';
+	}
+
+	//============================================================================
+
+	public function newModelCall() {
 		changeModel(Model.makeNew());
-	}
-
-	public function saveFile(filename:String):Bool {
-		#if sys
-		// Render the _outputBitmap (TODO need to be better, maybe this system in ModelView)
-		render(false);
-
-		// Determine the file path
-		//var filename:String = saveDialog("TileCraft PNG image","*.png");
-		if (filename==null) {
-			APP.log('User canceled the dialog');
-			return false;
-		}
-
-		// Get FileOutput
-		var fo:haxe.io.Output = null;
-		try { fo = sys.io.File.write(filename,true); }
-		catch (e:Dynamic){
-			APP.error('File write error $e');
-			fo = null;
-		}
-
-		// Export the model
-		fo = _theModel.toPNG(fo,_outputView.getBitmapData());
-
-		// Check if everything is ok
-		if (fo==null) {
-			APP.error('Unable to save the Model to "$filename"');
-			return false;
-		} else {
-			try { fo.close(); } catch(e:Dynamic) {}
-			return true;
-		}
-		#else
-		return false;
-		#end
-	}
-
-	public function openFile(filename:String):Bool {
-		#if sys
-		// Determine the file path
-		//var filename:String = openDialog("TileCraft PNG image","*.png");
-		if (filename==null) {
-			APP.log('User canceled the dialog');
-			return false;
-		}
-
-		// Get FileInput
-		var fr:FileInput = null;
-		try { fr = sys.io.File.read(filename,true); }
-		catch (e:Dynamic){ APP.error('File read error $e'); fr = null; }
-
-		// Import the model
-		var model:Model = Model.fromPNG(fr);
-
-		// Close the FileInput
-		if (fr!=null) try { fr.close(); } catch(e:Dynamic) {}
-
-		// Check if everything is ok
-		if (model==null) {
-			APP.error('Unable to load the model "$filename"');
-			return false;
-		} else {
-			// prepare context
-			changeModel(model);
-			return true;
-		}
-		#else
-		return false;
-		#end
 	}
 
 	//============================================================================
@@ -705,7 +630,6 @@ class TileCraft extends Screen
 			render(false);
 		}
 	}
-
 	//============================================================================
 
 	private function quitCall() {
@@ -723,34 +647,6 @@ class TileCraft extends Screen
 
 	private function quitResponse(dialog:Dialog) {
 		if (cast(dialog.value,Bool)) PLIK.quit();
-		removeChild(dialog);
-		dialog.destroy();
-		dialog = null;
-	}
-
-	//============================================================================
-
-	private function exportBase64Call() {
-		var _dialog:DialogMessage = new DialogMessage(exportBase64Response,
-																		false, //no input
-																		_theModel.toString(true),
-																		Style.getStyle('.dialog'),
-																		Style.getStyle('.dialogBox'),
-																		Style.getStyle('.button'),
-																		Style.getStyle('.dialogText'));
-		_dialog.textOk = "Close";
-		_dialog.textCancel = "Copy";
-		_dialog.selectable = true;
-		_dialog.setWordWrap(true,400);
-		_dialog.drawDialogBox(rwidth,rheight);
-		addChild(_dialog);
-	}
-
-	private function exportBase64Response(dialog:Dialog) {
-		if (!cast(dialog.value,Bool)) {
-			//Copy
-			systools.Clipboard.setText(_theModel.toString(true));
-		}
 		removeChild(dialog);
 		dialog.destroy();
 		dialog = null;
@@ -787,6 +683,153 @@ class TileCraft extends Screen
 
 	//============================================================================
 
+	private function exportBase64Call() {
+		var _dialog:DialogMessage = new DialogMessage(exportBase64Response,
+																		false, //no input
+																		_theModel.toString(true),
+																		Style.getStyle('.dialog'),
+																		Style.getStyle('.dialogBox'),
+																		Style.getStyle('.button'),
+																		Style.getStyle('.dialogText'));
+		_dialog.textOk = "Close";
+		_dialog.textCancel = "Copy";
+		_dialog.selectable = true;
+		_dialog.setWordWrap(true,400);
+		_dialog.drawDialogBox(rwidth,rheight);
+		addChild(_dialog);
+	}
+
+	private function exportBase64Response(dialog:Dialog) {
+		if (!cast(dialog.value,Bool)) {
+			//Copy
+			systools.Clipboard.setText(_theModel.toString(true));
+		}
+		removeChild(dialog);
+		dialog.destroy();
+		dialog = null;
+	}
+
+	//============================================================================
+
+	public function saveFileCall() {
+		if (hasCurrentFilename()) {
+			if (saveFile(getCurrentPath())) {
+				messageCall('File saved\n'+getCurrentPath()); //give feedback
+			}
+		} else {
+			saveAsFileCall();
+		}
+	}
+
+	#if (windows || mac)
+
+	public function saveAsFileCall() {
+		var saveAsDir = _currentDir;
+		var response = Dialogs.saveFile
+			( "Choose a name or select a PNG image"
+			, "TileCraft will save the model data inside the rendered image"
+			, _currentDir
+			, _fileFilters
+			);
+		if (response!=null) {
+			response = normalisePngPath(response);
+
+			if (saveFile(response)) {
+				setCurrentPath(response);
+			}
+		}
+	}
+
+	#else
+
+	// TODO when fixed systools for Linux this has to be removed in favour of the native SaveFile Dialog
+	private function saveAsFileCall() {
+		var _dialog:DialogMessage = new DialogMessage(saveAsFileResponse,
+																		true, //input
+																		_currentDir + "/",
+																		Style.getStyle('.dialog'),
+																		Style.getStyle('.dialogBox'),
+																		Style.getStyle('.button'),
+																		Style.getStyle('.textInput'));
+		_dialog.textOk = "Save";
+		_dialog.textCancel = "Cancel";
+		_dialog.selectable = true;
+		_dialog.setWordWrap(true,400,100);
+		_dialog.drawDialogBox(rwidth,rheight);
+		addChild(_dialog);
+		_dialog.setFocus(); //set focus to textfield (need to be on stage)
+	}
+
+	private function saveAsFileResponse(dialog:Dialog) {
+		var response:String = cast(dialog.value,String);
+		if (response!="") {
+			response = normalisePngPath(response);
+
+			if (saveFile(response)) {
+				setCurrentPath(response);
+			}
+		}
+		removeChild(dialog);
+		dialog.destroy();
+		dialog = null;
+	}
+
+	#end
+
+	#if (windows)
+	public function openFileCall() {
+		var filters: FILEFILTERS =
+			{ count: 1
+			, descriptions: ["TileCraft PNG Model"]
+			, extensions: ["*.png"]
+			};
+		var result = Dialogs.openFile
+			( "Select a PNG image"
+			, "Only PNG files made by TileCraft contains a valid model"
+			, _fileFilters
+			);
+		if (result!=null) {
+			var response = normalisePngPath(result[0]);
+			if (openFile(response)) {
+				setCurrentPath(response);
+			}
+		}
+	}
+	#else
+	// TODO when fixed systools for Linux and Mac this has to be removed in favour of the native OpenFile Dialog
+	private function openFileCall() {
+		var _dialog:DialogMessage = new DialogMessage(openFileResponse,
+																		true, //input
+																		_currentDir + "/",
+																		Style.getStyle('.dialog'),
+																		Style.getStyle('.dialogBox'),
+																		Style.getStyle('.button'),
+																		Style.getStyle('.textInput'));
+		_dialog.textOk = "Load";
+		_dialog.textCancel = "Cancel";
+		_dialog.selectable = true;
+		_dialog.setWordWrap(true,400,100);
+		_dialog.drawDialogBox(rwidth,rheight);
+		addChild(_dialog);
+		_dialog.setFocus(); //set focus to textfield (need to be on stage)
+	}
+
+	private function openFileResponse(dialog:Dialog) {
+		var response:String = cast(dialog.value,String);
+		if (response!="") {
+			response = normalisePngPath(response);
+			if (openFile(response)) {
+				setCurrentPath(response);
+			}
+		}
+		removeChild(dialog);
+		dialog.destroy();
+		dialog = null;
+	}
+	#end
+
+	//============================================================================
+
 	private function messageCall(string:String) {
 		var _dialog:DialogMessage = new DialogMessage(dummyResponse,
 																		false, //no input
@@ -808,32 +851,123 @@ class TileCraft extends Screen
 
 	//============================================================================
 
+	public function saveFile(filename:String):Bool {
+		#if sys
+		// Render the _outputBitmap (TODO need to be better, maybe this system in ModelView)
+		render(false);
 
-	//############################################################################
-	//############################################################################
+		if (filename==null) return false;
 
-	// TODO implement this CLIPBOARD systools example
+		// Get FileOutput
+		var fo:haxe.io.Output = null;
+		try { fo = sys.io.File.write(filename,true); }
+		catch (e:Dynamic){
+			APP.error('File write error $e');
+			fo = null;
+		}
 
-	// 	var cbtext: String = systools.Clipboard.getText();
-	// trace("Current text on clipboard: "+ cbtext);
-	//
-	// systools.Clipboard.clear();
-	// trace("Cleared clipboard");
-	//
-	// cbtext = systools.Clipboard.getText();
-	// trace("Current text on clipboard: "+ cbtext);
-	//
-	// trace("Setting clipboard text to: Hello World");
-	// systools.Clipboard.setText("Hello World");
-	//
-	// cbtext = systools.Clipboard.getText();
-	// trace("Current text on clipboard: "+ cbtext);
-	//
-	// systools.Clipboard.clear();
-	// trace("Cleared clipboard (again)");
-	//
-	// cbtext = systools.Clipboard.getText();
-	// trace("Current text on clipboard: "+ cbtext);
+		// Export the model
+		fo = _theModel.toPNG(fo,_outputView.getBitmapData());
+
+		// Check if everything is ok
+		if (fo==null) {
+			messageCall("Unable to save: file I/O error\n"+filename);
+			APP.error('Unable to save the Model to "$filename"');
+			return false;
+		} else {
+			try { fo.close(); } catch(e:Dynamic) {}
+			APP.error('Saved model to "$filename"');
+			return true;
+		}
+		#else
+		return false;
+		#end
+	}
+		// messageCall("Unable to load: file I/O error\n"+filename);
+
+	public function openFile(filename:String):Bool {
+		#if sys
+		if (filename==null) return false;
+
+		// Get FileInput
+		var fr:FileInput = null;
+		try { fr = sys.io.File.read(filename,true); }
+		catch (e:Dynamic){ APP.error('File read error $e'); fr = null; }
+
+		// Import the model
+		var model:Model = Model.fromPNG(fr);
+
+		// Close the FileInput
+		if (fr!=null) try { fr.close(); } catch(e:Dynamic) {}
+
+		// Check if everything is ok
+		if (model==null) {
+			APP.error('Unable to load the model "$filename"');
+			messageCall("Unable to load: file error\n"+filename);
+			return false;
+		} else {
+			// prepare context
+			changeModel(model);
+			APP.error('Loaded model from "$filename"');
+			return true;
+		}
+		#else
+		return false;
+		#end
+	}
+
+	private var _currentFilename:String = "";
+	private var _currentDir:String = Sys.getEnv('HOME');
+
+	private var _fileFilters: FILEFILTERS =
+			{ count: 1
+			, descriptions: ["TileCraft PNG Model"]
+			, extensions: ["*.png"]
+			};
+
+	private static function directoryFromPath(path:String):String{
+		var dirname = "";
+    var r = ~/^(.*)[\\\/]([^\\\/]+)$/i; //win+unix
+    if (r.match(path)) {
+	   dirname = r.matched(1);
+    }
+		return dirname;
+	}
+	private static function filenameFromPath(path:String):String{
+		var filename = "";
+		var r = ~/[\\\/]([^\\\/]+)$/i; //win+unix
+    if (r.match(path)) {
+	   filename = r.matched(1);
+    }
+		return filename;
+	}
+
+	private function setCurrentPath(path:String="") {
+		if (path!="") _currentDir = TileCraft.directoryFromPath(path);
+		_currentFilename = TileCraft.filenameFromPath(path);
+		updateStatusBar();
+	}
+
+	private function getCurrentPath():String {
+		#if windows
+		return _currentDir+"\\"+_currentFilename;
+		#else
+		return _currentDir+"/"+_currentFilename;
+		#end
+	}
+
+	private function hasCurrentFilename():Bool {
+		return _currentFilename!="";
+	}
+
+	private function normalisePngPath(path:String):String {
+		// if not .png add extension to path
+		var r = ~/\.png$/i;
+    if (!r.match(path)) path+=".png";
+		return path;
+	}
+
+	//============================================================================
 
 	///////////////////////////////////////////////////////////////////////////
 	// INTERFACE INITIALISER
@@ -955,31 +1089,16 @@ class TileCraft extends Screen
 		_actionToolbar = new Toolbar(0,false,Style.getStyle('.toolbar'),Style.getStyle('.button.toolbarButton'));
 		_actionToolbar.addButton("new",null,false,
 					[APP.atlasSPRITES.getRegion(APP.ICON_NEW).toBitmapData()],
-					function(_) { newModel(); });
+					function(_) { newModelCall(); });
 		_actionToolbar.addButton("open",null,false,
 					[APP.atlasSPRITES.getRegion(APP.ICON_OPEN).toBitmapData()],
-					function(_) {
-						//TODO to be removed when savedialog will work
-						var filename:String = SAVE_FOLDER + "/tilecraft-import.png";
-						if (!openFile(filename)){
-							messageCall("Unable to load: file I/O error\n"+filename);
-						}
-					});
+					function(_) { openFileCall(); });
 		_actionToolbar.addButton("save",null,false,
 					[APP.atlasSPRITES.getRegion(APP.ICON_SAVE).toBitmapData()],
-					function(_) {
-						//TODO to be removed when savedialog will work
-						if ( !FileSystem.exists( SAVE_FOLDER ) ) {
-						    FileSystem.createDirectory( SAVE_FOLDER );
-						}
-						var filename:String = SAVE_FOLDER + "/tilecraft-" + Date.now().getTime() + ".png";
-
-						if (saveFile(filename)) {
-							messageCall("File saved\n"+filename);
-						} else {
-							messageCall("Unable to save: file I/O error\n"+filename);
-						}
-					});
+					function(_) { saveFileCall(); });
+		_actionToolbar.addButton("saveas",null,false,
+					[APP.atlasSPRITES.getRegion(APP.ICON_SAVEAS).toBitmapData()],
+					function(_) { saveAsFileCall(); });
 		//_actionToolbar.addButton("-");
 		_actionToolbar.addButton("render",null,false,
 					[APP.atlasSPRITES.getRegion(APP.ICON_RENDER).toBitmapData()],
@@ -1037,6 +1156,15 @@ class TileCraft extends Screen
 							APP.atlasSPRITES.getRegion(APP.ICON_OUTLINE).toBitmapData()],
 					outlineModeLoop);
 		addChild(_outputActionToolbar);
+	}
+
+	private inline function initStatusbar() {
+
+		// APP TITLE ---------------------------------------------------------------
+
+		_statusBar = new Text("",18,APP.COLOR_WHITE,openfl.text.TextFormatAlign.CENTER,APP.FONT_LATO_BOLD);
+		_statusBar.t.setAnchoredPivot(Transformation.ANCHOR_MIDDLE_LEFT);
+		addChild(_statusBar);
 	}
 
 	private inline function initAppTitle() {

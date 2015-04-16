@@ -23,8 +23,12 @@ Close the current model and start over with a new empty model
 - **Open model**:
 Open a model from a PNG file (see [Model Format](#export))
 
-- **Save model**:
+*Note* On Mac and Linux the dialog box does not work and you have to put a path by hand. I hope *systools* will be fixed soon. [OpenFL Issue #602](https://github.com/openfl/openfl/issues/602)
+
+- **Save model**
 Save/export the model to a PNG file (see [Model Format](#export))
+
+*Note* On Linux the dialog box does not work and you have to put a path by hand. I hope *systools* will be fixed soon. [systools Issue #27](https://github.com/waneck/systools/issues/27)
 
 - **Render model**:
 Update the "render view" (same as clicking on the render view picture)

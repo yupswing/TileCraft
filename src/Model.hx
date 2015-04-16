@@ -21,7 +21,6 @@ class Model {
 	private static inline var COLOR_COUNT = 16;
 	public static var DEFAULT_PALETTE:Array<Int> = [
 		0xFFd5f6ff, // original hole color
-		//0xFFFF0000, // TODO change this as new hole color
 		0xFF4045BB,
 		0xFF3EA5F2,
 		0xFFB3DBEE,
@@ -319,7 +318,7 @@ class Model {
 		if (output==null || bitmapData==null) return null;
 
 		// encode the bitmapData to PNG format
-		#if (v2 && !flash)
+		#if (v2)
 									 // openfl.utils.ByteArray to Bytes (thru String)
 		var pngBytes = Bytes.ofString(bitmapData.encode("png", 1).toString());
 		#else

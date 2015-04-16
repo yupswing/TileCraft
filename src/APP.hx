@@ -6,6 +6,9 @@ import openfl.display.BitmapData;
 using hxColorToolkit.ColorToolkit;
 import com.akifox.asynchttp.*;
 
+#if (!windows && !linux && !mac)
+#error "!!! TileCraft supports only Windows, Mac or Linux !!!"
+#end
 
 class APP {
 
@@ -25,15 +28,9 @@ class APP {
   public static inline var APP_VERSION = "1.0.0-alpha8dev"; //TODEPLOY
   public static inline var APP_STAGE = "alpha8 dev"; //TODEPLOY
   public static inline var APP_PLATFORM =
-  #if debug "dev"
-  #elseif flash "swf"
-  #elseif ios "ios"
-  #elseif android	"and"
-  #elseif mac "mac"
+  #if mac "mac"
   #elseif windows "win"
   #elseif linux "lnx"
-  #elseif web "web"
-  #else "---"
   #end;
   public static inline var APP_BGCOLOR = 0xEEEEEE ;
 
@@ -93,6 +90,7 @@ class APP {
   public static inline var ICON_DELETE = 'delete.png';
   public static inline var ICON_OK = 'ok.png';
   public static inline var ICON_SAVE = 'save.png';
+  public static inline var ICON_SAVEAS = 'saveas.png';
   public static inline var ICON_QUIT = 'quit.png';
   public static inline var ICON_RENDER = 'render.png';
   public static inline var ICON_CLOSE = 'close.png';

@@ -1,7 +1,7 @@
-[![TileCraft](https://img.shields.io/badge/app-TileCraft%201.0.0%20alpha8dev-brightgreen.svg)](#) 
-[![MIT License](https://img.shields.io/badge/license-GNU%20GPL%203-blue.svg)](LICENSE) 
-[![Haxe 3](https://img.shields.io/badge/language-Haxe%203-orange.svg)](http://www.haxe.org) 
-[![OpenFL 2](https://img.shields.io/badge/require-OpenFL 2-red.svg)](http://www.openfl.org) 
+[![TileCraft](https://img.shields.io/badge/app-TileCraft%201.0.0%20alpha8dev-brightgreen.svg)](#)
+[![MIT License](https://img.shields.io/badge/license-GNU%20GPL%203-blue.svg)](LICENSE)
+[![Haxe 3](https://img.shields.io/badge/language-Haxe%203-orange.svg)](http://www.haxe.org)
+[![OpenFL 2](https://img.shields.io/badge/require-OpenFL 2-red.svg)](http://www.openfl.org)
 [![Cross platform](https://img.shields.io/badge/platform-win%2Bmac%2Blinux-yellow.svg)](http://www.openfl.org)
 # ![TILECRAFT](https://dl.dropboxusercontent.com/u/683344/akifox/tilecraft/git/title.png)
 
@@ -56,22 +56,42 @@ Coming soon **Mac** and **Windows** version.
 
 ## Try it
 
-Right now, if you want to try it, download this project and download also the [PLIK library](https://github.com/yupswing/plik). Then set PLIK on haxelib
+To compile the project by yourself you need to set up some stuff
+
+#### Haxelib
+
+Install the needed libraries (and keep them updated)
 ````
-haxelib dev plik path/to/plik
-````
-then cd to tilecraft and run with
-````
-lime test mac/windows/linux -Dv2 -Dlegacy
+haxelib install openfl
+haxelib install hxColorToolkit
+haxelib install format
+haxelib install systools
+haxelib git plik https://github.com/yupswing/plik.git
 ````
 
-**Note**: NEKO is very slow on light rendering, run native instead (support Windows, Mac and Linux)
+Rebuild systools for your platform (the project need to be revived!)
+````
+haxelib run lime rebuild systools [windows|mac|linux]
+````
 
-**Note**: Right now the save action saves in '/export/tilecraft-XXXXXX.png' (same folder as the app)
+Clone this repository
+````
+git clone https://github.com/yupswing/TileCraft.git
+````
 
-*On Mac it will be inside the App package 'TileCraft.app/Contents/Resources/export'*
+And finally try to compile and run (need to use legacy OpenFL)
 
-**Note**: Right now the load action always load the file '/export/tilecraft-import.png' (same folder as the app)
+**Note**: NEKO is very slow, I strongly recommend to run native instead
+````
+cd tilecraft
+haxelib run lime test [windows|mac|linux] -Dv2 -Dlegacy
+````
+
+*Notes*: Sadly systools has lots of problems so the native Open and Save Dialogs works perfectly only on Windows.
+
+On Mac it works only the native save dialog (you have to put a path by hand if you want to open a model).
+
+On Linux no native dialog works (you have to put a path by hand if you want to open a model).
 
 ## Examples
 
@@ -168,8 +188,11 @@ The tag in bold, before every entry, indicates at what stage that feature will b
   - [x] Clone shape
   - [x] I/O from string (Base64)
   - [x] Feedback on Load/Save/Boot/Errors
-  - [ ] Save/Load file (fix Dialogs) **TODO TO GO BETA**
-  - [ ] History (basic keep last 5 models as steps) **TODO TO GO BETA**
+  - [x] Save/Load file
+    - Windows: Save and load native dialogs
+    - Mac: Save native + load textual (problems with systools)
+    - Linux: Save and load textual (problems with systools)
+  - [ ] **BETA**History (basic keep last 5 models as steps)
   - [ ] **BETA** Report error to the user via GUI
   - [ ] **BETA** Report waiting (render especially) with Thread (and GUI modal 'box')
   - [ ] **BETA** Minimap (Orthogonal Top and Side view)
