@@ -53,7 +53,9 @@ See the [TODOs](#todo) to check the work in progress.
 
 ## Download
 
-Coming soon **Mac** and **Windows** version.
+- *Windows* [Download 1.0.0-alpha8](http://akifox.com/tilecraft/get?p=windows)
+- *Mac* [Download 1.0.0-alpha8](http://akifox.com/tilecraft/get?p=mac)
+- *Linux32* [Download 1.0.0-alpha8](http://akifox.com/tilecraft/get?p=linux)
 
 ## Try it
 
