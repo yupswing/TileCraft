@@ -25,8 +25,8 @@
 - [Milestones](#milestones)
 - [Download](#download)
 - [Build by the sources](#try-it)
-- [Sample models](#examples)
 - [Lostgarden challenge](#lostgarden-challenge)
+- [Sample models](#examples)
 - [TODOs](#todo)
 
 ## Status
@@ -96,44 +96,6 @@ On Mac it works only the native save dialog (you have to put a path by hand if y
 
 On Linux no native dialog works (you have to put a path by hand if you want to open a model).
 
-## Examples
-
-When you start the app there is a small icon on the top toolbar with a paper+arrow+64 (It means "Import model from Base64")
-
-Click on it and `CTRL`+`V` or `CMD`+`V` one of this example models
-
-##### A complex shape
-````
-Ff//1fb/QEW7PqXys9vuJDI/OVJXUpAjpswzUUY1p3At////9+F2vjJB33qSfoaPprO8Ezw5DkBLCjwAWldvAGlIj1CrKhJwRZrNMEtIzmJFGhKCq5rNAiNnvALNRc0CzXgSAiNFEgJ4Zj9MacxpDng7eEMS3gFD3t4BAy3eAUBF3gFDq+8B
-````
-##### A fancy home
-````
-Ev__1fb_QEW7PqXys9vuJDI_OVJXUpAjpswzUUY1x4J11M2l9fDJvjJB33qSfoaPprO8WzRo72tWaO9rjG2tWzdtrQk8bQgAaY0UQGl9Nghp3gAIPE0AWjeLrVk3TYtqjIutaYy9iwg8bZkwI94LMM3eCzDNVgsZNmh9
-````
-##### HOME (lostgarden test-case)
-````
-DP__1fb_QEW7PqXys9vuJDI_OVJXUpAjpswzUUY1x4J11M2l9fDJvjJB33qSfoaPprO8a4xdrVs3Xa0JPE0IAGmNFEBpfTYIad4ACDxNAFo3e61ZN02Laox7rWmMTYsIPF2Z
-````
-##### FACTORY (lostgarden test-case)
-````
-DP__1fb_QEW7PqXys9vuJDI_OVJXUpAjpswzUUY1x4J11M2l9fDJvjJB33qSpmxRprO8CS1tCAA1jRYIJt4ACC1NAAgtfZlLmt5FSIvNNkleIwlLi32rCy19qghpzUUIms1Z
-````
-##### STONE (lostgarden test-case)
-````
-CP__1fb_QEW7PqXys9vuJDI_OVJXUpAjpswzUUY1p3At6pA-9-F2vjJBY2tzfoaPoK66HTwqAh48KjUfPCpnPkQzZz6qRGc-u3dnPlWIZz5nVmc.
-````
-##### TREE (lostgarden test-case)
-````
-BP__1fb_QEW7PqXys9vuJDI_OVJXUpAjpswzUUY1p3At6pA-9-F2vjJBorAneocaoK66HTwqAh48KjUePCqbHTwqaA..
-````
-##### WOODCHUCK (lostgarden test-case)
-````
-DP__1fb_QEW7SGV9s9vuKztNOVJXUpAjpswzUUY1p3At6pA-9-F2vjJBorAneocaoK66FDwqGkRGmgFEm5oBQ0aaV0ObmldEVZpmRKqaZkQ2Vq5EnFauQqtWvUJFVr0ADwMK
-````
-##### An happy farm ;)
-````
-E____wAA____PqXys9vuJDI_OVJXUpAjpswzUUY1p3At6pA-9-F2vjJB33qSfoaPprO8OxK8AUo0qwFLq5oBO828ATgjNBg5IlUDOd1VAwgeVSIBigESMXoBIjGIAQExqgEBUYgAMzYRiAE2FCWbNiM0vBYFFpo27ncCNt40BA..
-````
 
 ## Lostgarden challenge
 
@@ -144,6 +106,63 @@ Here's the test-cases he provides to check the efficiency of the tool.
 This were made in just five 5 minutes (all of them!)
 
 ![Test Cases](https://dl.dropboxusercontent.com/u/683344/akifox/tilecraft/git/test-cases.png)
+
+## Examples
+
+Here some example models. To import them in TileCraft there are two ways:
+- Click on <img src="https://dl.dropboxusercontent.com/u/683344/akifox/tilecraft/git/guide/import.png" /> and after `CTRL`+`V` or `CMD`+`V` one of this example Base64 strings
+- Otherwise you can download the PNG and load it in TileCraft
+
+##### A complex shape
+<img src="https://dl.dropboxusercontent.com/u/683344/akifox/tilecraft/models/complex.png" />
+````
+Ff__1fb_QEW78K8-7ebTJDI_OVJXUpAjpswzUUY1p3At____9-F2vjJB33qSfoaPprO8Mzw5DkBLCjwAWldvAGlIj1CrKhJwRZrNMEtIzmJFGhKCq5rNkiNnvCLNRc3CI0USAnhmP0xpzGlDEt4BDng7eEPe3gEDLd4BQEXeAUOr7wFCvHkS
+````
+##### A truck
+<img src="https://dl.dropboxusercontent.com/u/683344/akifox/tilecraft/models/truck.png" />
+````
+Ff__1fb_QEW7PqXyzu3fRFFcFRoMnpdtzMiPUUY1p3At6pA-9-F2vjJB1d7WfoaPprO8GG6LIxgUiyMnbos5BB6aIkQjqxInFIs4RM2rEkR4qxIDEotnGj6LZ3ASi3iA3os5EH-aWTREiGoAVYs4RnerREaZq0RGu6tERt2rREYzq0Q03ppE
+````
+##### A truck
+<img src="https://dl.dropboxusercontent.com/u/683344/akifox/tilecraft/models/car.png" />
+````
+Df__1fb_QEW7PqXyzu3fRFFcFRoMO4GPzMiPUUY1p3At6pA-9-F2vjJB1d7WfoaPprO8GDyLI0RFqxImPIs2RKurEgNWi1UDfItVLMy7My0ziDMtM7szQL2LWHBni1YANYtWcDV7RA..
+````
+##### An happy farm ;)
+<img src="https://dl.dropboxusercontent.com/u/683344/akifox/tilecraft/models/farm.png" />
+````
+E____wAA____PqXys9vuJDI_OVJXUpAjpswzUUY1p3At6pA-9-F2vjJB33qSfoaPprO8OxK8AUo0qwFLq5oBO828ATgjNBg5IlUDOd1VAwgeVSIBigESMXoBIjGIAQExqgEBUYgAMzYRiAE2FCWbNiM0vBYFFpo27ncCNt40BA..
+````
+##### A fancy home
+<img src="https://dl.dropboxusercontent.com/u/683344/akifox/tilecraft/models/home-fancy.png" />
+````
+Ev__1fb_QEW7PqXys9vuJDI_OVJXUpAjpswzUUY1x4J11M2l9fDJvjJB33qSfoaPprO8WzRo72tWaO9rjG2tWzdtrQk8bQgAaY0UQGl9Nghp3gAIPE0AWjeLrVk3TYtqjIutaYy9iwg8bZkwI94LMM3eCzDNVgsZNmh9
+````
+##### HOME (lostgarden test-case)
+<img src="https://dl.dropboxusercontent.com/u/683344/akifox/tilecraft/models/lg-home.png" />
+````
+DP__1fb_QEW7PqXys9vuJDI_OVJXUpAjpswzUUY1x4J11M2l9fDJvjJB33qSfoaPprO8a4xdrVs3Xa0JPE0IAGmNFEBpfTYIad4ACDxNAFo3e61ZN02Laox7rWmMTYsIPF2Z
+````
+##### FACTORY (lostgarden test-case)
+<img src="https://dl.dropboxusercontent.com/u/683344/akifox/tilecraft/models/lg-factory.png" />
+````
+DP__1fb_QEW7PqXys9vuJDI_OVJXUpAjpswzUUY1x4J11M2l9fDJvjJB33qSpmxRprO8CS1tCAA1jRYIJt4ACC1NAAgtfZlLmt5FSIvNNkleIwlLi32rCy19qghpzUUIms1Z
+````
+##### STONE (lostgarden test-case)
+<img src="https://dl.dropboxusercontent.com/u/683344/akifox/tilecraft/models/lg-stone.png" />
+````
+CP__1fb_QEW7PqXys9vuJDI_OVJXUpAjpswzUUY1p3At6pA-9-F2vjJBY2tzfoaPoK66HTwqAh48KjUfPCpnPkQzZz6qRGc-u3dnPlWIZz5nVmc.
+````
+##### TREE (lostgarden test-case)
+<img src="https://dl.dropboxusercontent.com/u/683344/akifox/tilecraft/models/lg-tree.png" />
+````
+BP__1fb_QEW7PqXys9vuJDI_OVJXUpAjpswzUUY1p3At6pA-9-F2vjJBorAneocaoK66HTwqAh48KjUePCqbHTwqaA..
+````
+##### WOODCHUCK (lostgarden test-case)
+<img src="https://dl.dropboxusercontent.com/u/683344/akifox/tilecraft/models/lg-woodchuck.png" />
+````
+DP__1fb_QEW7SGV9s9vuKztNOVJXUpAjpswzUUY1p3At6pA-9-F2vjJBorAneocaoK66FDwqGkRGmgFEm5oBQ0aaV0ObmldEVZpmRKqaZkQ2Vq5EnFauQqtWvUJFVr0ADwMK
+````
 
 # TODO
 
@@ -196,7 +215,6 @@ The tag in bold, before every entry, indicates at what stage that feature will b
     - Mac: Save native + load textual (problems with systools)
     - Linux: Save and load textual (problems with systools)
   - [ ] **BETA**History (basic keep last 5 models as steps)
-  - [ ] **BETA** Report error to the user via GUI
   - [ ] **BETA** Report waiting (render especially) with Thread (and GUI modal 'box')
   - [ ] **BETA** Minimap (Orthogonal Top and Side view)
   - [ ] **BETA** ALT (center transformation), SHIFT (keep it square), Rotation (single element, whole context)
