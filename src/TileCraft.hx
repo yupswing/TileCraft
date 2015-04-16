@@ -918,7 +918,11 @@ class TileCraft extends Screen
 	}
 
 	private var _currentFilename:String = "";
+	#if windows
+	private var _currentDir:String = '';
+	#else
 	private var _currentDir:String = Sys.getEnv('HOME');
+	#end
 
 	private var _fileFilters: FILEFILTERS =
 			{ count: 1

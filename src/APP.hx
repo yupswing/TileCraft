@@ -25,8 +25,8 @@ class APP {
   public static inline var APP_PACKAGE = "com.akifox.tilecraft" ;
   public static inline var APP_BUILD = CompileTime.readFile("Export/.build");
   public static inline var APP_BUILD_DATE = CompileTime.buildDateString();
-  public static inline var APP_VERSION = "1.0.0-alpha8"; //TODEPLOY
-  public static inline var APP_STAGE = "alpha8"; //TODEPLOY
+  public static inline var APP_VERSION = "1.0.0-alpha9"; //TODEPLOY
+  public static inline var APP_STAGE = "alpha9"; //TODEPLOY
   public static inline var APP_PLATFORM =
   #if mac "mac"
   #elseif windows "win"

@@ -1,4 +1,4 @@
-[![TileCraft](https://img.shields.io/badge/app-TileCraft%201.0.0%20alpha8-brightgreen.svg)](#)
+[![TileCraft](https://img.shields.io/badge/app-TileCraft%201.0.0%20alpha9-brightgreen.svg)](#)
 [![MIT License](https://img.shields.io/badge/license-GNU%20GPL%203-blue.svg)](LICENSE)
 [![Haxe 3](https://img.shields.io/badge/language-Haxe%203-orange.svg)](http://www.haxe.org)
 [![OpenFL 2](https://img.shields.io/badge/require-OpenFL 2-red.svg)](http://www.openfl.org)
@@ -47,15 +47,16 @@ See the [TODOs](#todo) to check the work in progress.
  - **alpha6: Shape list + improved gui**
  - **alpha7: Model editing**
  - **alpha8: Open/Save + check updates + improved feedbacks**
+ - **alpha9: unreliable systools removed**
  - *beta stage: Improve interface and renderer* **<-- in progress**
  - *rc stage: Polish the app*
  - *release: Done!*
 
 ## Download
 
-- *Windows* [Download 1.0.0-alpha8](http://akifox.com/tilecraft/get?p=windows)
-- *Mac* [Download 1.0.0-alpha8](http://akifox.com/tilecraft/get?p=mac)
-- *Linux32* [Download 1.0.0-alpha8](http://akifox.com/tilecraft/get?p=linux)
+- *Windows* [Download 1.0.0-alpha9](http://akifox.com/tilecraft/get?p=windows)
+- *Mac* [Download 1.0.0-alpha9](http://akifox.com/tilecraft/get?p=mac)
+- *Linux32* [Download 1.0.0-alpha9](http://akifox.com/tilecraft/get?p=linux)
 
 ## Try it
 
@@ -90,7 +91,7 @@ cd tilecraft
 haxelib run lime test [windows|mac|linux] -Dv2 -Dlegacy
 ````
 
-*Notes*: Sadly systools has lots of problems so the native Open and Save Dialogs works perfectly only on Windows.
+*Notes*: Sadly systools has lots of problems so I can't use the native Open and Save Dialogs right now
 
 On Mac it works only the native save dialog (you have to put a path by hand if you want to open a model).
 
