@@ -112,7 +112,7 @@ This were made in just five 5 minutes (all of them!)
 
 Here some example models. To import them in TileCraft there are two ways:
 - Click on <img src="https://dl.dropboxusercontent.com/u/683344/akifox/tilecraft/git/guide/import.png" /> and after `CTRL`+`V` or `CMD`+`V` one of this example Base64 strings
-- Otherwise you can download the PNG and load it in TileCraft
+- Otherwise you can download the PNG and load it in TileCraft (yes [it works!](GUIDE.md#export))
 
 ##### A complex shape
 <img src="https://dl.dropboxusercontent.com/u/683344/akifox/tilecraft/models/complex.png" />
@@ -124,7 +124,7 @@ Ff__1fb_QEW78K8-7ebTJDI_OVJXUpAjpswzUUY1p3At____9-F2vjJB33qSfoaPprO8Mzw5DkBLCjwA
 ````
 Ff__1fb_QEW7PqXyzu3fRFFcFRoMnpdtzMiPUUY1p3At6pA-9-F2vjJB1d7WfoaPprO8GG6LIxgUiyMnbos5BB6aIkQjqxInFIs4RM2rEkR4qxIDEotnGj6LZ3ASi3iA3os5EH-aWTREiGoAVYs4RnerREaZq0RGu6tERt2rREYzq0Q03ppE
 ````
-##### A truck
+##### A car
 <img src="https://dl.dropboxusercontent.com/u/683344/akifox/tilecraft/models/car.png" />
 ````
 Df__1fb_QEW7PqXyzu3fRFFcFRoMO4GPzMiPUUY1p3At6pA-9-F2vjJB1d7WfoaPprO8GDyLI0RFqxImPIs2RKurEgNWi1UDfItVLMy7My0ziDMtM7szQL2LWHBni1YANYtWcDV7RA..
@@ -138,6 +138,11 @@ E____wAA____PqXys9vuJDI_OVJXUpAjpswzUUY1p3At6pA-9-F2vjJB33qSfoaPprO8OxK8AUo0qwFL
 <img src="https://dl.dropboxusercontent.com/u/683344/akifox/tilecraft/models/home-fancy.png" />
 ````
 Ev__1fb_QEW7PqXys9vuJDI_OVJXUpAjpswzUUY1x4J11M2l9fDJvjJB33qSfoaPprO8WzRo72tWaO9rjG2tWzdtrQk8bQgAaY0UQGl9Nghp3gAIPE0AWjeLrVk3TYtqjIutaYy9iwg8bZkwI94LMM3eCzDNVgsZNmh9
+````
+##### A dice
+<img src="https://dl.dropboxusercontent.com/u/683344/akifox/tilecraft/models/dice.png" />
+````
+C___1fb_4NrTPqXyDDJAJDI_OVJXUpAjpswzUUY1p3At6pA-9-F2vjJB33qSfoaPprO8EUspByFLKQczVjRnM5o0ZzOaeGdDVokSM1Z4Z0OaiVYzVlZnM5pWZ0N4iTQ.
 ````
 ##### HOME (lostgarden test-case)
 <img src="https://dl.dropboxusercontent.com/u/683344/akifox/tilecraft/models/lg-home.png" />
