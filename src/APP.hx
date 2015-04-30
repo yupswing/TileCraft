@@ -221,17 +221,19 @@ class APP {
 
 		var apiURL = URL_SERVICE_VERSION;
 
-		var request = new AsyncHttpRequest(apiURL + "?v=" + APP_VERSION,
-			function(response:AsyncHttpResponse) {
-				if (!response.isOK) return;
+		var request = new HttpRequest({
+					 url : apiURL + "?v=" + APP_VERSION,
+			callback : function(response:HttpResponse) {
+										if (!response.isOK) return;
 
-				var json:Dynamic = response.toJson();
-		    	if (json == null || Std.int(json.e) > 0) return;
+										var json:Dynamic = response.toJson();
+								    	if (json == null || Std.int(json.e) > 0) return;
 
-					APP.onlineVersion = Std.string(json.c.version);
-		    	if (APP.onlineVersion != APP_VERSION) callback();
+											APP.onlineVersion = Std.string(json.c.version);
+								    	if (APP.onlineVersion != APP_VERSION) callback();
 
-			});
+									}
+		});
 
 		request.send(); //async send
 
