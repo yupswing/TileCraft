@@ -67,7 +67,12 @@ To compile the project by yourself you need to set up some stuff
 Install the needed libraries (and keep them updated)
 ````
 haxelib install openfl
+haxelib run openfl setup
+haxelib install actuate
+haxelib install akifox-transform
+haxelib install akifox-asynchttp
 haxelib install hxColorToolkit
+haxelib install compiletime
 haxelib install format
 haxelib install systools
 haxelib git plik https://github.com/yupswing/plik.git
