@@ -1,7 +1,10 @@
+<h1 align="center">This project is no longer mantained.</h1>
+---
+
 [![TileCraft](https://img.shields.io/badge/app-TileCraft%201.0.0%20alpha9-brightgreen.svg)](#)
 [![MIT License](https://img.shields.io/badge/license-GNU%20GPL%203-blue.svg)](LICENSE)
 [![Haxe 3](https://img.shields.io/badge/language-Haxe%203-orange.svg)](http://www.haxe.org)
-[![OpenFL 2](https://img.shields.io/badge/require-OpenFL 2-red.svg)](http://www.openfl.org)
+[![OpenFL 2](https://img.shields.io/badge/require-OpenFL%202-red.svg)](http://www.openfl.org)
 [![Cross platform](https://img.shields.io/badge/platform-win%2Bmac%2Blinux-yellow.svg)](http://www.openfl.org)
 # ![TILECRAFT](README/title.png)
 
@@ -14,6 +17,7 @@
 - Original idea from [lostgarden.com](http://www.lostgarden.com/2013/10/prototyping-challenge-3d-modeling-tool.html)
 
 ![Alpha8 Interface](README/interface.png)
+
 
 ---
 [Read the Quick guide to understand how to use TileCraft](GUIDE.md)
