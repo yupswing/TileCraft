@@ -65,7 +65,7 @@ To compile the project by yourself you need to set up some stuff
 #### Haxelib
 
 Install the needed libraries (and keep them updated)
-````
+```
 haxelib install openfl
 haxelib run openfl setup
 haxelib install actuate
@@ -76,25 +76,25 @@ haxelib install compiletime
 haxelib install format
 haxelib install systools
 haxelib git plik https://github.com/yupswing/plik.git
-````
+```
 
 (Only Windows or Mac) Rebuild systools for your platform (the project need to be revived!)
-````
+```
 haxelib run lime rebuild systools [windows|mac]
-````
+```
 
 Clone this repository
-````
+```
 git clone https://github.com/yupswing/TileCraft.git
-````
+```
 
 And finally try to compile and run (need to use legacy OpenFL)
 
 **Note**: NEKO is very slow, I strongly recommend to run native instead
-````
+```
 cd tilecraft
 haxelib run lime test [windows|mac|linux] -Dv2 -Dlegacy
-````
+```
 
 *Notes*: Sadly systools has lots of problems so I can't use the native Open and Save Dialogs right now
 
@@ -121,59 +121,80 @@ Here some example models. To import them in TileCraft there are two ways:
 
 ##### A complex shape
 <img src="models/complex.png" />
-````
+
+```
 Ff__1fb_QEW78K8-7ebTJDI_OVJXUpAjpswzUUY1p3At____9-F2vjJB33qSfoaPprO8Mzw5DkBLCjwAWldvAGlIj1CrKhJwRZrNMEtIzmJFGhKCq5rNkiNnvCLNRc3CI0USAnhmP0xpzGlDEt4BDng7eEPe3gEDLd4BQEXeAUOr7wFCvHkS
-````
+```
+
 ##### A truck
 <img src="models/truck.png" />
-````
+
+```
 Ff__1fb_QEW7PqXyzu3fRFFcFRoMnpdtzMiPUUY1p3At6pA-9-F2vjJB1d7WfoaPprO8GG6LIxgUiyMnbos5BB6aIkQjqxInFIs4RM2rEkR4qxIDEotnGj6LZ3ASi3iA3os5EH-aWTREiGoAVYs4RnerREaZq0RGu6tERt2rREYzq0Q03ppE
-````
+```
+
 ##### A car
 <img src="models/car.png" />
-````
+
+```
 Df__1fb_QEW7PqXyzu3fRFFcFRoMO4GPzMiPUUY1p3At6pA-9-F2vjJB1d7WfoaPprO8GDyLI0RFqxImPIs2RKurEgNWi1UDfItVLMy7My0ziDMtM7szQL2LWHBni1YANYtWcDV7RA..
-````
+```
+
 ##### An happy farm ;)
 <img src="models/farm.png" />
-````
+
+```
 E____wAA____PqXys9vuJDI_OVJXUpAjpswzUUY1p3At6pA-9-F2vjJB33qSfoaPprO8OxK8AUo0qwFLq5oBO828ATgjNBg5IlUDOd1VAwgeVSIBigESMXoBIjGIAQExqgEBUYgAMzYRiAE2FCWbNiM0vBYFFpo27ncCNt40BA..
-````
+```
+
 ##### A fancy home
 <img src="models/home-fancy.png" />
-````
+
+```
 Ev__1fb_QEW7PqXys9vuJDI_OVJXUpAjpswzUUY1x4J11M2l9fDJvjJB33qSfoaPprO8WzRo72tWaO9rjG2tWzdtrQk8bQgAaY0UQGl9Nghp3gAIPE0AWjeLrVk3TYtqjIutaYy9iwg8bZkwI94LMM3eCzDNVgsZNmh9
-````
+```
+
 ##### A dice
 <img src="models/dice.png" />
-````
+
+```
 C___1fb_4NrTPqXyDDJAJDI_OVJXUpAjpswzUUY1p3At6pA-9-F2vjJB33qSfoaPprO8EUspByFLKQczVjRnM5o0ZzOaeGdDVokSM1Z4Z0OaiVYzVlZnM5pWZ0N4iTQ.
-````
+```
+
 ##### HOME (lostgarden test-case)
 <img src="models/lg-home.png" />
-````
+
+```
 DP__1fb_QEW7PqXys9vuJDI_OVJXUpAjpswzUUY1x4J11M2l9fDJvjJB33qSfoaPprO8a4xdrVs3Xa0JPE0IAGmNFEBpfTYIad4ACDxNAFo3e61ZN02Laox7rWmMTYsIPF2Z
-````
+```
+
 ##### FACTORY (lostgarden test-case)
 <img src="models/lg-factory.png" />
-````
+
+```
 DP__1fb_QEW7PqXys9vuJDI_OVJXUpAjpswzUUY1x4J11M2l9fDJvjJB33qSpmxRprO8CS1tCAA1jRYIJt4ACC1NAAgtfZlLmt5FSIvNNkleIwlLi32rCy19qghpzUUIms1Z
-````
+```
+
 ##### STONE (lostgarden test-case)
 <img src="models/lg-stone.png" />
-````
+
+```
 CP__1fb_QEW7PqXys9vuJDI_OVJXUpAjpswzUUY1p3At6pA-9-F2vjJBY2tzfoaPoK66HTwqAh48KjUfPCpnPkQzZz6qRGc-u3dnPlWIZz5nVmc.
-````
+```
+
 ##### TREE (lostgarden test-case)
 <img src="models/lg-tree.png" />
-````
+
+```
 BP__1fb_QEW7PqXys9vuJDI_OVJXUpAjpswzUUY1p3At6pA-9-F2vjJBorAneocaoK66HTwqAh48KjUePCqbHTwqaA..
-````
+```
+
 ##### WOODCHUCK (lostgarden test-case)
 <img src="models/lg-woodchuck.png" />
-````
+
+```
 DP__1fb_QEW7SGV9s9vuKztNOVJXUpAjpswzUUY1p3At6pA-9-F2vjJBorAneocaoK66FDwqGkRGmgFEm5oBQ0aaV0ObmldEVZpmRKqaZkQ2Vq5EnFauQqtWvUJFVr0ADwMK
-````
+```
 
 # TODO
 
@@ -238,19 +259,19 @@ The tag in bold, before every entry, indicates at what stage that feature will b
 
   ### Conversion regexp from java to haxe
 
-  ````
+  ```
   (public|private) (static )?([a-z]+)([^{;]+\([^{]+)
   $1 $2function$4:$3
-  ````
-  ````
+  ```
+  ```
   (int|byte|float|boolean)\[\] ([a-z0-9]+)
   $2:Array<$1>
-  ````
-  ````
+  ```
+  ```
   (int|byte|float|boolean) ([a-z0-9]+)
   $2:$1
-  ````
-  ````
+  ```
+  ```
   \(Int\)
   Std.int
-  ````
+  ```
