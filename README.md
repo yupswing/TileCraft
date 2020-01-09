@@ -54,13 +54,12 @@ See the [TODOs](#todo) to check the work in progress.
 
 ## Download
 
-- *Windows* [Download 1.0.0-alpha9](http://akifox.com/tilecraft/get?p=windows)
-- *Mac* [Download 1.0.0-alpha9](http://akifox.com/tilecraft/get?p=mac)
-- *Linux32* [Download 1.0.0-alpha9](http://akifox.com/tilecraft/get?p=linux)
+[For Linux (32), Mac and Windows](https://github.com/yupswing/TileCraft/releases/tag/v1.0.0-alpha.9)
 
 ## Try it
 
 To compile the project by yourself you need to set up some stuff
+[(see also this guide from Wulf)](https://github.com/Wulf/TileCraft/blob/master/README.md)
 
 #### Haxelib
 
