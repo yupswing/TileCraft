@@ -1,4 +1,4 @@
-![How to use TileCraft](https://dl.dropboxusercontent.com/u/683344/akifox/tilecraft/git/guide/title.png)
+![How to use TileCraft](GUIDE/title.png)
 
 ## Index
 
@@ -9,11 +9,11 @@
 ---
 
 # Interface
-![Interface](https://dl.dropboxusercontent.com/u/683344/akifox/tilecraft/git/guide/interface.png)
+![Interface](GUIDE/interface.png)
 
 ## Main toolbar
 
-<img src="https://dl.dropboxusercontent.com/u/683344/akifox/tilecraft/git/guide/mainToolbar.png">
+<img src="GUIDE/mainToolbar.png">
 
 There are few buttons on the main toolbar, here's the explanation as they appear in the toolbar:
 
@@ -44,7 +44,7 @@ I think you know what it means
 
 ## Shape toolbar
 
-<img align="right" src="https://dl.dropboxusercontent.com/u/683344/akifox/tilecraft/git/guide/shapeToolbar.png">
+<img align="right" src="GUIDE/shapeToolbar.png">
 
 There are few buttons on the shape toolbar, here's the explanation as they appear in the toolbar:
 
@@ -68,7 +68,7 @@ If no shape is selected you can choose which shape primitive you want to create 
 
 ## Palette toolbar
 
-<img align="right" src="https://dl.dropboxusercontent.com/u/683344/akifox/tilecraft/git/guide/paletteToolbar.png">
+<img align="right" src="GUIDE/paletteToolbar.png">
 
 - If a shape is selected clicking here will change the shape color index.
 
@@ -88,7 +88,7 @@ All the shape with that color index will change color as well.
 
 ## Render view
 
-<img align="right" src="https://dl.dropboxusercontent.com/u/683344/akifox/tilecraft/git/guide/renderView.png">
+<img align="right" src="GUIDE/renderView.png">
 
 Here you can see the final image rendered from the model.
 
@@ -105,7 +105,7 @@ This *WILL NOT* be drawn on the exported PNG.
 
 ## Shape list
 
-<img align="right" src="https://dl.dropboxusercontent.com/u/683344/akifox/tilecraft/git/guide/shapeList.png">
+<img align="right" src="GUIDE/shapeList.png">
 
 Here you can see all the shape in the model.
 
@@ -123,7 +123,7 @@ All the shapes below a Hole Shape will be cut by the Hole Shape, but not the one
 
 ## Model view
 
-<img align="right" src="https://dl.dropboxusercontent.com/u/683344/akifox/tilecraft/git/guide/modelView.png">
+<img align="right" src="GUIDE/modelView.png">
 
 Finally, here's where the real magic happen.
 
@@ -141,7 +141,7 @@ Finally, here's where the real magic happen.
 
 # Hole
 
-<img align="right" src="https://dl.dropboxusercontent.com/u/683344/akifox/tilecraft/git/guide/hole.png">
+<img align="right" src="GUIDE/hole.png">
 
 An hole shape is a standard shape with a special property determine by its "color".
 
