@@ -1,4 +1,4 @@
-<h1 align="center">This project is no longer mantained.</h1>
+<h1 align="center">This project is no longer maintained.</h1>
 ---
 
 [![TileCraft](https://img.shields.io/badge/app-TileCraft%201.0.0%20alpha9-brightgreen.svg)](#)
