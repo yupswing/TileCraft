@@ -1,7 +1,7 @@
 <h1 align="center">This project is no longer maintained.</h1>
 ---
 
-[![TileCraft](https://img.shields.io/badge/app-TileCraft%201.0.0%20alpha9-brightgreen.svg)](#)
+[![TileCraft](https://img.shields.io/badge/app-TileCraft%201.0.0%20alpha10-brightgreen.svg)](#)
 [![MIT License](https://img.shields.io/badge/license-GNU%20GPL%203-blue.svg)](LICENSE)
 [![Haxe 3](https://img.shields.io/badge/language-Haxe%203-orange.svg)](http://www.haxe.org)
 [![OpenFL 2](https://img.shields.io/badge/require-OpenFL%202-red.svg)](http://www.openfl.org)
@@ -105,6 +105,108 @@ On Mac it works only the native save dialog (you have to put a path by hand if y
 
 On Linux no native dialog works (you have to put a path by hand if you want to open a model).
 
+## Verified working setup (Windows)
+
+This stack only compiles with **Haxe 3.x** — Haxe 4 rejects OpenFL 3.6.1's old syntax (`@:enum abstract`, `@:fakeEnum`). Confirmed working versions: Haxe **3.4.7**, OpenFL **3.6.1**, Lime **2.9.1**.
+
+````
+# Install Haxe 3.4.7 + matching Neko, make sure both are on PATH/HAXEPATH/NEKOPATH
+# (the haxelib.exe shipped with Haxe 3.4.7 is 32-bit, so NEKOPATH must point at a 32-bit Neko build)
+
+haxelib install openfl 3.6.1
+haxelib install lime 2.9.1
+haxelib run lime setup
+haxelib install actuate
+haxelib install compiletime
+haxelib install akifox-transform
+haxelib install akifox-asynchttp
+haxelib install hxColorToolkit
+haxelib install format
+haxelib install systools
+
+haxelib git plik https://github.com/yupswing/plik.git
+
+# Run
+lime test neko -Dv2 -Dlegacy
+
+# Or just build (output in Export/windows/neko/bin/)
+lime build neko -Dv2 -Dlegacy
+
+# Native Windows .exe (lime build windows) instead needs Visual Studio
+# Build Tools with the "Desktop development with C++" workload installed.
+````
+
+`project.xml` declares `<ndll name="systools" haxelib="systools" />` so lime copies
+`systools.ndll` into the Export bin folder — the `systools` haxelib ships without its
+own `include.xml`, so without this lime never knows to bundle it and the app crashes
+on boot with `Failed to load library : systools.ndll`.
+
+If your shell's PATH/HAXEPATH/NEKOPATH env vars get out of sync with this toolchain
+(e.g. errors like "unable to start correctly" or a missing `neko_kind_lookup` entry
+point in `ssl.ndll`, both signs of a 32/64-bit Neko mismatch), and/or `lime test`
+hangs/loops instead of opening the window (lime 2.9.1's CLI does a network
+version-check on every run that can intermittently fail and retry), use
+[dev.ps1](dev.ps1) instead — it pins the right environment, builds, and launches the
+exe directly via PowerShell instead of through lime's run step:
+
+````
+.\dev.ps1                       # build neko -Dv2 -Dlegacy, then run the exe
+.\dev.ps1 build neko -Dv2 -Dlegacy   # just build
+````
+
+## Native Windows .exe (no Haxe/Neko needed to run it)
+
+The Neko build above still needs the Neko VM DLLs alongside the exe. For a fully
+native binary, install Visual Studio Build Tools (workload "Desktop development
+with C++") and use **hxcpp 3.4.64** specifically — not 3.3.x or earlier, and not
+the haxelib-default 4.x:
+
+````
+haxelib install hxcpp 3.4.64
+haxelib set hxcpp 3.4.64
+````
+
+Older hxcpp generates `__alloc(hx::Ctx*, ...)`-style constructors that the Haxe
+3.4.7 compiler doesn't emit-compatible code for anymore (`error C2039: 'Ctx': is
+not a member of 'hx'`) — Haxe 3.4.x requires hxcpp >= 3.4.49. hxcpp's native libs
+(std.dll etc.) also need to be (re)built once for the 32-bit toolchain lime 2.9.1's
+Windows target always uses (it hardcodes `-DHXCPP_M32`, there's no 64-bit option in
+this lime version):
+
+````
+cd /d "%HAXELIB_REPO%\hxcpp\3,4,64\project"
+haxelib run hxcpp Build.xml -DHXCPP_MSVC_CUSTOM
+````
+
+run from an `x86` (or `x64_x86` cross) **Developer Command Prompt**, with
+`C:\HaxeToolkit\msvc_compat_include` (or wherever you put a one-line
+`#pragma once` + `#include <typeinfo>` shim named `typeinfo.h`) prepended to
+`INCLUDE` — modern MSVC dropped the legacy `typeinfo.h` header that old hxcpp's
+`hxcpp.h` still `#include`s.
+
+[dev-native.bat](dev-native.bat) wraps all of this (vcvarsall, the typeinfo.h
+shim, and the `lime build windows` call). It assumes the toolchain lives under
+`C:\HaxeToolkit` as set up above. Run it from the project root:
+
+````
+dev-native.bat
+````
+
+Output: `Export\windows\cpp\bin\TileCraft.exe` — a standalone native PE32 GUI exe,
+only depends on a couple of small native DLLs bundled right next to it (no
+Haxe/Neko install needed on the target machine). It builds cleanly, but **currently
+crashes on launch** (access violation inside `nvoglv32.dll`, the Nvidia 32-bit
+OpenGL driver) right after the main window paints its first frame — reproduced even
+with a maximally stripped-down screen, so it isn't any single widget. Three real
+bugs were found and fixed along the way (`Renderer.arrayIntFill`'s `from` parameter
+had no default, leaving it an uninitialized `Null<Int>` read only on cpp; two
+`TileCraft.resize()` background rects passed the wrong-edge X coordinate as their
+`width`/`height` argument), but the native crash persists after those fixes — it
+looks like a deeper incompatibility between this old lime 2.9.1 GL renderer and a
+modern Nvidia driver, triggered specifically by TileCraft's heavier UI (toolbars +
+gradient icons + shape list) that mimic-rush's simpler screens don't hit. Use the
+**Neko build** above for actual day-to-day use until this is debugged further with
+a real native debugger (none was available in this environment).
 
 ## Lostgarden challenge
 

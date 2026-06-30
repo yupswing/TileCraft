@@ -4,8 +4,9 @@
 	<!-- ################################ SET ################################### -->
 
 
-	<meta title="TileCraft" package="com.akifox.tilecraft" version="1.0.0-alpha9" company="Akifox Studio" /> <!--  #TODEPLOY -->
-    <app main="Main" path="Export" file="TileCraft" />
+	<meta title="TileCraft" package="com.akifox.tilecraft" version="1.0.0-alpha10"
+		company="Akifox Studio" /> <!--  #TODEPLOY -->
+	<app main="Main" path="Export" file="TileCraft" />
 
 
 	<!-- ############################### WINDOW ################################# -->
@@ -18,7 +19,7 @@
 	<window orientation="landscape" />
 
 	<window vsync="true" antialiasing="4" if="cpp" />
-	<window hardware="true" allow-shaders="true" require-shaders="false" if="cpp"/>
+	<window hardware="true" allow-shaders="true" require-shaders="false" if="cpp" />
 
 	<icon path="assets/icon.svg" />
 
@@ -26,9 +27,9 @@
 	<!-- ################################ CODE ################################## -->
 
 	<source path="src" />
-  <haxelib name="format" />
+	<haxelib name="format" />
 	<!-- Openfl Libraries -->
-  <haxelib name="openfl" />
+	<haxelib name="openfl" />
 	<haxelib name="actuate" />
 	<!-- Akifox Libraries -->
 	<haxelib name="akifox-transform" />
@@ -38,6 +39,7 @@
 	<haxelib name="compiletime" />
 	<haxelib name="hxColorToolkit" />
 	<haxelib name="systools" />
+	<ndll name="systools" haxelib="systools" />
 
 	<!-- ############################# CUSTOM BUILDS ############################ -->
 
@@ -50,9 +52,6 @@
 	<haxedef name="legacy" if="v2" />
 
 	<set name="SWF_VERSION" value="11.8" />
-
-	<!-- Update check -->
-	<haxedef name="app_checkupdates" if="desktop" />
 
 	<!-- ################################ ASSETS ################################ -->
 
