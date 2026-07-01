@@ -4,3 +4,4 @@ lgmodeler/
 *.hxproj
 .vscode
 vscode-project.hxml
+vendor/

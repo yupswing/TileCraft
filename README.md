@@ -58,7 +58,7 @@ See the [TODOs](#todo) to check the work in progress.
 
 ## Download
 
-[For Linux (32), Mac and Windows](https://github.com/yupswing/TileCraft/releases/tag/v1.0.0-alpha.9)
+[Windows](https://github.com/yupswing/TileCraft/releases/tag/v1.0.0-alpha.10)
 
 ## Try it
 
@@ -194,19 +194,52 @@ dev-native.bat
 
 Output: `Export\windows\cpp\bin\TileCraft.exe` — a standalone native PE32 GUI exe,
 only depends on a couple of small native DLLs bundled right next to it (no
-Haxe/Neko install needed on the target machine). It builds cleanly, but **currently
-crashes on launch** (access violation inside `nvoglv32.dll`, the Nvidia 32-bit
-OpenGL driver) right after the main window paints its first frame — reproduced even
-with a maximally stripped-down screen, so it isn't any single widget. Three real
-bugs were found and fixed along the way (`Renderer.arrayIntFill`'s `from` parameter
-had no default, leaving it an uninitialized `Null<Int>` read only on cpp; two
-`TileCraft.resize()` background rects passed the wrong-edge X coordinate as their
-`width`/`height` argument), but the native crash persists after those fixes — it
-looks like a deeper incompatibility between this old lime 2.9.1 GL renderer and a
-modern Nvidia driver, triggered specifically by TileCraft's heavier UI (toolbars +
-gradient icons + shape list) that mimic-rush's simpler screens don't hit. Use the
-**Neko build** above for actual day-to-day use until this is debugged further with
-a real native debugger (none was available in this environment).
+Haxe/Neko install needed on the target machine).
+
+Along the way two real bugs were found and fixed: `Renderer.arrayIntFill`'s
+`from`/`to` clamp treated `0` (a perfectly valid "start of array"/row-0 value) as
+"unspecified" and snapped it to `array.length`, so the renderer's per-frame buffer
+clear was silently a no-op — this is what caused the "ghost" pixels from previous
+renders lingering on screen; and two `TileCraft.resize()` background rects passed
+the wrong-edge X coordinate as their `width`/`height` argument.
+
+### The real Nvidia driver crashes — use Mesa's software renderer instead
+
+This build **crashes on launch against the real GPU driver**: access violation
+inside `nvoglv32.dll` (the Nvidia 32-bit OpenGL driver) right after the main window
+paints its first frame. Reproduced even with a maximally stripped-down screen (no
+widgets at all beyond a background fill), and even with an old prebuilt native
+binary predating any of this session's changes — so it's not a TileCraft bug, it's
+this specific lime 2.9.1 legacy GL renderer tripping a bug in the current Nvidia
+driver, unrelated to project content.
+
+**Confirmed workaround**: swap in Mesa's `llvmpipe` software OpenGL implementation
+in place of the Nvidia driver, for this exe only (nothing system-wide is touched).
+`dev-native.bat` does this automatically if the DLLs are present in `vendor\mesa-x86\`
+(gitignored — not committed, ~50MB):
+
+```
+# download & extract once (x86/32-bit build, matches this lime's -DHXCPP_M32 target)
+https://github.com/pal1000/mesa-dist-win/releases  ->  mesa3d-*-release-msvc.7z
+#   -> extract x86/opengl32.dll and x86/libgallium_wgl.dll into vendor\mesa-x86\
+```
+
+With those two files in place, `dev-native.bat` copies them next to the built exe
+and generates **`Export\windows\cpp\bin\TileCraft Launcher.bat`**, which sets
+`GALLIUM_DRIVER=llvmpipe` and `LIBGL_ALWAYS_SOFTWARE=1` before starting
+`TileCraft.exe`. This avoids the crash entirely and renders the full UI correctly
+(verified: model view, toolbars, color picker, shape list, output panel all draw as
+expected). Software rendering is slower than the native driver but is otherwise
+indistinguishable functionally — good enough until/unless the actual Nvidia driver
+bug gets tracked down.
+
+**Important**: `TileCraft.exe` itself has no idea any of this is needed — running it
+directly (double-click, a shortcut, `lime test windows`, etc.) uses the real Nvidia
+driver and crashes. Always launch via **`TileCraft Launcher.bat`** instead (it's what
+`dev-native.bat` itself uses to launch after building). Without `vendor\mesa-x86\`,
+`dev-native.bat` skips generating the launcher, builds normally, and runs
+`TileCraft.exe` directly against the real driver (and warns you first), which is
+expected to crash.
 
 ## Lostgarden challenge
 
